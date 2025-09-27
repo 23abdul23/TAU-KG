@@ -1,4 +1,3 @@
-python_version == "3.11.*"
 
 streamlit>=1.28.0
 networkx>=3.0.0
