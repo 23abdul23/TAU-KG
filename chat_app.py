@@ -11,7 +11,6 @@ from collections import defaultdict
 import random
 import tempfile
 import os
-os.environ["GENSIM_NO_CYTHON"] = "1"
 
 
 # Load environment variables
