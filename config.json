@@ -1,0 +1,25 @@
+{
+  "pubmed": {
+    "max_retries": 3,
+    "timeout": 10,
+    "timeout_short": 10,
+    "timeout_long": 15,
+    "max_citations": 5
+  },
+  "network": {
+    "use_proxy": true,
+    "log_network_requests": true,
+    "http_proxy": "",
+    "https_proxy": ""
+  },
+  "citation_extraction": {
+    "use_llm_extraction": true,
+    "use_llm_query_generation": true,
+    "entity_extraction_model": "gpt-4",
+    "query_generation_model": "gpt-4",
+    "extraction_temperature": 0.1,
+    "generation_temperature": 0.2,
+    "extraction_max_tokens": 500,
+    "generation_max_tokens": 500
+  }
+}
