@@ -1,3 +1,5 @@
+python_version == "3.11.*"
+
 streamlit>=1.28.0
 networkx>=3.0.0
 pyvis>=0.3.0
@@ -7,7 +9,7 @@ scipy
 plotly
 node2vec
 scikit-learn
-gensim
+gensim==4.3.3
 chromadb>=0.4.0
 sentence-transformers>=2.0.0
 python-dotenv>=1.0.0
