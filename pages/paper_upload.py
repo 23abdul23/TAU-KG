@@ -16,6 +16,7 @@ import uuid
 import os
 import re
 import hashlib
+import time
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from typing import Optional
@@ -25,11 +26,16 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from src.pdf_processor import (
+    get_pdf_extraction_backends,
     process_pdf,
     is_pmc_url,
     clean_pdf_text
 )
-from src.pmc_service import process_pmc_url_advanced, process_pmc_url_html_fallback
+from src.pmc_service import (
+    PMC_FETCH_WORKER_RECOMMENDATION,
+    process_pmc_url_advanced,
+    process_pmc_url_html_fallback,
+)
 from src.paper_entity_extractor import extract_entities_from_text, format_extraction_for_review
 from vector_db_manager import VectorDBManager
 import deb_data_papers as papers_db
@@ -37,8 +43,9 @@ from logger_config import setup_logger
 
 logger = setup_logger(__name__)
 
-PMC_FETCH_WORKERS = 4
+PMC_FETCH_WORKERS = PMC_FETCH_WORKER_RECOMMENDATION
 AI_EXTRACT_WORKERS = 4
+ACTIVE_JOB_REFRESH_SECONDS = 2.0
 
 
 def _build_paper_entity_summary_rows():
@@ -109,7 +116,7 @@ def _render_live_entity_summary_panel():
         st.info("No extracted paper entities yet. Start by fetching PMC links or uploading PDFs.")
         return
 
-    st.dataframe(summary_rows, use_container_width=True, hide_index=True)
+    st.dataframe(summary_rows, width="stretch", hide_index=True)
 
     totals = {
         "genes": sum(r["genes"] for r in summary_rows),
@@ -154,6 +161,15 @@ def _make_pmc_source_key(pmc_url: str, index: int) -> str:
     """Build stable source keys so Streamlit widgets survive reruns."""
     digest = hashlib.sha1(pmc_url.encode("utf-8")).hexdigest()[:12]
     return f"pmc_{index}_{digest}"
+
+
+def _make_uploaded_file_source_key(uploaded_file) -> str:
+    """Build a stable key for uploaded PDFs so reruns do not duplicate work."""
+    digest = hashlib.sha1()
+    digest.update(uploaded_file.name.encode("utf-8"))
+    digest.update(str(uploaded_file.size).encode("utf-8"))
+    digest.update(uploaded_file.getbuffer())
+    return f"pdf_{digest.hexdigest()[:16]}"
 
 
 def _fetch_pmc_payload(pmc_url: str):
@@ -297,6 +313,23 @@ def _poll_pmc_jobs():
                 job["future"] = None
 
 
+def _has_running_background_jobs() -> bool:
+    """Return True when any PMC or AI background work is still in progress."""
+    return any(job.get("status") == "running" for job in st.session_state.pmc_jobs.values()) or any(
+        job.get("status") == "running" for job in st.session_state.ai_jobs.values()
+    )
+
+
+def _auto_refresh_background_jobs():
+    """Trigger periodic reruns while background jobs are active."""
+    if not _has_running_background_jobs():
+        return
+
+    st.caption(f"Auto-refreshing every {ACTIVE_JOB_REFRESH_SECONDS:.0f}s while background jobs are running.")
+    time.sleep(ACTIVE_JOB_REFRESH_SECONDS)
+    st.rerun()
+
+
 def initialize_session_state():
     """Initialize Streamlit session state variables."""
     if "uploaded_papers" not in st.session_state:
@@ -305,6 +338,8 @@ def initialize_session_state():
         st.session_state.current_extraction = None
     if "extraction_progress" not in st.session_state:
         st.session_state.extraction_progress = 0
+    if "uploaded_file_payloads" not in st.session_state:
+        st.session_state.uploaded_file_payloads = {}
     if "pmc_executor" not in st.session_state:
         st.session_state.pmc_executor = ThreadPoolExecutor(max_workers=PMC_FETCH_WORKERS)
     if "pmc_jobs" not in st.session_state:
@@ -348,6 +383,34 @@ def save_uploaded_pdf(uploaded_file, upload_dir: str) -> str:
     
     logger.info(f"Saved PDF: {file_path}")
     return file_path
+
+
+def _get_or_create_pdf_payload(uploaded_file, upload_dir: str, pmid: Optional[str] = None):
+    """Cache PDF extraction results in session state so reruns stay idempotent."""
+    source_key = _make_uploaded_file_source_key(uploaded_file)
+    cached_payload = st.session_state.uploaded_file_payloads.get(source_key)
+    if cached_payload:
+        return cached_payload
+
+    file_size_mb = len(uploaded_file.getbuffer()) / (1024 * 1024)
+    if file_size_mb > 50:
+        raise ValueError(f"File size {file_size_mb:.1f}MB exceeds 50MB limit")
+
+    file_path = save_uploaded_pdf(uploaded_file, upload_dir)
+    metadata, full_text = process_pdf(file_path, max_pages=10)
+    clean_text = clean_pdf_text(full_text)
+
+    if pmid:
+        metadata["pmid"] = pmid
+
+    payload = {
+        "file_path": file_path,
+        "metadata": metadata,
+        "clean_text": clean_text,
+        "source_key": source_key,
+    }
+    st.session_state.uploaded_file_payloads[source_key] = payload
+    return payload
 
 
 def process_extracted_paper(metadata, clean_text: str, source_label: str, file_path: str, source_url: str = "", source_key: str = "default"):
@@ -556,6 +619,7 @@ def main():
     # Initialize session state
     initialize_session_state()
     _poll_ai_jobs()
+    _poll_pmc_jobs()
     
     # Page header
     st.title("📤 Upload Research Papers")
@@ -598,6 +662,14 @@ def main():
 
     if source_mode == "Upload PDF files":
         st.subheader("📁 Upload PDF Files")
+        pdf_backends = get_pdf_extraction_backends()
+        if not pdf_backends:
+            st.error(
+                "PDF extraction backends are missing in this Python environment. "
+                "Install `pdfplumber` and `pypdf` before uploading PDFs."
+            )
+        else:
+            st.caption(f"PDF text extraction backends: {', '.join(pdf_backends)}")
         uploaded_files = st.file_uploader(
             "Choose PDF files to upload",
             type="pdf",
@@ -614,16 +686,19 @@ def main():
                 st.subheader(f"Processing: {uploaded_file.name}")
 
                 try:
-                    file_size_mb = len(uploaded_file.getbuffer()) / (1024 * 1024)
-                    if file_size_mb > 50:
-                        st.error(f"❌ File size {file_size_mb:.1f}MB exceeds 50MB limit")
-                        continue
+                    payload = _get_or_create_pdf_payload(uploaded_file, upload_dir)
+                    st.success(f"✓ File ready: `{os.path.basename(payload['file_path'])}`")
+                    process_extracted_paper(
+                        payload["metadata"],
+                        payload["clean_text"],
+                        "PDF",
+                        payload["file_path"],
+                        source_key=payload["source_key"],
+                    )
 
-                    file_path = save_uploaded_pdf(uploaded_file, upload_dir)
-                    st.success(f"✓ File saved: `{os.path.basename(file_path)}`")
-
-                    process_single_pdf(file_path)
-
+                except ImportError as e:
+                    st.error(f"❌ PDF extraction backend error: {str(e)}")
+                    logger.error(f"PDF backend error: {e}", exc_info=True)
                 except Exception as e:
                     st.error(f"❌ Error: {str(e)}")
                     logger.error(f"File processing error: {e}", exc_info=True)
@@ -647,8 +722,6 @@ def main():
                 st.warning("Enter at least one PMC link.")
             else:
                 _submit_pmc_jobs(pmc_urls)
-
-        _poll_pmc_jobs()
 
         if st.session_state.pmc_jobs:
             running = sum(1 for j in st.session_state.pmc_jobs.values() if j.get("status") == "running")
@@ -723,6 +796,8 @@ def main():
         st.markdown("2. Review extracted entities")
         st.markdown("3. Approve and merge to graph")
         st.markdown("4. Use in chat and visualization")
+
+    _auto_refresh_background_jobs()
 
 
 if __name__ == "__main__":

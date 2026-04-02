@@ -214,9 +214,15 @@ def main():
     render_paper_header(current_paper)
     
     # Get entities
-    entities = papers_db.get_paper_entities(current_paper["paper_id"])
+    entities = papers_db.get_paper_entities(current_paper["paper_id"]) or {
+        "genes": [],
+        "proteins": [],
+        "diseases": [],
+        "pathways": [],
+    }
+    relationships = papers_db.get_paper_relationships(current_paper["paper_id"])
     
-    if not entities:
+    if not any(entities.values()) and not relationships:
         st.warning("❌ No entities extracted for this paper")
         return
     
@@ -255,7 +261,6 @@ def main():
     
     with tabs[4]:
         st.subheader("🔗 RELATIONSHIPS")
-        relationships = entities.get("relationships", [])
         if not relationships:
             st.info("No relationships found")
         else:
@@ -276,29 +281,35 @@ def main():
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
-        if st.button("✅ Approve All Visible", use_container_width=True):
+        if st.button("✅ Approve All Visible", width="stretch"):
             try:
                 # Mark all as approved
                 for entity_type in ["genes", "proteins", "diseases", "pathways"]:
                     for entity in updated_all_entities.get(entity_type, []):
                         entity["approved"] = True
+                for relationship in updated_all_entities.get("relationships", relationships):
+                    relationship["approved"] = True
                 
                 # Save to database
-                for entity_type in ["genes", "proteins", "diseases", "pathways"]:
-                    papers_db.paper_entities[current_paper["paper_id"]][entity_type] = \
-                        updated_all_entities.get(entity_type, [])
+                papers_db.set_paper_entities(current_paper["paper_id"], updated_all_entities)
+                papers_db.set_paper_relationships(
+                    current_paper["paper_id"],
+                    updated_all_entities.get("relationships", relationships)
+                )
                 
                 st.success("✅ All visible entities marked for approval")
             except Exception as e:
                 st.error(f"❌ Error: {e}")
     
     with col2:
-        if st.button("💾 Save Changes", use_container_width=True):
+        if st.button("💾 Save Changes", width="stretch"):
             try:
-                # Update entities in database
-                for entity_type in ["genes", "proteins", "diseases", "pathways"]:
-                    papers_db.paper_entities[current_paper["paper_id"]][entity_type] = \
-                        updated_all_entities.get(entity_type, [])
+                # Update entities and relationships in database
+                papers_db.set_paper_entities(current_paper["paper_id"], updated_all_entities)
+                papers_db.set_paper_relationships(
+                    current_paper["paper_id"],
+                    updated_all_entities.get("relationships", relationships)
+                )
                 
                 st.success("✅ Changes saved!")
                 logger.info(f"Paper {current_paper['paper_id']} entities updated")
@@ -307,7 +318,7 @@ def main():
                 logger.error(f"Save error: {e}")
     
     with col3:
-        if st.button("🔄 Merge to Graph", use_container_width=True):
+        if st.button("🔄 Merge to Graph", width="stretch"):
             try:
                 # Count approved entities
                 approved_count = sum(
@@ -327,7 +338,7 @@ def main():
                 st.error(f"❌ Error: {e}")
     
     with col4:
-        if st.button("🗑️ Skip Paper", use_container_width=True):
+        if st.button("🗑️ Skip Paper", width="stretch"):
             try:
                 papers_db.update_paper_status(current_paper["paper_id"], "skipped")
                 st.warning("Paper skipped (no merge)")

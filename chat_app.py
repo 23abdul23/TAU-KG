@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 from vector_db_manager import VectorDBManager
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional, Set, Tuple
 import time
 import os
 import networkx as nx
@@ -9,7 +9,7 @@ from pyvis.network import Network
 import streamlit.components.v1 as components
 from collections import defaultdict
 import random
-import tempfile
+import re
 import os
 
 # Paper integration imports
@@ -18,6 +18,12 @@ try:
     PAPERS_AVAILABLE = True
 except ImportError:
     PAPERS_AVAILABLE = False
+
+try:
+    import deb_data
+    GRAPH_DATA_AVAILABLE = True
+except ImportError:
+    GRAPH_DATA_AVAILABLE = False
 
 # Load environment variables
 from dotenv import load_dotenv
@@ -46,6 +52,484 @@ if 'gene_network' not in st.session_state:
     st.session_state.gene_network = defaultdict(set)
 if 'query_genes' not in st.session_state:
     st.session_state.query_genes = []
+if 'search_result_limit' not in st.session_state:
+    st.session_state.search_result_limit = 15
+if 'selected_chat_turn_index' not in st.session_state:
+    st.session_state.selected_chat_turn_index = 0
+if 'next_query_input' not in st.session_state:
+    st.session_state.next_query_input = ""
+
+
+QUERY_COLOR_PALETTE = [
+    "#1f77b4",
+    "#ff7f0e",
+    "#2ca02c",
+    "#d62728",
+    "#9467bd",
+    "#8c564b",
+    "#e377c2",
+    "#7f7f7f",
+    "#bcbd22",
+    "#17becf",
+]
+
+NODE_TYPE_COLORS = {
+    "gene": "#1f77b4",
+    "protein": "#2ca02c",
+    "gene/protein": "#ff7f0e",
+    "disease": "#d62728",
+    "pathway": "#8c564b",
+    "paper": "#7f7f7f",
+    "entity": "#9467bd",
+}
+
+
+def distance_to_similarity_percent(distance) -> float:
+    """Convert vector distance into a bounded similarity percentage for display."""
+    try:
+        numeric_distance = max(float(distance), 0.0)
+    except (TypeError, ValueError):
+        return 0.0
+    return 100.0 / (1.0 + numeric_distance)
+
+
+def render_pyvis_network(net: Network, height: int) -> None:
+    """Render a PyVis graph directly as HTML without temporary files."""
+    html_content = net.generate_html(notebook=False)
+    components.html(html_content, height=height)
+
+
+def get_paper_display_fields(paper: Dict[str, Any]) -> Dict[str, Any]:
+    """Normalize paper search results whether fields are flat or nested under metadata."""
+    metadata = paper.get("metadata", {}) if isinstance(paper, dict) else {}
+    merged = dict(metadata)
+    if isinstance(paper, dict):
+        merged.update({k: v for k, v in paper.items() if k != "metadata"})
+
+    authors = merged.get("authors", [])
+    if isinstance(authors, str):
+        authors = [author for author in authors.split("|") if author]
+    elif not isinstance(authors, list):
+        authors = []
+    merged["authors"] = authors
+
+    if PAPERS_AVAILABLE:
+        paper_id = str(merged.get("paper_id", "")).strip()
+        if paper_id:
+            paper_record = papers_db.get_paper_by_id(paper_id)
+            if paper_record:
+                merged["title"] = paper_record.get("title") or merged.get("title", "")
+                merged["authors"] = paper_record.get("authors") or merged.get("authors", [])
+                merged["abstract"] = paper_record.get("abstract", "")
+                merged["pmid"] = paper_record.get("pmid") or merged.get("pmid", "")
+                merged["doi"] = paper_record.get("doi") or merged.get("doi", "")
+                merged["publication_date"] = paper_record.get("publication_date") or merged.get("publication_date", "")
+                merged["source_url"] = paper_record.get("source_url", "")
+
+    publication_date = str(merged.get("publication_date", "") or "")
+    merged["publication_year"] = merged.get("publication_year") or (publication_date[:4] if len(publication_date) >= 4 else "")
+    return merged
+
+
+def normalize_node_key(name: str) -> str:
+    """Normalize node names so duplicate hits collapse into one network node."""
+    text = re.sub(r"\s+", " ", str(name or "").strip())
+    return text.lower()
+
+
+def singularize_entity_type(entity_type: str) -> str:
+    mapping = {
+        "genes": "gene",
+        "proteins": "protein",
+        "diseases": "disease",
+        "pathways": "pathway",
+    }
+    return mapping.get(entity_type, entity_type or "entity")
+
+
+def safe_float(value: Any, default: float = 0.0) -> float:
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def normalize_source_name(value: Optional[str], default: str = "CURATED_GRAPH") -> str:
+    text = str(value or "").strip()
+    return text or default
+
+
+def build_graph_node_lookup() -> Dict[str, Dict[str, Any]]:
+    """Create a unified lookup for curated and paper-derived graph nodes."""
+    node_lookup: Dict[str, Dict[str, Any]] = {}
+
+    if GRAPH_DATA_AVAILABLE:
+        for node in getattr(deb_data, "nodes_data", []):
+            name = str(node.get("id", "")).strip()
+            if not name:
+                continue
+            key = normalize_node_key(name)
+            node_lookup[key] = {
+                "key": key,
+                "name": name,
+                "type": str(node.get("type", "entity") or "entity"),
+                "source": normalize_source_name(node.get("source_type") or node.get("node_source"), "CURATED_GRAPH"),
+                "cluster": node.get("cluster", ""),
+            }
+
+    if PAPERS_AVAILABLE:
+        for paper_id, entities in getattr(papers_db, "paper_entities", {}).items():
+            for entity_type, values in entities.items():
+                for entity in values:
+                    name = str(entity.get("name", "")).strip()
+                    if not name:
+                        continue
+                    key = normalize_node_key(name)
+                    existing = node_lookup.get(key, {})
+                    node_lookup[key] = {
+                        "key": key,
+                        "name": existing.get("name", name),
+                        "type": existing.get("type", singularize_entity_type(entity_type)),
+                        "source": existing.get("source", "PAPER_INGEST"),
+                        "cluster": existing.get("cluster", ""),
+                    }
+
+    return node_lookup
+
+
+def build_graph_adjacency() -> Dict[str, List[Dict[str, Any]]]:
+    """Create adjacency lists from curated graph edges and paper-derived edges."""
+    adjacency: Dict[str, List[Dict[str, Any]]] = defaultdict(list)
+
+    if GRAPH_DATA_AVAILABLE:
+        for edge in getattr(deb_data, "edges_data", []):
+            source = str(edge.get("source", "")).strip()
+            target = str(edge.get("target", "")).strip()
+            if not source or not target:
+                continue
+
+            edge_record = {
+                "source_name": source,
+                "target_name": target,
+                "relation": str(edge.get("relation", "related")),
+                "score": safe_float(edge.get("score", 0.5), 0.5),
+                "provenance": "CURATED_GRAPH",
+            }
+            source_key = normalize_node_key(source)
+            target_key = normalize_node_key(target)
+            adjacency[source_key].append({**edge_record, "neighbor_key": target_key, "neighbor_name": target})
+            adjacency[target_key].append({**edge_record, "neighbor_key": source_key, "neighbor_name": source})
+
+    if PAPERS_AVAILABLE:
+        for edge in getattr(papers_db, "paper_edges", []):
+            source = str(edge.get("source", "")).strip()
+            target = str(edge.get("target", "")).strip()
+            if not source or not target:
+                continue
+
+            edge_record = {
+                "source_name": source,
+                "target_name": target,
+                "relation": str(edge.get("relation", "related")),
+                "score": safe_float(edge.get("confidence", edge.get("score", 0.5)), 0.5),
+                "provenance": "PAPER_INGEST",
+                "paper_id": str(edge.get("paper_id", "")),
+            }
+            source_key = normalize_node_key(source)
+            target_key = normalize_node_key(target)
+            adjacency[source_key].append({**edge_record, "neighbor_key": target_key, "neighbor_name": target})
+            adjacency[target_key].append({**edge_record, "neighbor_key": source_key, "neighbor_name": source})
+
+    return adjacency
+
+
+def merge_search_results(raw_results: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Deduplicate search hits by normalized node name while keeping the strongest match."""
+    merged: Dict[str, Dict[str, Any]] = {}
+
+    for result in raw_results:
+        metadata = dict(result.get("metadata", {}))
+        node_name = str(metadata.get("node_name", "")).strip()
+        if not node_name:
+            continue
+
+        key = normalize_node_key(node_name)
+        similarity = result.get("similarity_score", distance_to_similarity_percent(result.get("distance")))
+        source = normalize_source_name(metadata.get("node_source"), "UNKNOWN")
+        node_type = str(metadata.get("node_type", "entity") or "entity")
+
+        current = merged.get(key)
+        if not current or similarity > current["similarity_score"]:
+            merged[key] = {
+                "key": key,
+                "document": result.get("document", ""),
+                "metadata": metadata,
+                "distance": result.get("distance"),
+                "similarity_score": similarity,
+                "sources": {source},
+                "types": {node_type},
+            }
+        else:
+            current["sources"].add(source)
+            current["types"].add(node_type)
+            if metadata.get("node_id") and not current["metadata"].get("node_id"):
+                current["metadata"]["node_id"] = metadata["node_id"]
+
+    merged_results = list(merged.values())
+    merged_results.sort(key=lambda item: item.get("similarity_score", 0.0), reverse=True)
+    return merged_results
+
+
+def collect_network_filter_options() -> Tuple[List[str], List[str]]:
+    """Collect the available node types and sources from current state and graph data."""
+    node_lookup = build_graph_node_lookup()
+    node_types: Set[str] = {node.get("type", "entity") for node in node_lookup.values()}
+    sources: Set[str] = {node.get("source", "CURATED_GRAPH") for node in node_lookup.values()}
+
+    for query_data in st.session_state.query_genes:
+        for result in query_data.get("genes", []):
+            metadata = result.get("metadata", {})
+            node_types.add(str(metadata.get("node_type", "entity") or "entity"))
+            sources.add(normalize_source_name(metadata.get("node_source"), "UNKNOWN"))
+
+    node_types.discard("")
+    sources.discard("")
+    return sorted(node_types), sorted(sources)
+
+
+def filter_seed_results(raw_results: List[Dict[str, Any]], settings: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """Filter, deduplicate, and rank vector-search results before graph expansion."""
+    filtered: List[Dict[str, Any]] = []
+
+    for result in merge_search_results(raw_results):
+        metadata = result.get("metadata", {})
+        similarity = result.get("similarity_score", 0.0)
+        node_type = str(metadata.get("node_type", "entity") or "entity")
+        source = normalize_source_name(metadata.get("node_source"), "UNKNOWN")
+
+        if similarity < settings["min_similarity"]:
+            continue
+        if settings["allowed_types"] and node_type not in settings["allowed_types"]:
+            continue
+        if settings["allowed_sources"] and source not in settings["allowed_sources"]:
+            continue
+
+        filtered.append(result)
+
+    return filtered[: settings["seed_limit"]]
+
+
+def build_node_payload(
+    name: str,
+    key: str,
+    query: str,
+    node_lookup: Dict[str, Dict[str, Any]],
+    metadata_override: Optional[Dict[str, Any]] = None,
+    similarity_score: float = 0.0,
+    is_seed: bool = False,
+) -> Dict[str, Any]:
+    """Create a consistent node payload used by both single and compound graphs."""
+    lookup = node_lookup.get(key, {})
+    metadata_override = metadata_override or {}
+    node_type = str(metadata_override.get("node_type") or lookup.get("type") or "entity")
+    node_source = normalize_source_name(
+        metadata_override.get("node_source") or lookup.get("source"),
+        "CURATED_GRAPH" if lookup else "UNKNOWN",
+    )
+    node_id = metadata_override.get("node_id") or lookup.get("name") or name
+
+    return {
+        "key": key,
+        "name": name,
+        "metadata": {
+            "node_name": name,
+            "node_id": node_id,
+            "node_type": node_type,
+            "node_source": node_source,
+        },
+        "similarity_score": similarity_score,
+        "queries": {query},
+        "is_seed": is_seed,
+    }
+
+
+def build_network_payload(query_entries: List[Dict[str, Any]], settings: Dict[str, Any]) -> Dict[str, Any]:
+    """Build a real graph network from retrieved seeds plus graph-neighbor expansion."""
+    node_lookup = build_graph_node_lookup()
+    adjacency = build_graph_adjacency()
+    node_registry: Dict[str, Dict[str, Any]] = {}
+    edge_registry: Dict[Tuple[str, str, str], Dict[str, Any]] = {}
+    seed_counts: Dict[str, int] = {}
+
+    for entry in query_entries:
+        query = entry.get("query", "")
+        raw_results = entry.get("genes", [])
+        seed_results = filter_seed_results(raw_results, settings)
+        seed_counts[query] = len(seed_results)
+
+        for seed in seed_results:
+            metadata = seed.get("metadata", {})
+            seed_name = str(metadata.get("node_name", "")).strip()
+            if not seed_name:
+                continue
+
+            seed_key = normalize_node_key(seed_name)
+            if seed_key not in node_registry and len(node_registry) >= settings["max_nodes"]:
+                break
+
+            similarity = seed.get("similarity_score", 0.0)
+            seed_payload = build_node_payload(
+                name=seed_name,
+                key=seed_key,
+                query=query,
+                node_lookup=node_lookup,
+                metadata_override=metadata,
+                similarity_score=similarity,
+                is_seed=True,
+            )
+
+            existing_seed = node_registry.get(seed_key)
+            if existing_seed:
+                existing_seed["queries"].add(query)
+                existing_seed["similarity_score"] = max(existing_seed["similarity_score"], similarity)
+                existing_seed["is_seed"] = True
+            else:
+                node_registry[seed_key] = seed_payload
+
+            neighbors_added = 0
+            neighbor_candidates = sorted(
+                adjacency.get(seed_key, []),
+                key=lambda item: item.get("score", 0.0),
+                reverse=True,
+            )
+
+            for edge in neighbor_candidates:
+                if neighbors_added >= settings["neighbors_per_seed"]:
+                    break
+                if len(edge_registry) >= settings["max_edges"]:
+                    break
+
+                neighbor_key = edge.get("neighbor_key", "")
+                neighbor_name = edge.get("neighbor_name", "")
+                if not neighbor_key or not neighbor_name:
+                    continue
+
+                neighbor_lookup = node_lookup.get(neighbor_key, {})
+                neighbor_type = str(neighbor_lookup.get("type", "entity") or "entity")
+                neighbor_source = normalize_source_name(neighbor_lookup.get("source"), edge.get("provenance", "CURATED_GRAPH"))
+
+                if settings["allowed_types"] and neighbor_type not in settings["allowed_types"]:
+                    continue
+                if settings["allowed_sources"] and neighbor_source not in settings["allowed_sources"]:
+                    continue
+
+                if neighbor_key not in node_registry and len(node_registry) >= settings["max_nodes"]:
+                    continue
+
+                neighbor_similarity = max(edge.get("score", 0.0) * 100.0, similarity * 0.7)
+                if neighbor_key in node_registry:
+                    node_registry[neighbor_key]["queries"].add(query)
+                    node_registry[neighbor_key]["similarity_score"] = max(
+                        node_registry[neighbor_key]["similarity_score"],
+                        neighbor_similarity,
+                    )
+                else:
+                    node_registry[neighbor_key] = build_node_payload(
+                        name=neighbor_name,
+                        key=neighbor_key,
+                        query=query,
+                        node_lookup=node_lookup,
+                        similarity_score=neighbor_similarity,
+                    )
+
+                edge_key = tuple(sorted([seed_key, neighbor_key])) + (str(edge.get("relation", "related")),)
+                existing_edge = edge_registry.get(edge_key)
+                edge_payload = {
+                    "source_key": seed_key,
+                    "target_key": neighbor_key,
+                    "score": safe_float(edge.get("score", 0.5), 0.5),
+                    "relation": str(edge.get("relation", "related")),
+                    "provenance": {str(edge.get("provenance", "CURATED_GRAPH"))},
+                    "queries": {query},
+                }
+
+                if existing_edge:
+                    existing_edge["score"] = max(existing_edge["score"], edge_payload["score"])
+                    existing_edge["queries"].update(edge_payload["queries"])
+                    existing_edge["provenance"].update(edge_payload["provenance"])
+                else:
+                    edge_registry[edge_key] = edge_payload
+                    neighbors_added += 1
+
+    edges = sorted(edge_registry.values(), key=lambda item: item["score"], reverse=True)[: settings["max_edges"]]
+    kept_node_keys = {edge["source_key"] for edge in edges} | {edge["target_key"] for edge in edges}
+    for key, node in node_registry.items():
+        if node.get("is_seed"):
+            kept_node_keys.add(key)
+
+    nodes = [node_registry[key] for key in kept_node_keys if key in node_registry]
+    nodes.sort(key=lambda item: (len(item["queries"]), item["similarity_score"]), reverse=True)
+    nodes = nodes[: settings["max_nodes"]]
+    allowed_node_keys = {node["key"] for node in nodes}
+    edges = [
+        edge for edge in edges
+        if edge["source_key"] in allowed_node_keys and edge["target_key"] in allowed_node_keys
+    ]
+
+    seed_total = sum(1 for node in nodes if node.get("is_seed"))
+    multi_query_nodes = sum(1 for node in nodes if len(node.get("queries", set())) > 1)
+
+    return {
+        "nodes": nodes,
+        "edges": edges,
+        "seed_counts": seed_counts,
+        "total_queries": len(query_entries),
+        "multi_query_nodes": multi_query_nodes,
+        "seed_total": seed_total,
+    }
+
+
+def get_query_network_settings() -> Dict[str, Any]:
+    """Render configurable graph controls and return the active settings."""
+    st.subheader("Network Controls")
+    available_types, available_sources = collect_network_filter_options()
+
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        seed_limit = st.slider("Seed Nodes", min_value=3, max_value=25, value=10, help="Top retrieved nodes used as graph seeds.")
+    with col2:
+        neighbors_per_seed = st.slider("Neighbors / Seed", min_value=1, max_value=10, value=3, help="Real graph neighbors added per seed.")
+    with col3:
+        min_similarity = st.slider("Min Similarity %", min_value=0, max_value=100, value=20, help="Hide weak vector hits before graph expansion.")
+
+    col4, col5 = st.columns(2)
+    with col4:
+        max_nodes = st.slider("Max Nodes", min_value=5, max_value=60, value=25)
+    with col5:
+        max_edges = st.slider("Max Edges", min_value=5, max_value=120, value=40)
+
+    allowed_types = st.multiselect(
+        "Node Types",
+        options=available_types,
+        default=available_types,
+        help="Filter which node types may appear in the network.",
+    )
+    allowed_sources = st.multiselect(
+        "Node Sources",
+        options=available_sources,
+        default=available_sources,
+        help="Filter which data sources may appear in the network.",
+    )
+
+    return {
+        "seed_limit": seed_limit,
+        "neighbors_per_seed": neighbors_per_seed,
+        "min_similarity": float(min_similarity),
+        "max_nodes": max_nodes,
+        "max_edges": max_edges,
+        "allowed_types": set(allowed_types),
+        "allowed_sources": set(allowed_sources),
+    }
 
 def initialize_database():
     """Initialize the vector database"""
@@ -115,13 +599,13 @@ def generate_basic_response(query: str, search_results: List[Dict[str, Any]]) ->
     
     for i, result in enumerate(search_results, 1):
         metadata = result['metadata']
-        distance = result.get('distance', 0)
+        similarity = result.get('similarity_score', distance_to_similarity_percent(result.get('distance')))
         
         response += f"**{i}. {metadata['node_name']}**\n"
         response += f"   - **Gene/Protein ID**: {metadata['node_id']}\n"
         response += f"   - **Type**: {metadata['node_type']}\n"
         response += f"   - **Source**: {metadata['node_source']}\n"
-        response += f"   - **Relevance Score**: {(1-distance)*100:.1f}%\n\n"
+        response += f"   - **Similarity Score**: {similarity:.1f}%\n\n"
     
     # Add contextual information
     if len(search_results) > 1:
@@ -200,7 +684,7 @@ def create_gene_network_graph(genes_data: List[Dict], query: str = ""):
         gene_id = metadata['node_id']
         gene_type = metadata['node_type']
         gene_source = metadata['node_source']
-        relevance = (1 - gene.get('distance', 0)) * 100
+        relevance = gene.get('similarity_score', distance_to_similarity_percent(gene.get('distance')))
         
         # Determine color based on type
         color = color_scheme.get(gene_type, color_scheme["default"])
@@ -441,6 +925,135 @@ def create_compound_gene_network_graph(selected_queries: List[str], query_genes_
     
     return net
 
+
+def build_pyvis_network_graph(network_payload: Dict[str, Any], query_order: List[str], height_px: int) -> Optional[Network]:
+    """Render a real graph network from retrieved seeds plus actual graph edges."""
+    nodes = network_payload.get("nodes", [])
+    if not nodes:
+        return None
+
+    edges = network_payload.get("edges", [])
+    node_map = {node["key"]: node for node in nodes}
+    net = Network(height=f"{height_px}px", width="100%", bgcolor="#ffffff", font_color="black")
+    net.force_atlas_2based()
+
+    for node in nodes:
+        metadata = node["metadata"]
+        query_membership = sorted(node.get("queries", set()))
+        node_type = metadata.get("node_type", "entity")
+        base_color = NODE_TYPE_COLORS.get(node_type, NODE_TYPE_COLORS["entity"])
+
+        if len(query_membership) > 1:
+            color = "#FFD700"
+        elif query_membership:
+            color = QUERY_COLOR_PALETTE[query_order.index(query_membership[0]) % len(QUERY_COLOR_PALETTE)]
+        else:
+            color = base_color
+
+        similarity = node.get("similarity_score", 0.0)
+        size = max(16, min(40, 10 + (similarity / 6)))
+        tooltip = (
+            f"Name: {metadata.get('node_name')}<br>"
+            f"ID: {metadata.get('node_id')}<br>"
+            f"Type: {node_type}<br>"
+            f"Source: {metadata.get('node_source')}<br>"
+            f"Similarity: {similarity:.1f}%<br>"
+            f"Role: {'Seed match' if node.get('is_seed') else 'Expanded neighbor'}<br>"
+            f"Queries: {', '.join(query_membership) if query_membership else 'N/A'}"
+        )
+
+        net.add_node(
+            node["key"],
+            label=metadata.get("node_name", node["name"]),
+            color=color,
+            title=tooltip,
+            size=size,
+            font={"size": 12},
+            borderWidth=3 if node.get("is_seed") else 1,
+            borderWidthSelected=5,
+            chosen={"node": True},
+        )
+
+    for edge in edges:
+        source = node_map.get(edge["source_key"])
+        target = node_map.get(edge["target_key"])
+        if not source or not target:
+            continue
+
+        query_membership = sorted(edge.get("queries", set()))
+        if len(query_membership) > 1:
+            color = "#FFD700"
+        elif query_membership:
+            color = QUERY_COLOR_PALETTE[query_order.index(query_membership[0]) % len(QUERY_COLOR_PALETTE)]
+        else:
+            color = "#666666"
+
+        provenance = ", ".join(sorted(edge.get("provenance", set())))
+        tooltip = (
+            f"{source['metadata']['node_name']} -> {target['metadata']['node_name']}<br>"
+            f"Relation: {edge.get('relation', 'related')}<br>"
+            f"Confidence/Score: {edge.get('score', 0.0):.2f}<br>"
+            f"Source: {provenance}<br>"
+            f"Queries: {', '.join(query_membership) if query_membership else 'N/A'}"
+        )
+
+        net.add_edge(
+            edge["source_key"],
+            edge["target_key"],
+            title=tooltip,
+            width=max(1.5, min(8.0, edge.get("score", 0.0) * 6.0)),
+            color=color,
+            dashes="PAPER_INGEST" in edge.get("provenance", set()),
+            arrows="to",
+        )
+
+    net.set_options("""
+    var options = {
+        "physics": {
+            "forceAtlas2Based": {
+                "gravitationalConstant": -70,
+                "centralGravity": 0.01,
+                "springLength": 120,
+                "springConstant": 0.06,
+                "damping": 0.6
+            },
+            "minVelocity": 0.75,
+            "solver": "forceAtlas2Based",
+            "stabilization": {
+                "enabled": true,
+                "iterations": 1200
+            }
+        },
+        "interaction": {
+            "hover": true,
+            "tooltipDelay": 150,
+            "multiselect": true,
+            "selectConnectedEdges": false
+        }
+    }
+    """)
+
+    return net
+
+
+def build_single_query_network_graph(query_entry: Dict[str, Any], settings: Dict[str, Any]) -> Tuple[Optional[Network], Dict[str, Any]]:
+    """Create a single-query graph using configured seeds and real edge expansion."""
+    payload = build_network_payload([query_entry], settings)
+    graph = build_pyvis_network_graph(payload, [query_entry.get("query", "")], height_px=650)
+    return graph, payload
+
+
+def build_compound_query_network_graph(selected_queries: List[str], query_genes_data: List[Dict], settings: Dict[str, Any]) -> Tuple[Optional[Network], Dict[str, Any]]:
+    """Create a multi-query graph by merging multiple expanded query subgraphs."""
+    selected_entries = [
+        query_data
+        for query_data in query_genes_data
+        if isinstance(query_data, dict) and query_data.get("query") in selected_queries
+    ]
+    payload = build_network_payload(selected_entries, settings)
+    graph = build_pyvis_network_graph(payload, selected_queries, height_px=700)
+    return graph, payload
+
 def display_gene_network_tab():
     """Display the gene network visualization tab with compound network option"""
     st.header("🕸️ Gene Network Visualization")
@@ -489,19 +1102,7 @@ def display_gene_network_tab():
                 # Create and display the network graph
                 net = create_gene_network_graph(genes_data, selected_query)
                 if net:
-                    # Save the network to a temporary file
-                    with tempfile.NamedTemporaryFile(mode='w', suffix='.html', delete=False) as tmp_file:
-                        net.save_graph(tmp_file.name)
-                        
-                        # Read the HTML content
-                        with open(tmp_file.name, 'r', encoding='utf-8') as f:
-                            html_content = f.read()
-                        
-                        # Display the network
-                        components.html(html_content, height=650)
-                        
-                        # Clean up temporary file
-                        os.unlink(tmp_file.name)
+                    render_pyvis_network(net, height=650)
                     
                     # Show gene details below the graph
                     st.subheader("📋 Genes in Network")
@@ -510,7 +1111,7 @@ def display_gene_network_tab():
                     for i, gene in enumerate(genes_data):
                         with cols[i % 3]:
                             metadata = gene['metadata']
-                            relevance = (1 - gene.get('distance', 0)) * 100
+                            relevance = gene.get('similarity_score', distance_to_similarity_percent(gene.get('distance')))
                             
                             st.markdown(f"""
                             **{metadata['node_name']}**
@@ -545,19 +1146,7 @@ def display_gene_network_tab():
             compound_net = create_compound_gene_network_graph(selected_queries, st.session_state.query_genes)
             
             if compound_net:
-                # Save the network to a temporary file
-                with tempfile.NamedTemporaryFile(mode='w', suffix='.html', delete=False) as tmp_file:
-                    compound_net.save_graph(tmp_file.name)
-                    
-                    # Read the HTML content
-                    with open(tmp_file.name, 'r', encoding='utf-8') as f:
-                        html_content = f.read()
-                    
-                    # Display the network
-                    components.html(html_content, height=700)
-                    
-                    # Clean up temporary file
-                    os.unlink(tmp_file.name)
+                render_pyvis_network(compound_net, height=700)
                 
                 # Show legend and analysis
                 st.subheader("🎨 Network Legend")
@@ -652,6 +1241,125 @@ def display_gene_network_tab():
             avg_genes = sum(len(q.get('genes', [])) for q in st.session_state.query_genes if isinstance(q, dict)) / max(1, total_queries)
             st.metric("Avg Genes/Query", f"{avg_genes:.1f}")
 
+
+def display_gene_network_tab_v2():
+    """Display the improved gene network tab using real graph expansion and filters."""
+    st.header("Gene Network Visualization")
+
+    if not st.session_state.query_genes:
+        st.info("No gene networks to display yet. Ask a question in the Chat tab first.")
+        return
+
+    query_options = [
+        query_data["query"]
+        for query_data in st.session_state.query_genes
+        if isinstance(query_data, dict) and query_data.get("query")
+    ]
+    if not query_options:
+        return
+
+    settings = get_query_network_settings()
+
+    st.subheader("Visualization Mode")
+    viz_mode = st.radio(
+        "Choose visualization mode:",
+        ["Single Query Network", "Compound Network (Multiple Queries)"],
+        key="viz_mode_selector_v2",
+    )
+
+    if viz_mode == "Single Query Network":
+        selected_query = st.selectbox(
+            "Select a query to visualize:",
+            options=query_options,
+            key="single_network_query_selector_v2",
+        )
+
+        query_entry = next(
+            (
+                query_data
+                for query_data in st.session_state.query_genes
+                if isinstance(query_data, dict) and query_data.get("query") == selected_query
+            ),
+            None,
+        )
+
+        if query_entry:
+            graph, payload = build_single_query_network_graph(query_entry, settings)
+            if graph:
+                render_pyvis_network(graph, height=650)
+
+                stats_cols = st.columns(4)
+                stats_cols[0].metric("Displayed Nodes", len(payload.get("nodes", [])))
+                stats_cols[1].metric("Displayed Edges", len(payload.get("edges", [])))
+                stats_cols[2].metric("Seed Matches", payload.get("seed_total", 0))
+                stats_cols[3].metric("Retrieved Candidates", len(query_entry.get("genes", [])))
+
+                rows = []
+                for node in payload.get("nodes", []):
+                    metadata = node["metadata"]
+                    rows.append({
+                        "Name": metadata.get("node_name", ""),
+                        "Type": metadata.get("node_type", ""),
+                        "Source": metadata.get("node_source", ""),
+                        "Similarity %": f"{node.get('similarity_score', 0.0):.1f}",
+                        "Role": "Seed" if node.get("is_seed") else "Neighbor",
+                        "Queries": ", ".join(sorted(node.get("queries", set()))),
+                    })
+                if rows:
+                    st.subheader("Nodes in Network")
+                    st.dataframe(pd.DataFrame(rows), width="stretch", hide_index=True)
+            else:
+                st.warning("No graph could be built with the current filters. Relax the node/source/similarity filters.")
+
+    else:
+        selected_queries = st.multiselect(
+            "Select multiple queries to combine:",
+            options=query_options,
+            default=query_options[:min(3, len(query_options))],
+            key="compound_network_query_selector_v2",
+            help="Each query contributes seed matches, then the graph expands through real curated or paper-derived edges.",
+        )
+
+        if len(selected_queries) < 2:
+            st.warning("Please select at least 2 queries to create a compound network.")
+        else:
+            graph, payload = build_compound_query_network_graph(selected_queries, st.session_state.query_genes, settings)
+            if graph:
+                render_pyvis_network(graph, height=700)
+
+                col1, col2, col3, col4 = st.columns(4)
+                col1.metric("Displayed Nodes", len(payload.get("nodes", [])))
+                col2.metric("Displayed Edges", len(payload.get("edges", [])))
+                col3.metric("Multi-Query Nodes", payload.get("multi_query_nodes", 0))
+                overlap_percentage = payload.get("multi_query_nodes", 0) / max(1, len(payload.get("nodes", []))) * 100
+                col4.metric("Overlap %", f"{overlap_percentage:.1f}%")
+
+                with st.expander("Query Breakdown", expanded=False):
+                    for query in selected_queries:
+                        st.write(f"**{query}**: {payload.get('seed_counts', {}).get(query, 0)} seed matches kept")
+            else:
+                st.warning("No compound graph could be built with the current filters.")
+
+    st.markdown("---")
+    st.subheader("Overall Network Statistics")
+    deduped_query_nodes = set()
+    total_queries = len(st.session_state.query_genes)
+    total_candidates = 0
+
+    for query_data in st.session_state.query_genes:
+        if not isinstance(query_data, dict):
+            continue
+        merged = merge_search_results(query_data.get("genes", []))
+        total_candidates += len(merged)
+        for gene in merged:
+            deduped_query_nodes.add(normalize_node_key(gene.get("metadata", {}).get("node_name", "")))
+
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Stored Queries", total_queries)
+    col2.metric("Unique Retrieved Nodes", len(deduped_query_nodes))
+    avg_candidates = total_candidates / max(1, total_queries)
+    col3.metric("Avg Candidates/Query", f"{avg_candidates:.1f}")
+
 def search_papers_for_query(query: str, n_results: int = 3) -> List[Dict[str, Any]]:
     """Search for relevant papers using vector similarity"""
     if not PAPERS_AVAILABLE or not st.session_state.db_manager:
@@ -673,9 +1381,10 @@ def display_papers(papers: List[Dict[str, Any]]):
     
     for i, paper in enumerate(papers, 1):
         with st.container():
+            paper_fields = get_paper_display_fields(paper)
             # Paper title and PMID link
-            title = paper.get('title', 'Untitled')
-            pmid = paper.get('pmid', '')
+            title = paper_fields.get('title') or 'Untitled'
+            pmid = paper_fields.get('pmid', '')
             
             if pmid:
                 pmid_link = f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/"
@@ -684,25 +1393,154 @@ def display_papers(papers: List[Dict[str, Any]]):
                 st.markdown(f"**{i}. {title}**")
             
             # Authors
-            if 'authors' in paper and paper['authors']:
-                st.write(f"👥 **Authors:** {paper['authors']}")
+            if paper_fields.get('authors'):
+                st.write(f"👥 **Authors:** {', '.join(paper_fields['authors'])}")
             
             # Publication info
             info_parts = []
-            if 'publication_year' in paper and paper['publication_year']:
-                info_parts.append(f"({paper['publication_year']})")
-            if 'journal' in paper and paper['journal']:
-                info_parts.append(f"*{paper['journal']}*")
+            if paper_fields.get('publication_year'):
+                info_parts.append(f"({paper_fields['publication_year']})")
+            if paper_fields.get('journal'):
+                info_parts.append(f"*{paper_fields['journal']}*")
             
             if info_parts:
                 st.write(" ".join(info_parts))
             
             # Abstract
-            if 'abstract' in paper and paper['abstract']:
+            if paper_fields.get('abstract'):
                 with st.expander("📖 Abstract"):
-                    st.write(paper['abstract'][:300] + "..." if len(paper['abstract']) > 300 else paper['abstract'])
+                    abstract = paper_fields['abstract']
+                    st.write(abstract[:300] + "..." if len(abstract) > 300 else abstract)
             
             st.divider()
+
+
+def get_chat_turns() -> List[Dict[str, Any]]:
+    """Group flat chat history into user/assistant turns for compact rendering."""
+    turns: List[Dict[str, Any]] = []
+    pending_user: Optional[Dict[str, Any]] = None
+
+    for index, (role, message) in enumerate(st.session_state.chat_history):
+        if role == "user":
+            pending_user = {
+                "user_message": message,
+                "user_index": index,
+            }
+            continue
+
+        if role == "assistant":
+            pending_user = pending_user or {"user_message": "", "user_index": None}
+            turns.append(
+                {
+                    "user_message": pending_user["user_message"],
+                    "user_index": pending_user["user_index"],
+                    "assistant_message": message,
+                    "assistant_index": index,
+                }
+            )
+            pending_user = None
+
+    if pending_user:
+        turns.append(
+            {
+                "user_message": pending_user["user_message"],
+                "user_index": pending_user["user_index"],
+                "assistant_message": "",
+                "assistant_index": None,
+            }
+        )
+
+    return turns
+
+
+def render_assistant_message_content(assistant_message: str, assistant_index: Optional[int]) -> None:
+    """Render assistant content plus any stored citations and related papers."""
+    st.write(assistant_message)
+
+    if assistant_index is None:
+        return
+
+    message_key = f"message_{assistant_index}"
+    if message_key in st.session_state.chat_citations:
+        display_citations(st.session_state.chat_citations[message_key])
+    if message_key in st.session_state.chat_papers:
+        display_papers(st.session_state.chat_papers[message_key])
+    render_stored_search_results(assistant_index)
+
+
+def render_chat_turn(turn: Dict[str, Any]) -> None:
+    """Render one compact user/assistant chat exchange."""
+    st.chat_message("user").write(turn.get("user_message", ""))
+
+    assistant_message = turn.get("assistant_message", "")
+    if assistant_message:
+        with st.chat_message("assistant"):
+            render_assistant_message_content(assistant_message, turn.get("assistant_index"))
+
+
+def format_chat_turn_label(turn: Dict[str, Any], turn_number: int) -> str:
+    """Create a compact label for the query selector."""
+    query = str(turn.get("user_message", "")).strip() or f"Query {turn_number}"
+    if len(query) > 90:
+        query = f"{query[:90]}..."
+    return f"{turn_number}. {query}"
+
+
+def render_stored_search_results(assistant_index: Optional[int]) -> None:
+    """Render stored vector-search details for a previously answered query."""
+    if assistant_index is None:
+        return
+
+    current_query_key = f"search_results_{assistant_index + 1}"
+    stored_results = st.session_state.get(current_query_key, [])
+    if not stored_results:
+        return
+
+    with st.expander("Retrieved Genes/Proteins from Database", expanded=False):
+        node_options = []
+        for result_item in stored_results:
+            metadata = result_item['metadata']
+            relevance = result_item.get('similarity_score', distance_to_similarity_percent(result_item.get('distance')))
+            option_text = f"{metadata['node_name']} (ID: {metadata['node_id']}) - {relevance:.1f}% relevance"
+            node_options.append(option_text)
+
+        if node_options:
+            selector_key = f"node_selector_{current_query_key}"
+            selected_node = st.selectbox(
+                "Select a gene/protein to view details:",
+                options=["Select a gene/protein..."] + node_options,
+                key=selector_key
+            )
+
+            if selected_node != "Select a gene/protein...":
+                selected_index = node_options.index(selected_node)
+                selected_result = stored_results[selected_index]
+                metadata = selected_result['metadata']
+
+                with st.container():
+                    st.markdown("### Gene/Protein Details")
+                    col1, col2 = st.columns(2)
+
+                    with col1:
+                        st.write(f"**Name:** {metadata['node_name']}")
+                        st.write(f"**Node ID:** {metadata['node_id']}")
+                        st.write(f"**Type:** {metadata['node_type']}")
+
+                    with col2:
+                        st.write(f"**Source:** {metadata['node_source']}")
+                        relevance = selected_result.get('similarity_score', distance_to_similarity_percent(selected_result.get('distance')))
+                        st.write(f"**Relevance:** {relevance:.1f}%")
+
+                    st.write(f"**Full Document:** {selected_result['document']}")
+                    st.info("This information is retrieved from your local gene/protein database.")
+
+    with st.expander("Raw Search Results (Technical)", expanded=False):
+        for i, result_item in enumerate(stored_results, 1):
+            st.write(f"**Result {i}:**")
+            st.write(f"Document: {result_item['document']}")
+            st.write(f"Similarity Score: {result_item.get('similarity_score', distance_to_similarity_percent(result_item.get('distance'))):.2f}%")
+            st.json(result_item['metadata'])
+            st.markdown("---")
 
 def main():
     st.title("🧬 Gene/Protein Knowledge Chat")
@@ -721,6 +1559,15 @@ def main():
         else:
             st.success("✅ Database Ready")
             
+            st.subheader("Search Settings")
+            st.session_state.search_result_limit = st.slider(
+                "Query results to retrieve",
+                min_value=5,
+                max_value=50,
+                value=st.session_state.search_result_limit,
+                help="Controls how many vector-search matches are retrieved for chat responses and network seeds.",
+            )
+
             # Show database statistics
             if st.session_state.db_manager:
                 try:
@@ -752,7 +1599,10 @@ def main():
         if st.button("Clear Chat History"):
             st.session_state.chat_history = []
             st.session_state.chat_citations = {}  # Clear citations
+            st.session_state.chat_papers = {}  # Clear related papers
             st.session_state.query_genes = []  # Also clear network data
+            st.session_state.selected_chat_turn_index = 0
+            st.session_state.next_query_input = ""
             st.rerun()
     
     # Tab 1: Chat Interface
@@ -761,37 +1611,60 @@ def main():
         if not st.session_state.db_loaded:
             st.info("👈 Please initialize the database using the sidebar to start chatting!")
         else:
-            # Display chat history
-            chat_container = st.container()
-            with chat_container:
-                for i, (role, message) in enumerate(st.session_state.chat_history):
-                    if role == "user":
-                        st.chat_message("user").write(message)
-                    else:
-                        with st.chat_message("assistant"):
-                            st.write(message)
-                            # Display citations if they exist for this message
-                            message_key = f"message_{i}"
-                            if message_key in st.session_state.chat_citations:
-                                display_citations(st.session_state.chat_citations[message_key])
-                            # Display papers if they exist for this message
-                            if message_key in st.session_state.chat_papers:
-                                display_papers(st.session_state.chat_papers[message_key])
-            
-            # Chat input
-            if prompt := st.chat_input("Ask about genes, proteins, or any related information..."):
-                # Add user message to chat history
-                st.session_state.chat_history.append(("user", prompt))
-                
-                # Display user message
-                st.chat_message("user").write(prompt)
-                
-                # Generate and display assistant response
-                with st.chat_message("assistant"):
+            chat_turns = get_chat_turns()
+            if chat_turns:
+                max_turn_index = len(chat_turns) - 1
+                st.session_state.selected_chat_turn_index = min(
+                    st.session_state.selected_chat_turn_index,
+                    max_turn_index,
+                )
+            else:
+                st.session_state.selected_chat_turn_index = 0
+
+            control_col1, control_col2, control_col3 = st.columns([1.5, 3.2, 0.8])
+
+            with control_col1:
+                if len(chat_turns) > 1:
+                    turn_options = list(range(len(chat_turns)))
+                    st.session_state.selected_chat_turn_index = st.selectbox(
+                        "Answered Queries",
+                        options=turn_options,
+                        index=min(st.session_state.selected_chat_turn_index, len(turn_options) - 1),
+                        format_func=lambda idx: format_chat_turn_label(chat_turns[idx], idx + 1),
+                        key="active_chat_turn_selector",
+                    )
+                elif len(chat_turns) == 1:
+                    st.caption("Viewing the current answered query")
+                else:
+                    st.caption("No answered queries yet")
+
+            with control_col2:
+                st.text_area(
+                    "Ask next query",
+                    key="next_query_input",
+                    height=80,
+                    placeholder="Ask about genes, proteins, or any related information...",
+                    label_visibility="collapsed",
+                )
+
+            with control_col3:
+                st.caption(" ")
+                ask_clicked = st.button("Ask", key="ask_next_query_button")
+
+            if ask_clicked:
+                prompt = st.session_state.next_query_input.strip()
+                if not prompt:
+                    st.warning("Enter a query before asking.")
+                else:
+                    st.session_state.chat_history.append(("user", prompt))
+
                     with st.spinner("Searching database and generating enhanced response..."):
                         try:
                             # Search the vector database
-                            search_results = st.session_state.db_manager.search_similar(prompt, n_results=5)
+                            search_results = st.session_state.db_manager.search_similar(
+                                prompt,
+                                n_results=st.session_state.search_result_limit,
+                            )
                             
                             # Store query and genes for network visualization
                             if search_results:
@@ -802,9 +1675,20 @@ def main():
                             
                             # Generate enhanced response with GPT-4 and citations
                             result = generate_enhanced_response(prompt, search_results, st.session_state.db_manager)
-                            
-                            # Display main response
-                            st.write(result['response'])
+                            st.session_state.chat_history.append(("assistant", result['response']))
+
+                            assistant_index = len(st.session_state.chat_history) - 1
+                            message_key = f"message_{assistant_index}"
+                            if result.get('citations'):
+                                st.session_state.chat_citations[message_key] = result['citations']
+                            if result.get('papers'):
+                                st.session_state.chat_papers[message_key] = result['papers']
+                            if search_results:
+                                st.session_state[f"search_results_{assistant_index + 1}"] = search_results
+
+                            st.session_state.selected_chat_turn_index = len(get_chat_turns()) - 1
+                            st.session_state.next_query_input = ""
+                            st.rerun()
                             
                             # Display citations if available
                             if result.get('citations'):
@@ -860,7 +1744,7 @@ def main():
                                     
                                     for i, result_item in enumerate(stored_results):
                                         metadata = result_item['metadata']
-                                        relevance = (1 - result_item.get('distance', 0)) * 100
+                                        relevance = result_item.get('similarity_score', distance_to_similarity_percent(result_item.get('distance')))
                                         option_text = f"{metadata['node_name']} (ID: {metadata['node_id']}) - {relevance:.1f}% relevance"
                                         node_options.append(option_text)
                                     
@@ -892,7 +1776,7 @@ def main():
                                                 
                                                 with col2:
                                                     st.write(f"**Source:** {metadata['node_source']}")
-                                                    relevance = (1 - selected_result.get('distance', 0)) * 100
+                                                    relevance = selected_result.get('similarity_score', distance_to_similarity_percent(selected_result.get('distance')))
                                                     st.write(f"**Relevance:** {relevance:.1f}%")
                                                 
                                                 st.write(f"**Full Document:** {selected_result['document']}")
@@ -905,14 +1789,24 @@ def main():
                                     for i, result_item in enumerate(search_results, 1):
                                         st.write(f"**Result {i}:**")
                                         st.write(f"Document: {result_item['document']}")
-                                        st.write(f"Similarity Score: {(1-result_item.get('distance', 0))*100:.2f}%")
+                                        st.write(f"Similarity Score: {result_item.get('similarity_score', distance_to_similarity_percent(result_item.get('distance'))):.2f}%")
                                         st.json(result_item['metadata'])
                                         st.markdown("---")
                         
                         except Exception as e:
                             error_msg = f"Sorry, I encountered an error while searching: {str(e)}"
-                            st.error(error_msg)
                             st.session_state.chat_history.append(("assistant", error_msg))
+                            st.session_state.selected_chat_turn_index = len(get_chat_turns()) - 1
+                            st.session_state.next_query_input = ""
+                            st.rerun()
+
+            st.markdown("---")
+
+            if chat_turns:
+                selected_turn = chat_turns[st.session_state.selected_chat_turn_index]
+                render_chat_turn(selected_turn)
+            else:
+                st.info("Ask a question to start the conversation.")
 
             # Additional features
             st.markdown("---")
@@ -954,7 +1848,7 @@ def main():
     
     # Tab 2: Gene Network Visualization
     with tab2:
-        display_gene_network_tab()
+        display_gene_network_tab_v2()
 
 if __name__ == "__main__":
     main()

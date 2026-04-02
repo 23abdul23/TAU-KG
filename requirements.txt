@@ -15,4 +15,4 @@ python-dotenv>=1.0.0
 openai>=1.0.0
 tqdm>=4.64.0
 pdfplumber>=0.9.0
-PyPDF2>=3.0.0
+pypdf>=3.0.0

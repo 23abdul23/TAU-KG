@@ -30,6 +30,15 @@ share/python-wheels/
 *.egg
 MANIFEST
 
+chroma_db/*
+chroma_db/
+chroma_db
+
+
+uploaded_papers/
+data/paper_store.json
+data/*.tmp
+
 # PyInstaller
 #  Usually these files are written by a python script from a template
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.

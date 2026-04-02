@@ -2,6 +2,7 @@ import pandas as pd
 import chromadb
 from chromadb.config import Settings
 import os
+import hashlib
 from sentence_transformers import SentenceTransformer
 from typing import List, Dict, Any
 import json
@@ -26,6 +27,13 @@ try:
 except ImportError:
     CITATIONS_AVAILABLE = False
     print("Warning: Citations module not available. Literature search disabled.")
+
+try:
+    import deb_data_papers as papers_db
+    PAPERS_DB_AVAILABLE = True
+except ImportError:
+    PAPERS_DB_AVAILABLE = False
+    papers_db = None
 
 class VectorDBManager:
     def __init__(self, db_path: str = "./chroma_db", collection_name: str = "gene_proteins"):
@@ -62,6 +70,69 @@ class VectorDBManager:
         except:
             self.collection = self.client.create_collection(name=collection_name)
             print(f"Created new collection: {collection_name}")
+
+    @staticmethod
+    def _distance_to_similarity(distance: Any) -> float:
+        """Convert an arbitrary non-negative vector distance into a bounded similarity percentage."""
+        try:
+            numeric_distance = max(float(distance), 0.0)
+        except (TypeError, ValueError):
+            return 0.0
+        return 100.0 / (1.0 + numeric_distance)
+
+    @staticmethod
+    def _stable_numeric_id(seed: str) -> int:
+        """Generate a deterministic positive integer from a string seed."""
+        digest = hashlib.sha1(seed.encode("utf-8")).hexdigest()[:12]
+        return int(digest, 16)
+
+    def _normalize_node_metadata(self, metadata: Dict[str, Any]) -> Dict[str, Any]:
+        """Repair missing or placeholder metadata for paper-derived entities."""
+        normalized = dict(metadata or {})
+
+        node_index = normalized.get("node_index")
+        try:
+            node_index = int(node_index)
+        except (TypeError, ValueError):
+            node_index = -1
+
+        if node_index < 0:
+            seed = "|".join([
+                str(normalized.get("node_source", "")),
+                str(normalized.get("node_type", "")),
+                str(normalized.get("node_id", "")),
+                str(normalized.get("source_paper_id", "")),
+            ])
+            normalized["node_index"] = self._stable_numeric_id(seed)
+        else:
+            normalized["node_index"] = node_index
+
+        return normalized
+
+    def _hydrate_paper_metadata(self, metadata: Dict[str, Any]) -> Dict[str, Any]:
+        """Flatten paper search metadata and enrich it from the in-memory papers DB when available."""
+        hydrated = dict(metadata or {})
+        authors_raw = hydrated.get("authors", "")
+        if isinstance(authors_raw, str):
+            hydrated["authors"] = [author for author in authors_raw.split("|") if author]
+        elif not isinstance(authors_raw, list):
+            hydrated["authors"] = []
+
+        paper_id = str(hydrated.get("paper_id", "")).strip()
+        if PAPERS_DB_AVAILABLE and paper_id:
+            paper_record = papers_db.get_paper_by_id(paper_id)
+            if paper_record:
+                hydrated["title"] = paper_record.get("title") or hydrated.get("title", "")
+                hydrated["authors"] = paper_record.get("authors") or hydrated.get("authors", [])
+                hydrated["abstract"] = paper_record.get("abstract", "")
+                hydrated["doi"] = paper_record.get("doi") or hydrated.get("doi", "")
+                hydrated["pmid"] = paper_record.get("pmid") or hydrated.get("pmid", "")
+                hydrated["publication_date"] = paper_record.get("publication_date") or hydrated.get("publication_date", "")
+                hydrated["source_url"] = paper_record.get("source_url", "")
+
+        publication_date = str(hydrated.get("publication_date", "") or "")
+        hydrated["publication_year"] = publication_date[:4] if len(publication_date) >= 4 else ""
+        return hydrated
     
     def load_csv_to_vectordb(self, csv_path: str, batch_size: int = 100):
         """
@@ -139,7 +210,7 @@ class VectorDBManager:
         
         print(f"Successfully loaded {processed_count} documents into the vector database.")
     
-    def search_similar(self, query: str, n_results: int = 5) -> List[Dict[str, Any]]:
+    def search_similar(self, query: str, n_results: int = 15) -> List[Dict[str, Any]]:
         """
         Search for similar documents in the vector database
         
@@ -159,10 +230,12 @@ class VectorDBManager:
         formatted_results = []
         if results['documents'] and results['documents'][0]:
             for i in range(len(results['documents'][0])):
+                distance = results['distances'][0][i] if results['distances'] else None
                 result = {
                     'document': results['documents'][0][i],
-                    'metadata': results['metadatas'][0][i],
-                    'distance': results['distances'][0][i] if results['distances'] else None
+                    'metadata': self._normalize_node_metadata(results['metadatas'][0][i]),
+                    'distance': distance,
+                    'similarity_score': self._distance_to_similarity(distance),
                 }
                 formatted_results.append(result)
         
@@ -198,7 +271,7 @@ class VectorDBManager:
         if results['documents'] and results['documents'][0]:
             return {
                 'document': results['documents'][0][0],
-                'metadata': results['metadatas'][0][0]
+                'metadata': self._normalize_node_metadata(results['metadatas'][0][0])
             }
         return None
     
@@ -303,7 +376,7 @@ class VectorDBManager:
 
             doc_text = f"{name} - Type: {node_type} - Source: {source_name}"
             metadata = {
-                "node_index": -1,
+                "node_index": self._stable_numeric_id(doc_id),
                 "node_id": name,
                 "node_type": node_type,
                 "node_name": name,
@@ -342,7 +415,7 @@ class VectorDBManager:
         context_parts = []
         for i, result in enumerate(search_results, 1):
             metadata = result['metadata']
-            relevance = (1 - result['distance']) * 100 if result['distance'] else 100
+            relevance = result.get('similarity_score', self._distance_to_similarity(result.get('distance')))
             
             context_part = f"""
 Gene/Protein {i}:
@@ -596,10 +669,22 @@ Citation {i}:
             formatted_results = []
             if results['documents'] and results['documents'][0]:
                 for i in range(len(results['documents'][0])):
+                    distance = results['distances'][0][i] if results['distances'] else None
+                    metadata = self._hydrate_paper_metadata(results['metadatas'][0][i])
                     result = {
                         'document': results['documents'][0][i],
-                        'metadata': results['metadatas'][0][i],
-                        'distance': results['distances'][0][i] if results['distances'] else None
+                        'metadata': metadata,
+                        'distance': distance,
+                        'similarity_score': self._distance_to_similarity(distance),
+                        'paper_id': metadata.get('paper_id', ''),
+                        'title': metadata.get('title', ''),
+                        'authors': metadata.get('authors', []),
+                        'pmid': metadata.get('pmid', ''),
+                        'doi': metadata.get('doi', ''),
+                        'publication_date': metadata.get('publication_date', ''),
+                        'publication_year': metadata.get('publication_year', ''),
+                        'abstract': metadata.get('abstract', ''),
+                        'source_url': metadata.get('source_url', ''),
                     }
                     formatted_results.append(result)
             
