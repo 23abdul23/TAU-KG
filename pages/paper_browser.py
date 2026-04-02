@@ -130,12 +130,20 @@ def render_paper_card(paper: Dict[str, Any]):
         
         # Show extracted entities count
         entities = papers_db.get_paper_entities(paper["paper_id"])
-        if entities:
+        relationships = papers_db.get_paper_relationships(paper["paper_id"])
+        if entities or relationships:
+            entities = entities or {
+                "genes": [],
+                "proteins": [],
+                "diseases": [],
+                "pathways": [],
+            }
             entity_counts = {
                 "Genes": len(entities.get("genes", [])),
                 "Proteins": len(entities.get("proteins", [])),
                 "Diseases": len(entities.get("diseases", [])),
-                "Pathways": len(entities.get("pathways", []))
+                "Pathways": len(entities.get("pathways", [])),
+                "Relationships": len(relationships)
             }
             
             st.markdown(
@@ -184,9 +192,15 @@ def render_paper_detail(paper: Dict[str, Any]):
     # Extracted entities
     st.subheader("🎯 Extracted Entities")
     
-    entities = papers_db.get_paper_entities(paper["paper_id"])
+    entities = papers_db.get_paper_entities(paper["paper_id"]) or {
+        "genes": [],
+        "proteins": [],
+        "diseases": [],
+        "pathways": [],
+    }
+    relationships = papers_db.get_paper_relationships(paper["paper_id"])
     
-    if entities:
+    if any(entities.values()) or relationships:
         entity_tabs = st.tabs(["🧬 Genes", "🧪 Proteins", "🏥 Diseases", "🛣️ Pathways", "🔗 Relationships"])
         
         with entity_tabs[0]:
@@ -201,7 +215,7 @@ def render_paper_detail(paper: Dict[str, Any]):
                     }
                     for e in genes
                 ])
-                st.dataframe(df_genes, use_container_width=True)
+                st.dataframe(df_genes, width="stretch")
             else:
                 st.info("No genes found")
         
@@ -217,7 +231,7 @@ def render_paper_detail(paper: Dict[str, Any]):
                     }
                     for e in proteins
                 ])
-                st.dataframe(df_proteins, use_container_width=True)
+                st.dataframe(df_proteins, width="stretch")
             else:
                 st.info("No proteins found")
         
@@ -233,7 +247,7 @@ def render_paper_detail(paper: Dict[str, Any]):
                     }
                     for e in diseases
                 ])
-                st.dataframe(df_diseases, use_container_width=True)
+                st.dataframe(df_diseases, width="stretch")
             else:
                 st.info("No diseases found")
         
@@ -249,12 +263,11 @@ def render_paper_detail(paper: Dict[str, Any]):
                     }
                     for e in pathways
                 ])
-                st.dataframe(df_pathways, use_container_width=True)
+                st.dataframe(df_pathways, width="stretch")
             else:
                 st.info("No pathways found")
         
         with entity_tabs[4]:
-            relationships = entities.get("relationships", [])
             if relationships:
                 df_rels = pd.DataFrame([
                     {
@@ -266,7 +279,7 @@ def render_paper_detail(paper: Dict[str, Any]):
                     }
                     for r in relationships
                 ])
-                st.dataframe(df_rels, use_container_width=True)
+                st.dataframe(df_rels, width="stretch")
             else:
                 st.info("No relationships found")
     else:

@@ -15,8 +15,6 @@ Features:
 import os
 import sys
 import argparse
-import json
-import time
 from pathlib import Path
 from typing import List, Tuple
 import logging
@@ -25,8 +23,11 @@ import logging
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 from src.pdf_processor import process_pdf, clean_pdf_text
-from src.pdf_processor import process_pmc_url
-from src.pmc_service import process_pmc_url_advanced, process_pmc_url_html_fallback
+from src.pmc_service import (
+    DEFAULT_HTTP_RETRIES,
+    process_pmc_url_advanced,
+    process_pmc_url_html_fallback,
+)
 from src.paper_entity_extractor import (
     extract_entities_from_text,
     validate_extracted_entities,
@@ -49,26 +50,13 @@ def process_single_pmc_url(
     auto_approve_threshold: float = 0.85,
     auto_merge: bool = False,
     dry_run: bool = False,
-    retries: int = 2,
+    retries: int = DEFAULT_HTTP_RETRIES,
 ) -> bool:
     """Process a single PMC URL using API-first pipeline and fallback to HTML extraction."""
     try:
         logger.info("Processing PMC URL: %s", pmc_url)
 
-        advanced = None
-        last_error = None
-        for attempt in range(retries + 1):
-            try:
-                advanced = process_pmc_url_advanced(pmc_url)
-                last_error = None
-                break
-            except Exception as exc:
-                last_error = exc
-                if attempt < retries:
-                    time.sleep((2 ** attempt) + 0.2)
-
-        if last_error:
-            logger.warning("Advanced PMC API path failed for %s: %s", pmc_url, last_error)
+        advanced = process_pmc_url_advanced(pmc_url, retries=retries)
 
         metadata = {
             "title": "",
@@ -93,7 +81,7 @@ def process_single_pmc_url(
             full_text = advanced.get("text")
 
         if not full_text:
-            fallback = process_pmc_url_html_fallback(pmc_url)
+            fallback = process_pmc_url_html_fallback(pmc_url, retries=retries)
             metadata.update({
                 "title": fallback.get("title", metadata.get("title", "")),
                 "authors": fallback.get("authors", metadata.get("authors", [])),
@@ -176,7 +164,7 @@ def batch_process_pmc_urls(
     auto_approve_threshold: float = 0.85,
     auto_merge: bool = False,
     dry_run: bool = False,
-    retries: int = 2,
+    retries: int = DEFAULT_HTTP_RETRIES,
 ) -> Tuple[int, int]:
     """Batch process PMC URLs."""
     success_count = 0

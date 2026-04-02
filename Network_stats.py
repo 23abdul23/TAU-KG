@@ -630,10 +630,10 @@ class NetworkAnalyzer:
                 barmode='group',
                 height=500
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
             
             # Detailed table
-            st.dataframe(contrib_df, use_container_width=True)
+            st.dataframe(contrib_df, width="stretch")
     
     def _display_paper_entity_distribution(self, paper_analyzer):
         """Display entity type distribution across papers"""
@@ -664,7 +664,7 @@ class NetworkAnalyzer:
                 )
             
             fig.update_layout(height=600, title_text="Entity Type Distribution Across Papers")
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
     
     def _display_paper_co_citation(self, paper_analyzer):
         """Display co-citation network"""
@@ -725,7 +725,7 @@ class NetworkAnalyzer:
                     showlegend=False,
                     height=500
                 )
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, width="stretch")
     
     def _display_paper_timeline(self, paper_analyzer):
         """Display temporal analysis with papers"""
@@ -761,7 +761,7 @@ class NetworkAnalyzer:
                 yaxis2=dict(title="Cumulative Entities", color='orange', overlaying='y', side='right'),
                 height=400
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
             
             # Stats
             col1, col2, col3 = st.columns(3)

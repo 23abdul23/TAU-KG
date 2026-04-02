@@ -12,11 +12,13 @@ Handles:
 import os
 import re
 from datetime import datetime
-from typing import Tuple, Dict, Any, Optional
+from typing import List, Tuple, Dict, Any, Optional
 import logging
 from html.parser import HTMLParser
 from urllib.request import Request, urlopen
 from urllib.parse import urlparse
+
+from src.pmc_service import process_pmc_url_advanced, process_pmc_url_html_fallback
 
 logger = logging.getLogger(__name__)
 
@@ -200,10 +202,45 @@ def extract_metadata_from_pmc_url(url: str, text: Optional[str] = None) -> Dict[
 
 
 def process_pmc_url(url: str, max_chars: Optional[int] = None) -> Tuple[Dict[str, Any], str]:
-    """Process a PMC URL through the same metadata/text extraction pipeline as PDFs."""
+    """Process a PMC URL through the faster PMC API-first pipeline with HTML fallback."""
     logger.info(f"Processing PMC URL: {url}")
-    text = extract_text_from_pmc_url(url, max_chars=max_chars)
-    metadata = extract_metadata_from_pmc_url(url, text=text)
+    advanced = process_pmc_url_advanced(url, max_chars=max_chars)
+
+    metadata = {
+        "title": advanced.get("title", ""),
+        "authors": advanced.get("authors", []),
+        "abstract": "",
+        "keywords": [],
+        "pmcid": advanced.get("pmcid", ""),
+        "pmid": "",
+        "doi": "",
+        "journal": advanced.get("journal", ""),
+        "publication_date": advanced.get("pubdate", ""),
+        "sections": advanced.get("sections", []),
+    }
+    text = advanced.get("text") or ""
+
+    if not text:
+        fallback = process_pmc_url_html_fallback(url, max_chars=max_chars)
+        metadata.update({
+            "title": fallback.get("title", metadata.get("title", "")),
+            "authors": fallback.get("authors", metadata.get("authors", [])),
+            "pmcid": fallback.get("pmcid", metadata.get("pmcid", "")),
+            "pmid": fallback.get("pmid", metadata.get("pmid", "")),
+            "doi": fallback.get("doi", metadata.get("doi", "")),
+            "sections": fallback.get("sections", metadata.get("sections", [])),
+            "publication_date": fallback.get("pubdate", metadata.get("publication_date", "")),
+        })
+        text = fallback.get("text", "")
+
+    if not text.strip():
+        raise IOError(f"Could not extract text from PMC page: {url}")
+
+    inferred = extract_metadata_from_text(text)
+    for key in ["title", "authors", "abstract", "keywords"]:
+        if not metadata.get(key):
+            metadata[key] = inferred.get(key, metadata.get(key))
+
     return metadata, text
 
 try:
@@ -215,10 +252,27 @@ except ImportError:
 
 try:
     from PyPDF2 import PdfReader
+    PDF_READER_BACKEND = "PyPDF2"
     PYPDF_AVAILABLE = True
 except ImportError:
-    PYPDF_AVAILABLE = False
-    logger.warning("PyPDF2 not installed. Install with: pip install PyPDF2")
+    try:
+        from pypdf import PdfReader
+        PDF_READER_BACKEND = "pypdf"
+        PYPDF_AVAILABLE = True
+    except ImportError:
+        PYPDF_AVAILABLE = False
+        PDF_READER_BACKEND = ""
+        logger.warning("PyPDF2/pypdf not installed. Install with: pip install pypdf")
+
+
+def get_pdf_extraction_backends() -> List[str]:
+    """Return the list of currently available PDF text extraction backends."""
+    backends: List[str] = []
+    if PDFPLUMBER_AVAILABLE:
+        backends.append("pdfplumber")
+    if PYPDF_AVAILABLE:
+        backends.append(PDF_READER_BACKEND)
+    return backends
 
 
 def validate_pdf(pdf_path: str, max_size_mb: int = 50) -> bool:
@@ -266,6 +320,13 @@ def extract_text_from_pdf(pdf_path: str, max_pages: Optional[int] = None) -> str
         IOError: If text extraction fails completely
     """
     validate_pdf(pdf_path)
+
+    available_backends = get_pdf_extraction_backends()
+    if not available_backends:
+        raise ImportError(
+            "No PDF text extraction backend is installed. "
+            "Install `pdfplumber` and `pypdf` to process uploaded PDFs."
+        )
     
     text = ""
     
@@ -299,13 +360,17 @@ def extract_text_from_pdf(pdf_path: str, max_pages: Optional[int] = None) -> str
                         text += page_text + "\n\n"
             
             if text.strip():
-                logger.info(f"Successfully extracted {len(text)} chars from {pdf_path} using PyPDF2")
+                logger.info(f"Successfully extracted {len(text)} chars from {pdf_path} using {PDF_READER_BACKEND}")
                 return text
         except Exception as e:
-            logger.error(f"PyPDF2 extraction failed: {e}")
+            logger.error(f"{PDF_READER_BACKEND} extraction failed: {e}")
     
     if not text.strip():
-        raise IOError(f"Could not extract text from PDF: {pdf_path}. File may be scanned image or corrupted.")
+        raise IOError(
+            f"Could not extract text from PDF: {pdf_path}. "
+            "The file is likely image-only/scanned, encrypted, or uses an unsupported encoding. "
+            f"Available backends: {', '.join(available_backends)}."
+        )
     
     return text
 

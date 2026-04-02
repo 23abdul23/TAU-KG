@@ -1023,7 +1023,7 @@ def main():
                         # Create publication network visualization
                         if strong_connections:
                             fig = analyzer.create_publication_network_plot(strong_connections, publication_groups)
-                            st.plotly_chart(fig, use_container_width=True)
+                            st.plotly_chart(fig, width="stretch")
                             
                             # Add interaction details
                             if st.checkbox("Show Detailed Connections"):
