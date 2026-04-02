@@ -54,6 +54,10 @@ if 'query_genes' not in st.session_state:
     st.session_state.query_genes = []
 if 'search_result_limit' not in st.session_state:
     st.session_state.search_result_limit = 15
+if 'selected_chat_turn_index' not in st.session_state:
+    st.session_state.selected_chat_turn_index = 0
+if 'next_query_input' not in st.session_state:
+    st.session_state.next_query_input = ""
 
 
 QUERY_COLOR_PALETTE = [
@@ -1410,6 +1414,134 @@ def display_papers(papers: List[Dict[str, Any]]):
             
             st.divider()
 
+
+def get_chat_turns() -> List[Dict[str, Any]]:
+    """Group flat chat history into user/assistant turns for compact rendering."""
+    turns: List[Dict[str, Any]] = []
+    pending_user: Optional[Dict[str, Any]] = None
+
+    for index, (role, message) in enumerate(st.session_state.chat_history):
+        if role == "user":
+            pending_user = {
+                "user_message": message,
+                "user_index": index,
+            }
+            continue
+
+        if role == "assistant":
+            pending_user = pending_user or {"user_message": "", "user_index": None}
+            turns.append(
+                {
+                    "user_message": pending_user["user_message"],
+                    "user_index": pending_user["user_index"],
+                    "assistant_message": message,
+                    "assistant_index": index,
+                }
+            )
+            pending_user = None
+
+    if pending_user:
+        turns.append(
+            {
+                "user_message": pending_user["user_message"],
+                "user_index": pending_user["user_index"],
+                "assistant_message": "",
+                "assistant_index": None,
+            }
+        )
+
+    return turns
+
+
+def render_assistant_message_content(assistant_message: str, assistant_index: Optional[int]) -> None:
+    """Render assistant content plus any stored citations and related papers."""
+    st.write(assistant_message)
+
+    if assistant_index is None:
+        return
+
+    message_key = f"message_{assistant_index}"
+    if message_key in st.session_state.chat_citations:
+        display_citations(st.session_state.chat_citations[message_key])
+    if message_key in st.session_state.chat_papers:
+        display_papers(st.session_state.chat_papers[message_key])
+    render_stored_search_results(assistant_index)
+
+
+def render_chat_turn(turn: Dict[str, Any]) -> None:
+    """Render one compact user/assistant chat exchange."""
+    st.chat_message("user").write(turn.get("user_message", ""))
+
+    assistant_message = turn.get("assistant_message", "")
+    if assistant_message:
+        with st.chat_message("assistant"):
+            render_assistant_message_content(assistant_message, turn.get("assistant_index"))
+
+
+def format_chat_turn_label(turn: Dict[str, Any], turn_number: int) -> str:
+    """Create a compact label for the query selector."""
+    query = str(turn.get("user_message", "")).strip() or f"Query {turn_number}"
+    if len(query) > 90:
+        query = f"{query[:90]}..."
+    return f"{turn_number}. {query}"
+
+
+def render_stored_search_results(assistant_index: Optional[int]) -> None:
+    """Render stored vector-search details for a previously answered query."""
+    if assistant_index is None:
+        return
+
+    current_query_key = f"search_results_{assistant_index + 1}"
+    stored_results = st.session_state.get(current_query_key, [])
+    if not stored_results:
+        return
+
+    with st.expander("Retrieved Genes/Proteins from Database", expanded=False):
+        node_options = []
+        for result_item in stored_results:
+            metadata = result_item['metadata']
+            relevance = result_item.get('similarity_score', distance_to_similarity_percent(result_item.get('distance')))
+            option_text = f"{metadata['node_name']} (ID: {metadata['node_id']}) - {relevance:.1f}% relevance"
+            node_options.append(option_text)
+
+        if node_options:
+            selector_key = f"node_selector_{current_query_key}"
+            selected_node = st.selectbox(
+                "Select a gene/protein to view details:",
+                options=["Select a gene/protein..."] + node_options,
+                key=selector_key
+            )
+
+            if selected_node != "Select a gene/protein...":
+                selected_index = node_options.index(selected_node)
+                selected_result = stored_results[selected_index]
+                metadata = selected_result['metadata']
+
+                with st.container():
+                    st.markdown("### Gene/Protein Details")
+                    col1, col2 = st.columns(2)
+
+                    with col1:
+                        st.write(f"**Name:** {metadata['node_name']}")
+                        st.write(f"**Node ID:** {metadata['node_id']}")
+                        st.write(f"**Type:** {metadata['node_type']}")
+
+                    with col2:
+                        st.write(f"**Source:** {metadata['node_source']}")
+                        relevance = selected_result.get('similarity_score', distance_to_similarity_percent(selected_result.get('distance')))
+                        st.write(f"**Relevance:** {relevance:.1f}%")
+
+                    st.write(f"**Full Document:** {selected_result['document']}")
+                    st.info("This information is retrieved from your local gene/protein database.")
+
+    with st.expander("Raw Search Results (Technical)", expanded=False):
+        for i, result_item in enumerate(stored_results, 1):
+            st.write(f"**Result {i}:**")
+            st.write(f"Document: {result_item['document']}")
+            st.write(f"Similarity Score: {result_item.get('similarity_score', distance_to_similarity_percent(result_item.get('distance'))):.2f}%")
+            st.json(result_item['metadata'])
+            st.markdown("---")
+
 def main():
     st.title("🧬 Gene/Protein Knowledge Chat")
     st.markdown("Ask questions about genes and proteins from your dataset!")
@@ -1467,7 +1599,10 @@ def main():
         if st.button("Clear Chat History"):
             st.session_state.chat_history = []
             st.session_state.chat_citations = {}  # Clear citations
+            st.session_state.chat_papers = {}  # Clear related papers
             st.session_state.query_genes = []  # Also clear network data
+            st.session_state.selected_chat_turn_index = 0
+            st.session_state.next_query_input = ""
             st.rerun()
     
     # Tab 1: Chat Interface
@@ -1476,33 +1611,53 @@ def main():
         if not st.session_state.db_loaded:
             st.info("👈 Please initialize the database using the sidebar to start chatting!")
         else:
-            # Display chat history
-            chat_container = st.container()
-            with chat_container:
-                for i, (role, message) in enumerate(st.session_state.chat_history):
-                    if role == "user":
-                        st.chat_message("user").write(message)
-                    else:
-                        with st.chat_message("assistant"):
-                            st.write(message)
-                            # Display citations if they exist for this message
-                            message_key = f"message_{i}"
-                            if message_key in st.session_state.chat_citations:
-                                display_citations(st.session_state.chat_citations[message_key])
-                            # Display papers if they exist for this message
-                            if message_key in st.session_state.chat_papers:
-                                display_papers(st.session_state.chat_papers[message_key])
-            
-            # Chat input
-            if prompt := st.chat_input("Ask about genes, proteins, or any related information..."):
-                # Add user message to chat history
-                st.session_state.chat_history.append(("user", prompt))
-                
-                # Display user message
-                st.chat_message("user").write(prompt)
-                
-                # Generate and display assistant response
-                with st.chat_message("assistant"):
+            chat_turns = get_chat_turns()
+            if chat_turns:
+                max_turn_index = len(chat_turns) - 1
+                st.session_state.selected_chat_turn_index = min(
+                    st.session_state.selected_chat_turn_index,
+                    max_turn_index,
+                )
+            else:
+                st.session_state.selected_chat_turn_index = 0
+
+            control_col1, control_col2, control_col3 = st.columns([1.5, 3.2, 0.8])
+
+            with control_col1:
+                if len(chat_turns) > 1:
+                    turn_options = list(range(len(chat_turns)))
+                    st.session_state.selected_chat_turn_index = st.selectbox(
+                        "Answered Queries",
+                        options=turn_options,
+                        index=min(st.session_state.selected_chat_turn_index, len(turn_options) - 1),
+                        format_func=lambda idx: format_chat_turn_label(chat_turns[idx], idx + 1),
+                        key="active_chat_turn_selector",
+                    )
+                elif len(chat_turns) == 1:
+                    st.caption("Viewing the current answered query")
+                else:
+                    st.caption("No answered queries yet")
+
+            with control_col2:
+                st.text_area(
+                    "Ask next query",
+                    key="next_query_input",
+                    height=80,
+                    placeholder="Ask about genes, proteins, or any related information...",
+                    label_visibility="collapsed",
+                )
+
+            with control_col3:
+                st.caption(" ")
+                ask_clicked = st.button("Ask", key="ask_next_query_button")
+
+            if ask_clicked:
+                prompt = st.session_state.next_query_input.strip()
+                if not prompt:
+                    st.warning("Enter a query before asking.")
+                else:
+                    st.session_state.chat_history.append(("user", prompt))
+
                     with st.spinner("Searching database and generating enhanced response..."):
                         try:
                             # Search the vector database
@@ -1520,9 +1675,20 @@ def main():
                             
                             # Generate enhanced response with GPT-4 and citations
                             result = generate_enhanced_response(prompt, search_results, st.session_state.db_manager)
-                            
-                            # Display main response
-                            st.write(result['response'])
+                            st.session_state.chat_history.append(("assistant", result['response']))
+
+                            assistant_index = len(st.session_state.chat_history) - 1
+                            message_key = f"message_{assistant_index}"
+                            if result.get('citations'):
+                                st.session_state.chat_citations[message_key] = result['citations']
+                            if result.get('papers'):
+                                st.session_state.chat_papers[message_key] = result['papers']
+                            if search_results:
+                                st.session_state[f"search_results_{assistant_index + 1}"] = search_results
+
+                            st.session_state.selected_chat_turn_index = len(get_chat_turns()) - 1
+                            st.session_state.next_query_input = ""
+                            st.rerun()
                             
                             # Display citations if available
                             if result.get('citations'):
@@ -1629,8 +1795,18 @@ def main():
                         
                         except Exception as e:
                             error_msg = f"Sorry, I encountered an error while searching: {str(e)}"
-                            st.error(error_msg)
                             st.session_state.chat_history.append(("assistant", error_msg))
+                            st.session_state.selected_chat_turn_index = len(get_chat_turns()) - 1
+                            st.session_state.next_query_input = ""
+                            st.rerun()
+
+            st.markdown("---")
+
+            if chat_turns:
+                selected_turn = chat_turns[st.session_state.selected_chat_turn_index]
+                render_chat_turn(selected_turn)
+            else:
+                st.info("Ask a question to start the conversation.")
 
             # Additional features
             st.markdown("---")
