@@ -2,6 +2,7 @@ import pandas as pd
 import chromadb
 from chromadb.config import Settings
 import os
+import hashlib
 from sentence_transformers import SentenceTransformer
 from typing import List, Dict, Any
 import json
@@ -26,6 +27,13 @@ try:
 except ImportError:
     CITATIONS_AVAILABLE = False
     print("Warning: Citations module not available. Literature search disabled.")
+
+try:
+    import deb_data_papers as papers_db
+    PAPERS_DB_AVAILABLE = True
+except ImportError:
+    PAPERS_DB_AVAILABLE = False
+    papers_db = None
 
 class VectorDBManager:
     def __init__(self, db_path: str = "./chroma_db", collection_name: str = "gene_proteins"):
@@ -62,6 +70,69 @@ class VectorDBManager:
         except:
             self.collection = self.client.create_collection(name=collection_name)
             print(f"Created new collection: {collection_name}")
+
+    @staticmethod
+    def _distance_to_similarity(distance: Any) -> float:
+        """Convert an arbitrary non-negative vector distance into a bounded similarity percentage."""
+        try:
+            numeric_distance = max(float(distance), 0.0)
+        except (TypeError, ValueError):
+            return 0.0
+        return 100.0 / (1.0 + numeric_distance)
+
+    @staticmethod
+    def _stable_numeric_id(seed: str) -> int:
+        """Generate a deterministic positive integer from a string seed."""
+        digest = hashlib.sha1(seed.encode("utf-8")).hexdigest()[:12]
+        return int(digest, 16)
+
+    def _normalize_node_metadata(self, metadata: Dict[str, Any]) -> Dict[str, Any]:
+        """Repair missing or placeholder metadata for paper-derived entities."""
+        normalized = dict(metadata or {})
+
+        node_index = normalized.get("node_index")
+        try:
+            node_index = int(node_index)
+        except (TypeError, ValueError):
+            node_index = -1
+
+        if node_index < 0:
+            seed = "|".join([
+                str(normalized.get("node_source", "")),
+                str(normalized.get("node_type", "")),
+                str(normalized.get("node_id", "")),
+                str(normalized.get("source_paper_id", "")),
+            ])
+            normalized["node_index"] = self._stable_numeric_id(seed)
+        else:
+            normalized["node_index"] = node_index
+
+        return normalized
+
+    def _hydrate_paper_metadata(self, metadata: Dict[str, Any]) -> Dict[str, Any]:
+        """Flatten paper search metadata and enrich it from the in-memory papers DB when available."""
+        hydrated = dict(metadata or {})
+        authors_raw = hydrated.get("authors", "")
+        if isinstance(authors_raw, str):
+            hydrated["authors"] = [author for author in authors_raw.split("|") if author]
+        elif not isinstance(authors_raw, list):
+            hydrated["authors"] = []
+
+        paper_id = str(hydrated.get("paper_id", "")).strip()
+        if PAPERS_DB_AVAILABLE and paper_id:
+            paper_record = papers_db.get_paper_by_id(paper_id)
+            if paper_record:
+                hydrated["title"] = paper_record.get("title") or hydrated.get("title", "")
+                hydrated["authors"] = paper_record.get("authors") or hydrated.get("authors", [])
+                hydrated["abstract"] = paper_record.get("abstract", "")
+                hydrated["doi"] = paper_record.get("doi") or hydrated.get("doi", "")
+                hydrated["pmid"] = paper_record.get("pmid") or hydrated.get("pmid", "")
+                hydrated["publication_date"] = paper_record.get("publication_date") or hydrated.get("publication_date", "")
+                hydrated["source_url"] = paper_record.get("source_url", "")
+
+        publication_date = str(hydrated.get("publication_date", "") or "")
+        hydrated["publication_year"] = publication_date[:4] if len(publication_date) >= 4 else ""
+        return hydrated
     
     def load_csv_to_vectordb(self, csv_path: str, batch_size: int = 100):
         """
@@ -139,7 +210,7 @@ class VectorDBManager:
         
         print(f"Successfully loaded {processed_count} documents into the vector database.")
     
-    def search_similar(self, query: str, n_results: int = 5) -> List[Dict[str, Any]]:
+    def search_similar(self, query: str, n_results: int = 15) -> List[Dict[str, Any]]:
         """
         Search for similar documents in the vector database
         
@@ -159,10 +230,12 @@ class VectorDBManager:
         formatted_results = []
         if results['documents'] and results['documents'][0]:
             for i in range(len(results['documents'][0])):
+                distance = results['distances'][0][i] if results['distances'] else None
                 result = {
                     'document': results['documents'][0][i],
-                    'metadata': results['metadatas'][0][i],
-                    'distance': results['distances'][0][i] if results['distances'] else None
+                    'metadata': self._normalize_node_metadata(results['metadatas'][0][i]),
+                    'distance': distance,
+                    'similarity_score': self._distance_to_similarity(distance),
                 }
                 formatted_results.append(result)
         
@@ -198,7 +271,7 @@ class VectorDBManager:
         if results['documents'] and results['documents'][0]:
             return {
                 'document': results['documents'][0][0],
-                'metadata': results['metadatas'][0][0]
+                'metadata': self._normalize_node_metadata(results['metadatas'][0][0])
             }
         return None
     
@@ -223,10 +296,107 @@ class VectorDBManager:
             sources[source] = sources.get(source, 0) + 1
             node_types[node_type] = node_types.get(node_type, 0) + 1
         
-        return {
+        stats = {
             'total_documents': total_docs,
             'sources': sources,
             'node_types': node_types
+        }
+
+        # Optional additional collections for papers and extracted entities
+        try:
+            papers_collection = self.client.get_collection(name="papers")
+            stats['papers_documents'] = papers_collection.count()
+        except Exception:
+            stats['papers_documents'] = 0
+
+        try:
+            paper_entities_collection = self.client.get_collection(name="paper_entities")
+            stats['paper_entities_documents'] = paper_entities_collection.count()
+        except Exception:
+            stats['paper_entities_documents'] = 0
+
+        stats['total_documents_all_collections'] = (
+            stats['total_documents'] +
+            stats['papers_documents'] +
+            stats['paper_entities_documents']
+        )
+
+        return stats
+
+    def sync_paper_entities_to_main_collection(
+        self,
+        paper_entities: Dict[str, Any],
+        source_name: str = "PAPER_INGEST",
+        only_approved: bool = False
+    ) -> Dict[str, int]:
+        """
+        Add new unique paper-derived entities into the main gene/protein collection.
+
+        Returns summary stats for added/skipped/total entities.
+        """
+        entity_types = ["genes", "proteins", "diseases", "pathways"]
+        candidates = []
+
+        for paper_id, entities in paper_entities.items():
+            for entity_type in entity_types:
+                for entity in entities.get(entity_type, []):
+                    if only_approved and not entity.get("approved", False):
+                        continue
+                    name = str(entity.get("name", "")).strip()
+                    if not name:
+                        continue
+                    candidates.append((paper_id, entity_type, name))
+
+        if not candidates:
+            return {"total_candidates": 0, "added": 0, "skipped": 0}
+
+        # Build a fast lookup of existing IDs in the main collection.
+        existing_ids = set(self.collection.get().get("ids", []))
+
+        documents = []
+        metadatas = []
+        ids = []
+        added = 0
+        skipped = 0
+
+        # Use stable deterministic IDs to prevent duplicate insertions.
+        for paper_id, entity_type, name in candidates:
+            normalized = ''.join(ch if ch.isalnum() else '_' for ch in name.lower()).strip('_')
+            doc_id = f"paper_node_{entity_type}_{normalized}"
+            if doc_id in existing_ids:
+                skipped += 1
+                continue
+
+            node_type = {
+                "genes": "gene",
+                "proteins": "protein",
+                "diseases": "disease",
+                "pathways": "pathway",
+            }.get(entity_type, "entity")
+
+            doc_text = f"{name} - Type: {node_type} - Source: {source_name}"
+            metadata = {
+                "node_index": self._stable_numeric_id(doc_id),
+                "node_id": name,
+                "node_type": node_type,
+                "node_name": name,
+                "node_source": source_name,
+                "source_paper_id": str(paper_id),
+            }
+
+            documents.append(doc_text)
+            metadatas.append(metadata)
+            ids.append(doc_id)
+            existing_ids.add(doc_id)
+            added += 1
+
+        if ids:
+            self.collection.add(documents=documents, metadatas=metadatas, ids=ids)
+
+        return {
+            "total_candidates": len(candidates),
+            "added": added,
+            "skipped": skipped,
         }
     
     def _format_context_for_gpt(self, search_results: List[Dict[str, Any]]) -> str:
@@ -245,7 +415,7 @@ class VectorDBManager:
         context_parts = []
         for i, result in enumerate(search_results, 1):
             metadata = result['metadata']
-            relevance = (1 - result['distance']) * 100 if result['distance'] else 100
+            relevance = result.get('similarity_score', self._distance_to_similarity(result.get('distance')))
             
             context_part = f"""
 Gene/Protein {i}:
@@ -398,6 +568,208 @@ Citation {i}:
             'has_openai': self.openai_client is not None,
             'has_citations': CITATIONS_AVAILABLE
         }
+    
+    def create_papers_collection(self, collection_name: str = "papers") -> None:
+        """
+        Create a separate collection for papers if it doesn't exist.
+        
+        Args:
+            collection_name: Name of the papers collection
+        """
+        try:
+            self.papers_collection = self.client.get_collection(name=collection_name)
+            print(f"Loaded existing papers collection: {collection_name}")
+        except:
+            self.papers_collection = self.client.create_collection(name=collection_name)
+            print(f"Created new papers collection: {collection_name}")
+    
+    def load_papers_to_vectordb(self, papers_data: List[Dict[str, Any]], batch_size: int = 50) -> None:
+        """
+        Load paper documents into the vector database. Each paper is indexed with its metadata.
+        
+        Args:
+            papers_data: List of paper dictionaries with title, abstract, pdf_path, etc.
+            batch_size: Number of papers to process in each batch
+        """
+        if not hasattr(self, 'papers_collection'):
+            self.create_papers_collection()
+        
+        total_papers = len(papers_data)
+        if total_papers == 0:
+            print("No papers to load.")
+            return
+        
+        print(f"Loading {total_papers} papers into vector database...")
+        processed_count = 0
+        
+        with tqdm(total=total_papers, desc="Loading papers", unit="papers") as pbar:
+            for start_idx in range(0, total_papers, batch_size):
+                end_idx = min(start_idx + batch_size, total_papers)
+                batch = papers_data[start_idx:end_idx]
+                
+                documents = []
+                metadatas = []
+                ids = []
+                
+                for paper in batch:
+                    # Create combined searchable text (title + abstract)
+                    doc_text = f"{paper.get('title', '')} {paper.get('abstract', '')}"
+                    
+                    # Create metadata
+                    metadata = {
+                        "paper_id": str(paper.get('paper_id', '')),
+                        "title": str(paper.get('title', '')),
+                        "authors": '|'.join(paper.get('authors', []))[:500],  # Limit string length
+                        "pmid": str(paper.get('pmid', '')),
+                        "doi": str(paper.get('doi', '')),
+                        "publication_date": str(paper.get('publication_date', '')),
+                        "upload_date": str(paper.get('upload_date', '')),
+                        "extraction_status": str(paper.get('extraction_status', 'pending'))
+                    }
+                    
+                    documents.append(doc_text)
+                    metadatas.append(metadata)
+                    ids.append(f"paper_{paper.get('paper_id', start_idx + len(documents))}")
+                
+                try:
+                    self.papers_collection.add(
+                        documents=documents,
+                        metadatas=metadatas,
+                        ids=ids
+                    )
+                    processed_count += len(documents)
+                    pbar.update(len(documents))
+                    time.sleep(0.01)
+                except Exception as e:
+                    print(f"Error loading papers batch {start_idx}-{end_idx}: {e}")
+                    continue
+        
+        print(f"Successfully loaded {processed_count} papers into the vector database.")
+    
+    def search_papers(self, query: str, n_results: int = 5) -> List[Dict[str, Any]]:
+        """
+        Search for papers similar to a query.
+        
+        Args:
+            query: Search query
+            n_results: Number of results to return
+            
+        Returns:
+            List of paper results with metadata
+        """
+        if not hasattr(self, 'papers_collection'):
+            return []
+        
+        try:
+            results = self.papers_collection.query(
+                query_texts=[query],
+                n_results=n_results
+            )
+            
+            formatted_results = []
+            if results['documents'] and results['documents'][0]:
+                for i in range(len(results['documents'][0])):
+                    distance = results['distances'][0][i] if results['distances'] else None
+                    metadata = self._hydrate_paper_metadata(results['metadatas'][0][i])
+                    result = {
+                        'document': results['documents'][0][i],
+                        'metadata': metadata,
+                        'distance': distance,
+                        'similarity_score': self._distance_to_similarity(distance),
+                        'paper_id': metadata.get('paper_id', ''),
+                        'title': metadata.get('title', ''),
+                        'authors': metadata.get('authors', []),
+                        'pmid': metadata.get('pmid', ''),
+                        'doi': metadata.get('doi', ''),
+                        'publication_date': metadata.get('publication_date', ''),
+                        'publication_year': metadata.get('publication_year', ''),
+                        'abstract': metadata.get('abstract', ''),
+                        'source_url': metadata.get('source_url', ''),
+                    }
+                    formatted_results.append(result)
+            
+            return formatted_results
+        except Exception as e:
+            print(f"Error searching papers: {e}")
+            return []
+    
+    def load_paper_entities_to_vectordb(self, paper_entities: Dict[str, Any], collection_name: str = "paper_entities") -> None:
+        """
+        Load extracted entities from papers into a separate collection for entity-specific search.
+        
+        Args:
+            paper_entities: Dictionary mapping paper_id to extracted entities
+            collection_name: Name of the entities collection
+        """
+        try:
+            entities_collection = self.client.get_collection(name=collection_name)
+        except:
+            entities_collection = self.client.create_collection(name=collection_name)
+        
+        total_entities = sum(
+            len(entities.get(etype, []))
+            for entities in paper_entities.values()
+            for etype in ['genes', 'proteins', 'diseases', 'pathways']
+        )
+        
+        if total_entities == 0:
+            print("No entities to load.")
+            return
+        
+        print(f"Loading {total_entities} entities from papers...")
+        processed_count = 0
+        batch_size = 100
+        documents = []
+        metadatas = []
+        ids = []
+        
+        with tqdm(total=total_entities, desc="Loading entities", unit="entities") as pbar:
+            for paper_id, entities in paper_entities.items():
+                for entity_type in ['genes', 'proteins', 'diseases', 'pathways']:
+                    for entity in entities.get(entity_type, []):
+                        doc_text = f"{entity.get('name', '')} {entity.get('context', '')[:200]}"
+                        
+                        metadata = {
+                            "paper_id": str(paper_id),
+                            "entity_name": str(entity.get('name', '')),
+                            "entity_type": entity_type,
+                            "confidence": float(entity.get('confidence', 0.0)),
+                            "approved": bool(entity.get('approved', False)),
+                            "mapped_to_existing": str(entity.get('mapped_to_existing', ''))
+                        }
+                        
+                        documents.append(doc_text)
+                        metadatas.append(metadata)
+                        ids.append(f"entity_{paper_id}_{entity_type}_{len(ids)}")
+                        
+                        if len(documents) >= batch_size:
+                            try:
+                                entities_collection.add(
+                                    documents=documents,
+                                    metadatas=metadatas,
+                                    ids=ids
+                                )
+                                processed_count += len(documents)
+                                pbar.update(len(documents))
+                                documents, metadatas, ids = [], [], []
+                                time.sleep(0.01)
+                            except Exception as e:
+                                print(f"Error loading entity batch: {e}")
+        
+        # Load remaining documents
+        if documents:
+            try:
+                entities_collection.add(
+                    documents=documents,
+                    metadatas=metadatas,
+                    ids=ids
+                )
+                processed_count += len(documents)
+                pbar.update(len(documents))
+            except Exception as e:
+                print(f"Error loading final entity batch: {e}")
+        
+        print(f"Successfully loaded {processed_count} entities into the vector database.")
 
 # Example usage
 if __name__ == "__main__":

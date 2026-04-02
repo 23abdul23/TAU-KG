@@ -1,0 +1,2093 @@
+[FULL_TEXT]
+Biallelic TMEM72 Variants in Patients with a Nephronophthisis-Like Phenotype - PMC
+Skip to main content
+An official website of the United States government
+Here's how you know
+Here's how you know
+Official websites use .gov
+A
+.gov
+website belongs to an official
+government organization in the United States.
+Secure .gov websites use HTTPS
+A
+lock
+(
+Lock
+Locked padlock icon
+) or
+https://
+means you've safely
+connected to the .gov website. Share sensitive
+information only on official, secure websites.
+Search
+Log in
+Dashboard
+Publications
+Account settings
+Log out
+Search…
+Search NCBI
+Search PMC Full-Text Archive
+Search in PMC
+Journal List
+User Guide
+PERMALINK
+Copy
+As a library, NLM provides access to scientific literature. Inclusion in an NLM database does not imply endorsement of, or agreement with,
+the contents by NLM or the National Institutes of Health.
+Learn more:
+PMC Disclaimer
+|
+PMC Copyright Notice
+Nephron Clin Pract
+. 2025 Nov 27. Online ahead of print. doi:
+10.1159/000549598
+Biallelic
+TMEM72
+Variants in Patients with a Nephronophthisis-Like Phenotype
+Laura R Claus
+Laura R Claus
+a
+Department of Genetics, University Medical Center Utrecht, Utrecht University, Utrecht, The Netherlands
+Find articles by
+Laura R Claus
+a
+,
+Rozemarijn Snoek
+Rozemarijn Snoek
+a
+Department of Genetics, University Medical Center Utrecht, Utrecht University, Utrecht, The Netherlands
+Find articles by
+Rozemarijn Snoek
+a
+,
+Siebren Faber
+Siebren Faber
+b
+Department of Human Genetics, Radboud UMC, Nijmegen, The Netherlands
+Find articles by
+Siebren Faber
+b
+,
+Aurelius JC Roskothen-Shevchuk
+Aurelius JC Roskothen-Shevchuk
+c
+Department of Nephrology and Hypertension, University Medical Center Utrecht, Utrecht, The Netherlands
+Find articles by
+Aurelius JC Roskothen-Shevchuk
+c
+,
+Elena Sendino Garví
+Elena Sendino Garví
+d
+Division of Pharmacology, Utrecht Institute for Pharmaceutical Sciences, Utrecht University, Utrecht, The Netherlands
+Find articles by
+Elena Sendino Garví
+d
+,
+Edith DJ Peters
+Edith DJ Peters
+a
+Department of Genetics, University Medical Center Utrecht, Utrecht University, Utrecht, The Netherlands
+Find articles by
+Edith DJ Peters
+a
+,
+Sanne MC Savelberg
+Sanne MC Savelberg
+a
+Department of Genetics, University Medical Center Utrecht, Utrecht University, Utrecht, The Netherlands
+Find articles by
+Sanne MC Savelberg
+a
+,
+Karen Duran
+Karen Duran
+a
+Department of Genetics, University Medical Center Utrecht, Utrecht University, Utrecht, The Netherlands
+Find articles by
+Karen Duran
+a
+,
+Bert van der Zwaag
+Bert van der Zwaag
+a
+Department of Genetics, University Medical Center Utrecht, Utrecht University, Utrecht, The Netherlands
+Find articles by
+Bert van der Zwaag
+a
+,
+Tri Q Nguyen
+Tri Q Nguyen
+e
+Department of Pathology, University Medical Center Utrecht, Utrecht University, Utrecht, The Netherlands
+Find articles by
+Tri Q Nguyen
+e
+,
+Roel Broekhuizen
+Roel Broekhuizen
+e
+Department of Pathology, University Medical Center Utrecht, Utrecht University, Utrecht, The Netherlands
+Find articles by
+Roel Broekhuizen
+e
+,
+Walter J Brummelhuis
+Walter J Brummelhuis
+f
+Department of Rheumatology and Clinical Immunology, University Medical Center Utrecht, Utrecht, The Netherlands
+Find articles by
+Walter J Brummelhuis
+f
+,
+Maarten Rookmaaker
+Maarten Rookmaaker
+c
+Department of Nephrology and Hypertension, University Medical Center Utrecht, Utrecht, The Netherlands
+Find articles by
+Maarten Rookmaaker
+c
+,
+Suzanne W van der Veen
+Suzanne W van der Veen
+g
+Department of Genetics, Center for Molecular Medicine, Utrecht University, Utrecht, The Netherlands
+Find articles by
+Suzanne W van der Veen
+g
+,
+Martin G Elferink
+Martin G Elferink
+a
+Department of Genetics, University Medical Center Utrecht, Utrecht University, Utrecht, The Netherlands
+Find articles by
+Martin G Elferink
+a
+,
+Alexandre Karras
+Alexandre Karras
+h
+Department of Nephrology, Assistance Publique-Hôpitaux de Paris (APHP), Hôpital Européen Georges Pompidou, Université de Paris, Paris, France
+Find articles by
+Alexandre Karras
+h
+,
+Laure Raymond
+Laure Raymond
+i
+Soins Intensifs Néphrologiques et Rein Aigu, Department of Nephrology, Sorbonne Université and Assistance Publique-Hôpitaux de Paris (APHP), Paris, France
+Find articles by
+Laure Raymond
+i
+,
+Cyril Mousseaux
+Cyril Mousseaux
+i
+Soins Intensifs Néphrologiques et Rein Aigu, Department of Nephrology, Sorbonne Université and Assistance Publique-Hôpitaux de Paris (APHP), Paris, France
+Find articles by
+Cyril Mousseaux
+i
+,
+Omid Sadeghi-Alavijeh
+Omid Sadeghi-Alavijeh
+j
+Centre for Genetics and Genomics, Department of Renal Medicine, University College London, London, UK
+Find articles by
+Omid Sadeghi-Alavijeh
+j
+,
+John A Sayer
+John A Sayer
+k
+Biosciences Institute, Faculty of Medical Sciences, Newcastle University, Newcastle upon Tyne, UK
+l
+Renal Services, Newcastle Upon Tyne Hospitals NHS Foundation Trust, Newcastle upon Tyne, UK
+m
+NIHR Newcastle Biomedical Research Centre, Newcastle upon Tyne, UK
+Find articles by
+John A Sayer
+k,
+l,
+m
+,
+Eric Olinger
+Eric Olinger
+k
+Biosciences Institute, Faculty of Medical Sciences, Newcastle University, Newcastle upon Tyne, UK
+Find articles by
+Eric Olinger
+k
+,
+Ruxandra Neatu
+Ruxandra Neatu
+k
+Biosciences Institute, Faculty of Medical Sciences, Newcastle University, Newcastle upon Tyne, UK
+Find articles by
+Ruxandra Neatu
+k
+,
+Verena Klämbt
+Verena Klämbt
+n
+Division of Pediatric Nephrology, Boston Children’s Hospital, Boston, MA, USA
+Find articles by
+Verena Klämbt
+n
+,
+Marijn F Stokman
+Marijn F Stokman
+a
+Department of Genetics, University Medical Center Utrecht, Utrecht University, Utrecht, The Netherlands
+b
+Department of Human Genetics, Radboud UMC, Nijmegen, The Netherlands
+Find articles by
+Marijn F Stokman
+a,
+b
+,
+Nine VAM Knoers
+Nine VAM Knoers
+o
+Department of Genetics, University Medical Center Groningen, Groningen, The Netherlands
+Find articles by
+Nine VAM Knoers
+o
+,
+Federico Tessadori
+Federico Tessadori
+a
+Department of Genetics, University Medical Center Utrecht, Utrecht University, Utrecht, The Netherlands
+p
+Hubrecht Institute, KNAW and University Medical Center Utrecht, Utrecht, The Netherlands
+Find articles by
+Federico Tessadori
+a,
+p
+,
+Daniel P Gale
+Daniel P Gale
+j
+Centre for Genetics and Genomics, Department of Renal Medicine, University College London, London, UK
+Find articles by
+Daniel P Gale
+j
+,
+Karsten Boldt
+Karsten Boldt
+q
+Institute of Ophthalmic Research, Center for Ophthalmology, University of Tübingen, Tübingen, Germany
+r
+Core Facility for Medical Proteomics, University of Tübingen, Tübingen, Germany
+Find articles by
+Karsten Boldt
+q,
+r
+,
+Marius Ueffing
+Marius Ueffing
+q
+Institute of Ophthalmic Research, Center for Ophthalmology, University of Tübingen, Tübingen, Germany
+Find articles by
+Marius Ueffing
+q
+,
+Gisela G Slaats
+Gisela G Slaats
+c
+Department of Nephrology and Hypertension, University Medical Center Utrecht, Utrecht, The Netherlands
+Find articles by
+Gisela G Slaats
+c
+,
+Ronald Roepman
+Ronald Roepman
+b
+Department of Human Genetics, Radboud UMC, Nijmegen, The Netherlands
+Find articles by
+Ronald Roepman
+b
+,
+Friedhelm Hildebrandt
+Friedhelm Hildebrandt
+m
+NIHR Newcastle Biomedical Research Centre, Newcastle upon Tyne, UK
+Find articles by
+Friedhelm Hildebrandt
+m
+,
+Laurent Mesnard
+Laurent Mesnard
+i
+Soins Intensifs Néphrologiques et Rein Aigu, Department of Nephrology, Sorbonne Université and Assistance Publique-Hôpitaux de Paris (APHP), Paris, France
+Find articles by
+Laurent Mesnard
+i
+,
+Gijs van Haaften
+Gijs van Haaften
+a
+Department of Genetics, University Medical Center Utrecht, Utrecht University, Utrecht, The Netherlands
+Find articles by
+Gijs van Haaften
+a
+,
+Albertien M van Eerde
+Albertien M van Eerde
+a
+Department of Genetics, University Medical Center Utrecht, Utrecht University, Utrecht, The Netherlands
+Find articles by
+Albertien M van Eerde
+a,
+✉
+Author information
+Article notes
+Copyright and License information
+a
+Department of Genetics, University Medical Center Utrecht, Utrecht University, Utrecht, The Netherlands
+b
+Department of Human Genetics, Radboud UMC, Nijmegen, The Netherlands
+c
+Department of Nephrology and Hypertension, University Medical Center Utrecht, Utrecht, The Netherlands
+d
+Division of Pharmacology, Utrecht Institute for Pharmaceutical Sciences, Utrecht University, Utrecht, The Netherlands
+e
+Department of Pathology, University Medical Center Utrecht, Utrecht University, Utrecht, The Netherlands
+f
+Department of Rheumatology and Clinical Immunology, University Medical Center Utrecht, Utrecht, The Netherlands
+g
+Department of Genetics, Center for Molecular Medicine, Utrecht University, Utrecht, The Netherlands
+h
+Department of Nephrology, Assistance Publique-Hôpitaux de Paris (APHP), Hôpital Européen Georges Pompidou, Université de Paris, Paris, France
+i
+Soins Intensifs Néphrologiques et Rein Aigu, Department of Nephrology, Sorbonne Université and Assistance Publique-Hôpitaux de Paris (APHP), Paris, France
+j
+Centre for Genetics and Genomics, Department of Renal Medicine, University College London, London, UK
+k
+Biosciences Institute, Faculty of Medical Sciences, Newcastle University, Newcastle upon Tyne, UK
+l
+Renal Services, Newcastle Upon Tyne Hospitals NHS Foundation Trust, Newcastle upon Tyne, UK
+m
+NIHR Newcastle Biomedical Research Centre, Newcastle upon Tyne, UK
+n
+Division of Pediatric Nephrology, Boston Children’s Hospital, Boston, MA, USA
+o
+Department of Genetics, University Medical Center Groningen, Groningen, The Netherlands
+p
+Hubrecht Institute, KNAW and University Medical Center Utrecht, Utrecht, The Netherlands
+q
+Institute of Ophthalmic Research, Center for Ophthalmology, University of Tübingen, Tübingen, Germany
+r
+Core Facility for Medical Proteomics, University of Tübingen, Tübingen, Germany
+✉
+Correspondence to: Albertien M. van Eerde,
+a.vaneerde@umcutrecht.nl
+#
+Laura R. Claus and Rozemarijn Snoek, Siebren Faber and Aurelius J.C. Roskothen-Shevchuk, and Gijs van Haaften and Albertien M. van Eerde contributed equally to this work.
+Karen Duran is included as a posthumous author.
+✉
+Corresponding author.
+Received 2024 Dec 21; Accepted 2025 Nov 12.
+© 2025 The Author(s). Published by S. Karger AG, Basel
+This article is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License (CC BY-NC) (
+http://www.karger.com/Services/OpenAccessLicense
+). Usage and distribution for commercial purposes requires written permission.
+PMC Copyright notice
+PMCID: PMC12782617  PMID:
+41308066
+Abstract
+Introduction
+Nephronophthisis (NPHP) is an autosomal recessive kidney disease resulting mainly from primary cilium defects, with unspecific and variable symptoms that can progress to kidney failure needing replacement therapy at a young age. Currently, up to 64% of likely NPHP cases can be diagnosed by assessing known genes. Therefore, there is a need to gain more insight in what genes can cause this disease.
+Methods
+In a diagnostic setting, we performed broad genetic testing in patients with advanced kidney disease. We carried out in silico and in vitro analyses for
+TMEM72
+, including immunohistochemistry and affinity proteomics, and in vivo experiments to further interpret our findings.
+Results
+We identified biallelic
+TMEM72
+variants in 9 patients from six families with a phenotype suggestive for NPHP. Five families presented with kidney failure at a (young) adult age. One family had a different phenotype with prenatal onset of kidney failure and neurological symptoms. The phenotypes of the patients correspond to TMEM72 expression mainly in the kidney. In silico analyses indicate that homozygous loss-of-function variants are likely not tolerated in
+TMEM72
+. Immunohistochemistry staining of kidney biopsies revealed altered localization and expression of TMEM72 in cases compared to controls. In human-derived tubuloids, we showed that TMEM72 localizes to the cilium. Furthermore, using an affinity proteomics approach, we found an association of TMEM72 and ciliary function, more specifically in selective ciliary cholesterol transport.
+Conclusion
+We present the first genetic evidence, underlined by immunohistochemistry and protein binding assays, linking
+TMEM72
+variants to kidney disease and ciliary function. We conclude that
+TMEM72
+is a candidate gene for NPHP. Future work is needed to further characterize
+TMEM72
+variants and unravel its disease mechanism.
+Keywords:
+TMEM72, Ciliopathy, Nephronophthisis, Kidney failure needing replacement therapy, Monogenic kidney disease
+Introduction
+Chronic kidney disease (CKD) that has progressed to kidney failure needing replacement therapy (KFRT) is life-threatening and causes a devastating social, economic, and medical burden worldwide [
+1
+–
+3
+]. One category of causes for CKD encompasses monogenic kidney disease. Despite each individual disease being rare, together monogenic kidney diseases are estimated to account for 70% of KFRT in children, and approximately 10–30% of the overall prevalence of KFRT in adults [
+4
+–
+6
+]. In children and young adults, nephronophthisis (NPHP) is the most frequent monogenic cause of KFRT [
+7
+,
+8
+].
+NPHP is mostly an autosomal recessive disease characterized by renal fibrosis, interstitial nephritis, and occasional presence of kidney cysts [
+8
+–
+10
+]. Patients with NPHP often experience polyuria, polydipsia, and secondary enuresis as initial symptoms, due to impairment of urine concentration. Because of these unspecific and variable symptoms, NPHP is notoriously difficult to diagnose clinically [
+11
+–
+13
+] and most patients only present with the disease when it has progressed to advanced kidney failure, especially those without extra-renal features [
+11
+,
+14
+–
+17
+]. Extra-renal features that are present in approximately 15–20% percent of the cases involve different organs such as the eyes, central nervous system, heart, liver, and skeleton [
+8
+,
+14
+,
+18
+–
+20
+].
+NPHP is classified as a ciliopathy since the disease is mainly caused by pathogenic variants in genes encoding proteins that are important for adequate functioning of the primary cilium [
+12
+,
+21
+,
+22
+]. The primary cilium functions as a cellular antenna by performing sensory and signaling functions [
+23
+]. The primary cilium consists of several components, including a basal body, a transition zone, an axoneme, a ciliary membrane, and a specialized intraflagellar transport (IFT) system [
+24
+].
+Localization of the NPHP-associated proteins in the primary cilium is diverse, so no single ciliary compartment can be linked to the development of NPHP [
+25
+]. Therefore, a unifying disease mechanism to date remains elusive, and it is still unclear why disease in the majority of NPHP patients is isolated to the kidney. Furthermore, up to 64% of all likely NPHP cases can be diagnosed by screening known genes for pathogenic variants [
+26
+]. Finding novel NPHP causing genes is therefore crucial to elucidate potential underlying mechanisms and to improve the diagnostic yield.
+In this study, we present 9 patients from six families that carry biallelic variants in
+TMEM72
+, encoding transmembrane protein 72 (TMEM72). TMEM72 is a 275 amino acid protein mainly expressed in the kidney. It contains four transmembrane domains and a relatively large intracellular domain at the C-terminus [
+27
+]. TMEM72 belongs to the family of transmembrane proteins (TMEMs), a protein family with diverse functions in essential cellular pathways [
+28
+]. Pathogenic variants in several genes encoding various TMEMs have already been shown to cause kidney disease and more specifically renal ciliopathies [
+9
+,
+29
+]. Previous studies demonstrate distinct expression of
+TMEM72
+in the kidney and suggest a role in tumorigenesis, but
+TMEM72
+has not yet been associated with monogenic disease [
+27
+,
+30
+–
+34
+]. Here, we show through in silico and in vitro analyses that
+TMEM72
+variants in the patients we described could cause their kidney disease, and might be functionally linked to ciliary function.
+Methods
+Patient Enrolment
+We included patients carrying rare variants in
+TMEM72
+through two complementary approaches. First, individuals were included through routine diagnostic genetic testing performed in the context of suspected hereditary kidney disease at the University Medical Center Utrecht in the Netherlands, the Sorbonne University and Assistance Publique Hopitaux de Paris in France and the Boston Children’s Hospital in the USA. Collaboration between these centers was established through GeneMatcher [
+35
+]. In these patients, no deleterious variants were detected in known kidney disease genes relevant for their phenotype (online suppl. Table 1; for all online suppl. material, see
+https://doi.org/10.1159/000549598
+). Second, additional patients were identified through a systematic analysis of the 100,000 Genomes Project (100kGP). All patients provided informed consent for whole-exome sequencing (WES) or whole-genome sequencing and for their anonymized data to be used for research. Patients from the 100kGP were enrolled as previously described [
+36
+].
+Genomic Analyses
+Details on WES, variant filtering, SNP genotyping, and structural variant analysis are described in the online supplementary material. Here, we also describe how we determined relatedness between the patients from family A and B.
+In silico Predictions
+To search for open reading frames (ORFs) in
+TMEM72
+, we applied the ORFfinder (NCBI) based on the nucleotide sequence of the reference genome and the variants found in our patients [
+37
+]. Using Uniprot, we assessed whether known isoforms were predicted [
+38
+]. We used the Protter tool to visualize the predicted secondary structure of TMEM72 [
+39
+], which aligns with previous in vitro evidence [
+27
+].
+Immunohistochemistry
+Kidney biopsy tissue of patients from family A and B, a healthy control and a CKD control kidney biopsy with ANCA-associated glomerulonephritis was stained with a rabbit-anti-TMEM72 antibody (Atlas Antibodies, HPA039894). A kidney biopsy was also performed on an unaffected parent (B-I-2) of a patient, before a living-donor kidney transplantation procedure.
+Tissue sections were deparaffinized, endogenous peroxidase was blocked for 30 min and antigen retrieval was done by boiling in citrate pH6 for 20 min. Primary antibody incubation was performed for 1 h at room temperature (RT) with the antibody at a 1:100 dilution in PBS with 1% bovine serum albumin. BrightVision anti-rabbit (VWR) was applied for 45 min, after which the Nova Red substrate (Vector) was incubated for 10 min, followed by counterstaining with hematoxylin (Merck). Slides were washed with tap water for 10 min and then dehydrated and mounted. Imaging was performed with a Nikon E800M microscope. Details on immunofluorescence are described in the online supplementary material.
+In vitro and in vivo Experiments
+In the online supplementary material, detailed methods on cell culture, qPCR, Western blot, transfection with overexpression constructs of
+TMEM72
+and in vivo experiments in zebrafish are provided.
+Staining of TMEM72 in Human-Derived Tubuloids
+Human Subjects
+Human healthy kidney tissue-derived tubuloids were established after obtaining written informed consent from nephrectomies for malignancies in the Kidneybank biobank, which was approved by the Biobank Research Ethics Committee (TCBio) of the University Medical Center Utrecht (UMCU) in January 2023 (TCBio 22–873). The study was approved by the TCBio of the UMCU under protocol No. 23-039 and is in accordance with the Declaration of Helsinki and Dutch law.
+Tubuloid Culture
+Tubuloids were generated from human healthy kidney tissue of four donors and seeded as single cells from passage 5–7 on coverslips, following previously established protocols [
+40
+,
+41
+]. Differentiation toward a distal tubular phenotype was performed as previously described [
+42
+].
+Immunofluorescent Staining and Confocal Imaging
+2D tubuloid cell monolayers were fixed in 4% paraformaldehyde, permeabilized, and blocked in PBS containing 0.5% Triton X-100 and 0.5% bovine serum albumin. Primary antibodies against TMEM72 (Atlas Antibodies, HPA039894), ARL13B (Proteintech, 30332-1-AP), acetylated tubulin (Sigma-Aldrich, T6793), and/or NPHP1 (Clone 62, gifted by Prof. Schermer) were incubated overnight at 4°C. After washing, appropriate secondary antibodies were applied for 1.5 h at room temperature. The samples were then mounted in VectaShield (Vectorlabs, H-1000-10) and stored at 4°C. Confocal imaging was performed using a Leica DMi8 microscope with a 63× oil immersion objective.
+Affinity Proteomics
+Constructs Generation
+To generate SF-TAP (NTAP) tagged TMEM72 long (1-275aa; A0PK05-1), human full-length wild-type
+TMEM72
+complementary DNA (cDNA) was amplified from HEK293T cells and cloned into the NTAP destination vector using Gateway cloning. NTAP TMEM72 short isoform (119-275aa; A0PK05-2) was created from the full-length
+TMEM72
+cDNA using PCR amplification mutagenesis, followed by Gateway cloning into NTAP destination vector. NTAP tagged RAF1 was used as control [
+43
+].
+Affinity Purification of TMEM72 Protein Complexes
+HEK293T cells were transfected with NTAP tagged constructs and cultured for 24 h in DMEM (Sigma-Aldrich, D0819) supplemented with 1% penicillin-streptomycin (Sigma, P4333), 1% sodium pyruvate (Sigma-Aldrich, S8636), and 10% fetal bovine serum (Sigma-Aldrich, F0392). The next day, cells were lysed in lysis buffer containing 0.5% Nonidet-P40, protease inhibitor cocktail (Roche), and phosphatase inhibitor cocktails I and II (Sigma-Aldrich) in TBS (30 m
+m
+Tris-HCl, pH 7.4, and 150 m
+m
+NaCl) for 30 min at 4°C and cleared by centrifugation at 10,000
+g
+for 15 min. The cleared lysates were transferred to anti-FlagM2 affinity gel (Sigma-Aldrich) and incubated for 1.5 h at 4°C. Subsequently, the affinity gel with bound protein complexes was washed 3 times with wash buffer (TBS containing 0.1% NP40 and phosphatase inhibitor cocktails I and II), followed by 2 times with 1xTBS. The protein complexes were eluted with Flag peptide (200 μg/mL; Sigma-Aldrich) in TBS. After purification, the samples were precipitated with methanol and chloroform [
+43
+]. The precipitated protein pellets were stored at −80°C until mass spectrometry (MS) analysis.
+MS Analysis, Protein Quantification, and Statistics
+The precipitated proteins were subjected to in-solution tryptic cleavage and StageTip purified (Thermo Scientific), followed by MS analysis on an Orbitrap Fusion Tribrid mass spectrometer (Thermo Fisher) as described earlier [
+44
+]. Label-free quantification was performed, using Maxquant (v.1.6.1.0) and identified proteins were analyzed using Perseus (v1.6.2.3) [
+45
+,
+46
+]. All data were filtered for potential contaminants, peptides only identified by side, and reverse database identifications. The proteins were filtered to be present in ≥4 of the 6 replicates. For TMEM72 long isoform versus RAF1 (control) and TMEM72 short isoform versus RAF1, a one-sided two-sample test with permutation-based FDR correction was performed (FDR ≤0.05). Proteins were considered significantly enriched when passing the two-sample test and when showing an enrichment of at least 4 fold (log2 = 2). For TMEM72 long versus TMEM72 short isoform, a two-sided two-sample test with permutation-based FDR correction was performed (FDR ≤0.05). A ratio >4 fold (log2 = 2) was used as threshold to identify TMEM72 long enriched proteins and a ratio <0.25 (log2 = −2) was used to identify TMEM72 short isoform enriched proteins. Significantly enriched proteins were subjected to GetGo analysis. Subsequently, identified ciliary landscape proteins were subjected to STRING analysis to define the functional protein association networks. The ciliary landscape proteins, defined by the Syscilia consortium, represent proteins enriched in the cilia specific protein landscape, created by affinity proteomics of more than two hundred ciliary proteins [
+43
+,
+47
+].
+Results
+Biallelic TMEM72 Variants in Kidney Disease Patients
+We detected homozygous variants in
+TMEM72
+in the index patients of six families who lacked an alternative genetic explanation for their kidney disease (
+Fig. 1
+;
+Table 1
+). In five families, we observed KFRT in (young) adulthood (ages ranging from 21 to 41). Kidney ultrasound was suggestive for NPHP showing small-to-normal-sized kidneys, increased echogenicity and loss of corticomedullary differentiation. Family F presented with a different phenotype. The patient had enlarged echogenic cystic kidneys, vesicoureteral reflux, and congenital KFRT. She developed epilepsy, but no brain MRI was performed, so the presence of cerebral malformations could not be assessed. She passed away at the age of 2 years.
+Fig. 1.
+Open in a new tab
+Pedigrees of the families described in this study. n.c., reported as non-consanguineous.
+Table 1.
+Phenotypical characteristics of the patients described in this study
+​
+Age, years
+1
+CKD stage
+1
+Presenting symptom
+Other renal features
+Extra-renal features
+Renal ultrasound
+1
+Renal biopsy
+Age at KFRT, years
+Family history
+Homozygous variant in
+TMEM72*
+A-II-2 (NL_NG_008_02)
+20
+IV
+Nycturia
+Hypertension, mild erythrocyturia and proteinuria
+None
+Right kidney 8.0 cm, left kidney 9.9 cm, both with increased echogenicity
+Not performed due to advanced CKD
+21
+Sib = A-II-4
+c.4C>T
+p.(Gln2*)
+A-II-4 (NL_NG_008_01)
+19
+III
+Hypertension
+Proteinuria 0.9 g/24 h, mild erythrocyturia and leukocyturia
+None
+Right kidney 9.7 cm, left kidney 10.7 cm, both with increased echogenicity
+Glomerulosclerosis and tubular atrophy. EM failed, IF no abnormalities
+22
+Sib = A-II-2
+c.4C>T
+p.(Gln2*)
+B-II-1 (France_TNN1)
+32
+IIIb
+Hypertension, CKD
+Mild proteinuria 1 g/day
+Polycythemia 16.9 g/dL
+Right kidney 8.9 cm, left kidney 9.3 cm, increased echogenicity, no cysts
+Interstitial fibrosis, vascular lesions
+41
+c
+Sib = B-II-4
+c.4C>T
+No hematuria
+p.(Gln2*)
+B-II-4 (France_TNN3)
+24
+IV
+Hypertension, CKD
+Proteinuria 1.5 g/day
+Relative polycythemia 17.4 g/dL
+Right kidney 9.7 cm, left kidney 10.4 cm, increased echogenicity, presence of 3 small cysts
+Interstitial fibrosis, vascular lesions, FSGS
+30
+c
+Sib = B-II-1
+c.4C>T
+No hematuria
+p.(Gln2*)
+C-II-1
+20
+III
+CKD, pyelonephritis
+Hypertension
+None
+Absence of renal cyst. Details not available
+Not performed
+45
+c
+Negative
+c.4C>T
+p.(Gln2*)
+D-II-1
+a
+(France_TNN250)
+23
+IV
+Malignant hypertension, post-partum CKD
+Mild proteinuria 1.35 g/day
+Relative polycythemia 16.1 g/dL
+Absence of renal cyst. Right kidney 10 cm, left kidney 11 cm
+Interstitial fibrosis, vascular fibrosis, FSGS
+26
+Sib KFRT at ∼25 yr/o, deceased at 54 yr/o
+c.208del
+No hematuria
+p.(Gln70Serfs*11)
+E-II-1
+b
+(UK_GEL1)
+20–25
+NA
+NA
+NPHP, hematuria, hypertension
+NA
+Renal atrophy, cyst of kidney, details not available
+NA
+25–30
+Sib = E-II-2
+c.705del
+p.(Ala236Profs*85)
+E-II-2
+b
+(UK_GEL2)
+20–25
+NA
+NA
+Hypertension
+NA
+NA
+NA
+30-35 yr/o with CKD stage IV
+Sib = E-II-1
+c.705del
+p.(Ala236Profs*85)
+F-II-1
+a
+(US_NP705_B2436-21)
+Prenatal
+V
+Intra-uterine oligohydramnios
+Hypertension, vesicoureteral reflux
+Epilepsy
+Increased echogenicity, medullary cysts, enlarged kidneys, loss of corticomedullary differentiation
+Not performed
+Prenatal diagnosis
+Cousin with PKD, dialysis for 2 yr before he passed away at 2 yr old
+c.370G>A p.(Gly124Ser)
+Open in a new tab
+CKD, chronic kidney disease; cm, centimeter; EM, electron microscopy; KFRT, kidney failure with replacement therapy; IF, immunofluorescence staining; NA, not available; NPHP, nephronophthisis; PKD, polycystic kidney disease; yr, years.
+1
+At presentation.
+*
+NM_001123376.2
+.
+a
+Passed away at age 2.
+b
+Detailed data unavailable due to policy of the 100,000 Genomes Project.
+c
+Preemptive transplantation. Family F is presented below the dotted line, as this case differs from the rest of the cohort in both variant type and clinical presentation.
+In family A, B, and E, we also detected the
+TMEM72
+variants in homozygous state in an affected sibling (
+Fig. 1
+). In family A, both parents were shown to carry the variant in a heterozygous state, and one unaffected sister was shown to have two wild-type alleles.
+In families A, B and C, we detected the same homozygous truncating variant p.Gln2*. These families originate from the same region in Northern-Africa. Families A and B were known consanguineous. Results of the genome-wide kinship analysis excluded relatedness up to the 3rd degree between family A and B. However, manual inspection of a 14 Mb ROH region comprising
+TMEM72
+showed that identical haplotypes were shared between the two families. We were unable to repeat this analysis for family C.
+In families D and E, we detected homozygous frameshift variants p.Gln70Serfs*11 and p.Ala236Profs*85, respectively). There was no evidence for a deletion of
+TMEM72
+in either family, and therefore, hemizygosity of the detected frameshift variants is unlikely. Family D reported a deceased affected sibling, in whom genetic testing had not been performed: further segregation in family D was complicated by the recent death of the index. The parents of this patient were not known to be consanguineous. The two affected siblings of family E were both included in the 100kGP. Based on the homozygosity plot, this family appears non-consanguineous, although there is some level of shared ancestry with the largest region of homozygosity of 10.5 Mb comprising
+TMEM72
+.
+In family F, we detected a homozygous missense variant p.Gly124Ser in a single child of consanguineous parents. The family history reported a cousin with a similar phenotype; however, no genetic testing was performed at the time.
+In silico Predictions of TMEM72 Variants
+Prediction of Variant Pathogenicity
+Table 2
+displays the results of the in silico analyses for the
+TMEM72
+variants. All variants have a PHRED-scaled CADD-score above 15 (15.63–35). In the gnomAD database (v2.1.1), the variants in our patients were not present in a homozygous state in more than 140,000 healthy controls and in silico loss of function studies did not detect homozygous protein-truncating variants in
+TMEM72
+[
+48
+]. In addition, there were significantly fewer instances of predicted loss-of-function variants in this gene than would be expected (o/e = 0.11 with 95% confidence interval 0.05–0.5), and none were detected in homozygosity, implying selection against this type of variant [
+49
+]. For the p.Gly124Ser missense variant, effect prediction tools SIFT, MutationTaster, and PolyPhen-2 predicted a pathogenic effect [
+50
+–
+53
+]. The substitution affects an evolutionary conserved residue and also appears to be located in a conserved region of the protein (online suppl. Fig. 1).
+Table 2.
+In silico assessment of patient variants in
+TMEM72
+Variant in
+TMEM72
+a
+gnomAD allele frequency v2.1.1
+CADD Phred v1.4
+SIFT
+MutationTaster
+PolyPhen-2
+c.4C>T p.(Gln2*)
+0
+35
+NA
+NA
+NA
+c.208del p. (Gln70Serfs*11)
+1.22e−5 x3 het; x0 hom
+27.0
+NA
+NA
+NA
+c.705del p.(Ala236Profs*85)
+2.14e−5 x6 het; x0 hom
+15.63
+NA
+NA
+NA
+c.370G>A p.(Gly124Ser)
+4.72e−5 x11 het; x0 hom
+23.6
+Deleterious (score:0.04)
+Disease causing (prob:0.998)
+Probably damaging (0.997)
+Open in a new tab
+The variant from Family F (c.370G>A) is presented below the dotted line, as this case differs from the rest of the cohort in both variant type and clinical presentation.
+Het, heterozygous; hom, homozygous; NA, not applicable.
+a
+NM_001123376.2
+.
+Genotype-First Approach in 100,000 Genomes Project and UK Biobank Reveals Rarity of TMEM72 Variants
+We assessed nearly 60,000 participants from the rare disease cohort of the 100kGP and 200,000 individuals from the population based cohort of the UK biobank for possible deleterious variants in
+TMEM72
+. Aside from the homozygous frameshift variant in family E reported above, we found no additional patients with convincing
+TMEM72
+variants. A detailed summary of the patients that passed the filtering strategy can be found in online supplementary Table 2.
+ORF Predictions
+ORF predictions indicated that the truncating variant p.Gln2*, identified in families A-C, and the frameshift variant c.208del p.Gln70Serfs*11, identified in family D, leads to the translation of a known short TMEM72 isoform (A0PK05-2) via an alternative transcription start site (highlighted in
+Fig. 2
+). The predicted secondary structure of A0PK05-2 is shown in online supplementary Figure 2.
+Fig. 2.
+Open in a new tab
+Visual representation of the predicted secondary structure of TMEM72. Adapted from the Protter tool [
+37
+]. The amino acids changed by the variants detected in the 5 families are highlighted in orange. Variant c.4C>T leads to a stop codon, resulting in translation of a shorter isoform at the start of the second methionine (highlighted in red), consisting solely of the intracellular C-terminal side of the protein (online suppl. Fig. 2). Also variant c.208del is predicted to result in this known short TMEM72 isoform (A0PK05-2). Every tenth amino acid is numbered. The location of rabbit-anti-TMEM72 antibody epitope is represented by the red bar. The blue circle represents the amino acid changed by the missense variant found in the control patient in the 100,000 Genomes Project (online suppl. material).
+Kidney Biopsies Show Altered Localization and Expression of TMEM72 in Patients
+Kidney biopsy tissue was available for participants A-II-4, B-I-2, B-II-1, and B-II-4. We stained both the long and short TMEM72 isoform using an antibody epitope directed at the first amino acids of the short isoform (epitope shown in
+Fig. 2
+).
+TMEM72 staining of healthy control material showed expression of TMEM72 in the distal tubule and the collecting duct (
+Fig. 3
+). On higher magnification, it is apparent that TMEM72 is mainly localized in the cell membrane with distinct sparing of the nucleus (
+Fig. 3
+). In patient samples with biallelic
+TMEM72
+variants
+TMEM72
+aggregated at the basolateral membrane as shown in patient A-II-4 and was also present in the nucleus in patients A-II-4, B-II-1, and B-II-4, while this is was not observed in controls or the unaffected heterozygous parent (B-I-2). Expression was clearly reduced in patients B-II-1 and B-II-4 compared to a healthy unrelated control, an unrelated CKD control biopsy (patient with ANCA-associated glomerulonephritis), and their unaffected heterozygous parent. In patient A-II-4, the reduction in expression compared to the controls was less pronounced. Co-staining of the ciliary axoneme using an ARL13B antibody showed that primary cilia are formed despite low TMEM72 expression (online suppl. Fig. 3). Given the high amount of extra-ciliary TMEM72 localization, we could not determine nor exclude ciliary co-localization of TMEM72 in patient biopsies.
+Fig. 3.
+Open in a new tab
+TMEM72 immunohistochemistry in healthy and diseased kidney biopsies.
+a
+Immunohistochemistry using a rabbit-anti-TMEM72 antibody (which epitope targets both isoform 1 and isoform 2) shows that in healthy kidney tissue, TMEM72 is present in the distal tubules (left panel) and collection ducts (right panel).
+b
+On higher magnification, it is apparent that TMEM72 is mainly localized in the cell membrane with distinct sparing of the nucleus.
+c
+In the native kidney biopsy of A-II-4, TMEM72 is mainly localized in the tubular cell basal membrane and in some nuclei. In the biopsies of B-II-1 and B-II-4, no prominent staining was present, apart from weak staining in some nuclei. The biopsy of B–I-2 (unaffected parent) is similar to A-II-4, but without staining of the nucleus.
+d
+TMEM72 staining in a CKD control kidney biopsy (patient with ANCA-associated vasculitis) shows a staining pattern similar to the healthy control biopsy. Brown: TMEM72, purple: hematoxylin staining. Scale bars indicate 50 µm.
+TMEM72
+Localizes to the Cilium in Human Healthy Tissue-Derived Tubuloids
+Based on the histological analysis (
+Fig. 3
+), TMEM72 is predominately expressed in the distal tubule and collecting duct segments of healthy kidney tissue. Therefore, we employed human kidney tubuloids as a tubule epithelial model [
+40
+,
+41
+] to study the subcellular localization of TMEM72. Tubuloids were differentiated towards a distal tubular phenotype [
+42
+] to more accurately mimic the distal segments of the nephron. In tubuloids derived from four healthy donors, TMEM72 localized to the primary cilium as marked by ARL13B and acetylated α-tubulin (
+Fig. 4
+a, b; online suppl. Video 1), as well as to plasma membrane regions (online suppl. Fig. 4b). To further validate ciliary localization, we co-stained with ciliary transition zone marker NPHP1 and confirmed the localization of TMEM72 to the cilium (online suppl. Fig. 4c).
+Fig. 4.
+Open in a new tab
+TMEM72 localizes to primary cilia in human healthy tissue-derived tubuloids.
+a
+Image showing primary cilia stained with ARL13B (red) and acetylated α-tubulin (magenta), co-localizing with TMEM72 (green) in differentiated tubuloids.
+b
+Close-up single channel and merge images demonstrating co-localization of TMEM72 (green) with ARL13B (red) and acetylated tubulin (magenta). Scale bars indicate 20 μm.
+TMEM72
+Is Associated with Membrane Proteins, Ciliary Landscape Proteins, and PEX19
+To identify potential TMEM72 interactors and thereby elucidating its function, we have performed flag pull-downs with SF-TAP tagged TMEM72 isoforms and RAF1 (control) transiently expressed in HEK293T cells followed by MS analysis. Proteins that were enriched in both TMEM72 long isoform samples and TMEM72 short isoform samples were considered as potential TMEM72 interactors. Based on these criteria, a total of 209 proteins were appointed as potential TMEM72 interactors (
+Fig. 5
+a, b; indicated in orange, blue, and magenta; online suppl. Table 3; online suppl. Fig. 5).
+Fig. 5.
+Open in a new tab
+Identification and clustering of potential TMEM72 interactors.
+a
+Scatterplot showing enriched proteins comparing TMEM72 long to control (RAF1). Bait protein is shown in red. Potential TMEM72 interactors shown in orange, blue, and magenta. Proteins equally strong associated to both isoforms are indicated in orange. Proteins more strongly associated to TMEM72 long isoform compared to TMEM72 short isoform are indicated in blue. The protein more strongly associated to TMEM72 short isoform compared to TMEM72 long isoform is indicated in magenta.
+X
+-axis represents log2 ratio between TMEM72 long and RAF1 (control) and
+Y
+-axis represents LFQ intensity score, indicating the relative amount of proteins in the dataset.
+b
+Scatterplot showing enriched proteins comparing TMEM72 short isoform to control (RAF1). Indicated colors and axis are identical to
+a
+.
+c
+GetGo analysis of potential TMEM72 interactors (left) and GetGo analysis of proteins more strongly associated to TMEM72 long isoform (right).
+d
+Representation of the STRING analysis of the ciliary landscape proteins that are associated with TMEM72. The two main hubs are indicated in light blue. Online supplementary Figure 5 provides additional explanation for interpretation.
+To elucidate the associations between those proteins, a GetGo enrichment analysis was performed [
+38
+]. With a minimum group size of 50 proteins per group, the analysis showed that proteins were mainly enriched for the categories “membrane” and “ciliary landscape proteins,” containing 81 proteins and 58 proteins, respectively (
+Fig. 5
+c; online suppl. Table 3). STRING analysis of the ciliary landscape proteins identified two main hubs (
+Fig. 5
+d; indicated in light blue). The left hub mainly consists of mitochondrial proteins. The right hub mainly consists of exportins, importins, nucleoporins, and transportins. Transportin 1 (TNPO1) connects this hub to an IFT protein, TTC26.
+To find out which of the potential TMEM72 interactors are more strongly associated to the full-length (long) isoform or to the short isoform, we compared TMEM72 long to TMEM72 short isoform. We found that 46 proteins (of the 209) were more strongly associated to the long isoform of TMEM72 (
+Fig. 5
+a, b; indicated in blue; online suppl. Table 3). GetGo analysis (minimum group size of 20 proteins per group) of these 46 proteins showed that proteins were enriched in the membrane (
+Fig. 5
+c; online suppl. Table 3). The membrane association of the long isoform was also confirmed by analysis of proteins specifically associated to TMEM72 long isoform (online suppl. Fig. 6; online suppl. Table 3). Only one protein (of the 209) was more strongly associated to the short isoform compared to the long isoform (
+Fig. 5
+a, b; indicated in magenta; online suppl. Table 3). This protein is named peroxisomal biogenesis factor 19 (PEX19) and plays an important role in peroxisome membrane assembly and maintenance [
+54
+,
+55
+].
+Challenges in Functional Analysis of
+TMEM72
+TMEM72
+appears to be a particularly challenging gene to study, likely due to its low expression in commonly used cell lines. Details on additional functional work can be found in the online supplementary material. In summary, we performed qPCR and Western blotting on several cell(-line)s – skin fibroblasts, HEK293T cells, IMCD3 cells, MDCK cells, and RPE1 cell – to investigate which cells expressed TMEM72. We could not find a cell type with sufficiently detectable endogenous TMEM72 expression that would warrant experiments to knock-out or knock-down
+TMEM72
+. Despite extensive efforts, we were unable overexpress fluorescently tagged TMEM72 in ciliated cell lines by transfecting the cells with expression constructs. We attempted to generate
+TMEM72
+−/−
+mutants using iPSC-derived kidney organoids (online suppl. material). However, expanded genetically edited clones were all repeatedly found to be heterozygous (
+TMEM72
++/−
+). In vivo studies revealed that CRISPR-Cas9 mediated knock-out zebrafish were homozygously viable but showed no distinct kidney phenotype.
+Discussion
+TMEM72
+is a previously unknown disease gene expressed primarily in the kidney, with distinct expression in distal renal tubules and collecting duct cells. We identified four homozygous
+TMEM72
+variants in six families with a phenotype suggestive for NPHP and early-onset KFRT. We provide new insights into TMEM72 function through carefully assessing patient phenotypes, in silico predictions, altered localization in patient biopsies, ciliary localization in human-derived tubuloids, and proteomic data linking TMEM72 to ciliary function. We propose
+TMEM72
+as novel kidney disease candidate gene involved in ciliary function.
+TMEM72 as Novel Kidney Disease Gene
+We detected two homozygous frameshift variants, one homozygous truncating variant and one homozygous missense variant in
+TMEM72
+. In silico analyses support that loss-of-function variants are likely not tolerated. No additional convincing biallelic
+TMEM72
+variants were found in 100kGP and UK biobank, underscoring the severity and the overall rarity of potentially disease causing
+TMEM72
+variants. With this genotype-first approach, we found no evidence contradicting our hypothesis that
+TMEM72
+could be a novel disease gene.
+TMEM72
+expression in distal tubule cell (with granular cytoplasmic and basal membrane localization [
+32
+]) and collecting duct cells [
+33
+] has previously been reported and was confirmed in our study. Immunohistochemistry in kidney biopsies of patients from family A and B showed an altered localization compared to healthy and CKD controls. Nuclear localization has previously been found in
+in vitro
+modelling of
+TMEM72
+lacking all transmembrane domains and in the known short isoform A0PK05-2 [
+27
+,
+56
+]. Furthermore, expression of TMEM72 was clearly reduced in the patients from family B as compared to controls. Although patients from family A and B carry the same
+TMEM72
+variant, biopsy staining differed, which may reflect technical variation as the biopsies were processed in different laboratories at different time points. Our findings indicate altered
+TMEM72
+localization and possibly reduced expression, resulting in an altered or potentially dysfunctional
+TMEM72
+in these patients.
+In families A-C with the p.Gln2* variant, the short TMEM72 isoform is predicted to be expressed. Exon specific gene expression databases show no evidence for endogenous expression of this isoform in healthy kidneys [
+57
+,
+58
+]. Its presence may suggest a non-canonical function for the short isoform in our patients. Co-staining of
+TMEM72
+with the ciliary axoneme in family B (online suppl. Fig. 3) possibly indicates a gain of function effect of the small amount of remaining protein. In family E, the p.Ala236Profs*85 variant is located in the last exon of
+TMEM72
+and is, therefore, expected to escape nonsense-mediated decay, likely explaining its relative low CADD score. The variant is predicted to result in a protein with an extended intracellular tail that misses the last disordered region (amino acids 236–262), which contains highly conserved residues, with probable functional effects [
+38
+,
+59
+].
+Gene expression data in humans show that
+TMEM72
+is mainly expressed in the kidney, with limited expression in the brain cortex, large intestine and reproductive organs [
+33
+,
+60
+]. This fits our patients’ phenotype of isolated kidney disease (family A–E) and may also explain the cortical epilepsy in patient F-II-1. However, caution is warranted when interpreting the pathogenicity of the variant identified in this patient. The clinical features overlap with characteristics of both CAKUT and infantile NPHP. While vesicoureteral reflux has been reported in ciliopathies such as Bardet-Biedl syndrome [
+61
+], similar renal imaging have been described in infantile NPHP [
+18
+], and even neurological symptoms have been described in the context of NPHP [
+62
+], this case remains distinct from the rest of the cohort in terms of both variant type and clinical presentation. Given the consanguinity in this family, we cannot exclude that the neurological features result from a separate, undetected genetic condition, despite WES analysis of all protein-coding genes for biallelic variants. Also heterozygous variants, which are more common in neurological phenotypes, were assessed.
+Interestingly, KidneyNetwork associates
+TMEM72
+with Reactome and human phenotype ontology pathways that are related to kidney functions and neurological functions linked to electrolyte transport [
+63
+]. KidneyNetwork uses expression patterns to predict gene functions and associated phenotypes, based on established gene-phenotype associations [
+63
+]. Relevant kidney-related human phenotype ontology phenotypes with z-scores ≥5 associated with TMEM72 are: polyuria, polydipsia, abnormal renal tubule morphology, abnormal nephron morphology, tubulointerstitial abnormality, decreased glomerular filtration rate, tubulointerstitial nephritis, and renal salt wasting [
+63
+]. Although not specific, these all fit with the NPHP phenotype.
+Linking
+TMEM72
+to Ciliary Function
+After linking
+TMEM72
+to kidneys, the next step was exploring the disease mechanism of this gene. Patients from family A–E show a shared renal phenotype that is seen in patients with NPHP, namely KFRT at a (young) adult age in combination with small-to-normal-sized kidneys, increased echogenicity, loss of corticomedullary differentiation, and kidney biopsies with interstitial fibrosis and/or tubular atrophy. No kidney cysts were seen, as is often the case in NPHP. A potential link of
+TMEM72
+to NPHP is the immunohistochemistry staining of kidney biopsies that show altered expression and localization of TMEM72 in cells known to be affected in NPHP. Although these findings are not individually specific to NPHP (and in some patients overlap with for instance Alport spectrum disorder could be considered), the combination of findings is suggestive for the NPHP phenotype.
+Furthermore, we demonstrated localization of TMEM72 to the primary cilium in human-derived differentiated tubuloids using immunofluorescence microscopy. Skin fibroblasts, HEK293T, IMCD3, MDCK, and RPE1 cells did not exhibit sufficient TMEM72 expression, however, differentiated tubuloids showed TMEM72 to consistently localize to the cilium across all four donor-derived tubuloid lines. Based on our stainings, we hypothesize TMEM72 is localized at the base of the cilium or the transition zone region. Not every cilium displayed detectable signal, which could reflect the dynamic nature of primary cilia, which assemble and disassemble with progression of the cell cycle – being fully assembled only during G0 and G1 phases [
+64
+]. Thus, the variability in TMEM72 ciliary localization may result from cell cycle-dependent regulation of its expression or trafficking. Moreover, recent studies have highlighted significant heterogeneity in ciliary composition. Transcriptomic variability among cilia within the same tissue was demonstrated in embryonic structures [
+65
+], and spatial transcriptomics of three different mammalian cell lines revealed ciliary heterogeneity at the single-cell level [
+66
+]. These findings support the notion that the observed variability in TMEM72 localization may also occur due to intrinsic ciliary diversity, reflecting cell type-specific functions or states.
+Taken together, our immunofluorescence and proteomics data indicate that TMEM72 localizes to the cilium and plasma membrane regions. The affinity proteomics studies showed that TMEM72 is significantly associated to membrane and ciliary landscape proteins [
+43
+]. Over 27 percent of the potential interactors of TMEM72 were previously identified as ciliary landscape proteins, suggesting a strong association of TMEM72 with ciliary function. This association was mainly based on two hubs. The first hub consists of several mitochondrial proteins, with voltage-dependent anion-selective channel protein 1 (VDAC1) being one of the central proteins in this hub. Interestingly, up- or down-regulation of VDAC1 affects ciliogenesis [
+67
+]. The second hub consists of components of the nuclear import and export machinery. These proteins also localize to the base of primary cilia and form a size-dependent diffusion barrier for selective import and export of ciliary proteins [
+68
+–
+70
+]. This hub seems associated to the IFT-B protein TTC26 (IFT56). Knockdown of ttc26 in zebrafish resulted in a kidney defect (i.e., enlarged pronephric tube and duct in combination with disrupted ciliogenesis), which therefore may be related to the kidney phenotype of our patients [
+71
+].
+We also compared the binding capacities of the different TMEM72 isoforms. The long isoform showed stronger interaction with membrane proteins, confirming that the full-length membrane protein binds more membrane proteins compared to the intracellular part of the protein, consistent with previous findings [
+27
+].
+PEX19, a protein involved in peroxisome membrane assembly and maintenance, was the only protein that was associated more strongly to the short isoform. An explanation for this could be that the short isoform has less affinity to the membrane compared to the long isoform (
+Figure 2
+; online suppl. Fig. 2) resulting in more interactions with the mainly cytoplasmic PEX19. This is confirmed by the analysis of proteins specifically associated to TMEM72 short isoform, which showed a strong association to the cytoplasm (online suppl. Fig. 6; online suppl. Table 3) in line with previous studies [
+27
+,
+56
+].
+Pathogenic variants in
+PEX19
+result in Zellweger syndrome. Patients with Zellweger syndrome display various clinical characteristics, including neurologic dysfunction, hypotonia, and liver dysfunction. Additional features include cardiovascular and skeletal defects, hearing impairment, ocular abnormalities, including retinitis pigmentosa, and polycystic kidneys, which are hallmark features of ciliopathies [
+72
+,
+73
+]. PEX molecules have been shown to regulate ciliary cholesterol transport, supporting an association with ciliopathies [
+55
+,
+74
+].
+Interestingly, PEX19 interactor exportin-1 (XPO1), which has functions in centrosomes and peroxisome biogenesis was enriched as a potential TMEM72 interactor in our dataset (
+Fig. 5
+a, b; online suppl. Table 3) [
+75
+]. Further studies are needed to further elucidate the connection between TMEM72, PEX19, and XPO1 in context of ciliary cholesterol transport. It is noteworthy in this context, that another TMEM protein, TMEM135, was already shown to regulate primary ciliogenesis by modulating intracellular cholesterol distribution [
+76
+].
+Other functional assays did not provide additional insights. We were unable to establish a cellular model system due to low endogenous TMEM72 expression in all assessed cell lines, probably explained by the highly cell type specific expression of TMEM72. Hitherto there is no known kidney cell line with
+TMEM72
+expression [
+33
+]. Also, overexpression of TMEM72 in ciliary cell lines was unsuccessful despite extensive efforts. Furthermore, we were unable to generate
+TMEM72
+−/−
+mutants using iPSC-derived kidney organoids, which we suspect is due to non-viability of the model, rather than TMEM72 being directly essential for iPSC survival or pluripotency (online suppl. material). Additionally, in vivo analysis in a knock-out zebrafish model did not show obvious signs of kidney failure at adult age. The zebrafish orthologue of
+TMEM72
+is only 39% conserved, possibly leading to different functions in fish compared to humans [
+59
+]. Also, in
+Tmem72
+knock-out mice no distinct kidney phenotype has been observed, although a neurological phenotype has been described [
+77
+]. While this is remarkable, it could be that the renal phenotype is specific to humans. Other known NPHP genes have not resulted in a renal phenotype in knock-out mice either (e.g., in
+Nphp4
+knock-out mice no renal phenotype was explicitly reported, and also in
+Iqcb1
+,
+Wdr19
+,
+Cep83
+, and
+Zfp423
+knock-out mice only nonrenal phenotypes are reported, although it is unclear whether kidney phenotypes were fully assessed) [
+77
+]. This appears unrelated to a specific ciliary domain or function. Generating a
+Tmem72
+knock-out mouse model with targeted renal phenotyping could be considered for future studies. However, rodent models are not always a suitable model as they may not reflect the human situation. Ideally, functional assessment would start by analysis of phenotypes in patient-derived cells, such as urine-derived renal epithelial cells or tubuloids [
+41
+,
+78
+,
+79
+]. However, for this study, it was not possible to obtain patient-derived cells since the patients were either deceased or post kidney transplantation. With immunofluorescence staining in kidney biopsies, we observed that cilia are formed despite low TMEM72 expression; however, quantification studies could not be obtained. Cilia formation can even be unchanged in these ciliopathies, as described for
+GANAB
+and
+MAPKBP1
+[
+80
+–
+82
+]. Future work is required to provide further insights on the role of TMEM72 in the kidney [
+83
+].
+Conclusion
+In this paper, we present the first genetic results, immunohistochemistry results and affinity proteomics studies that link
+TMEM72
+to patients with KFRT. The phenotype of these patients with advanced kidney disease, including their imaging and kidney biopsy results, together with the immunohistochemistry findings are suggestive for NPHP. The localization of TMEM72 at the base of the cilium in human-derived tubuloids, along with the affinity proteomics results suggest that TMEM72 is indeed implicated in ciliary function and underlines our hypothesis that biallelic
+TMEM72
+variants could cause NPHP. Because of the difficulty to obtain functional proof that reveals the exact cellular function of TMEM72 and that unequivocally links our patients’ variants with their phenotype, we conclude
+TMEM72
+is a strong candidate gene for NPHP. Although we were unable to elucidate the disease mechanism of
+TMEM72
+, based on the provided evidence clinicians can consider including
+TMEM72
+in gene panel testing of patients with a NPHP-like phenotype or unexplained kidney failure. This will lead the way to more knowledge about this gene and the possible related phenotypes. Future work could focus on further characterizing
+TMEM72
+variants and unraveling its function.
+Acknowledgments
+We thank the study participants and their families for their contribution. Several authors of this publication are members of the European Reference Network for Rare Kidney Diseases (ERKNet). This research was made possible through access to the data and findings generated by the 100,000 Genomes Project. The 100,000 Genomes Project is managed by Genomics England Limited (a wholly owned company of the Department of Health and Social Care). The 100,000 Genomes Project uses data provided by patients and collected by the National Health Service as part of their care and support. The previously described NPHP1 antibody (clone 62) was provided by Prof. Bernhard Schermer [
+84
+].
+Statement of Ethics
+Informed consent was obtained from all participants that were included in this manuscript for publication of the details of their medical case and any accompanying biopsy images. Patients from family A-D and family F were tested in a diagnostic setting and therefore consent for publishing their diagnostically obtained results suffices. Patients from family E were enrolled in the 100kGP and were consented as previously described [
+36
+]. Human healthy kidney tissue-derived tubuloids were established after obtaining written informed consent from nephrectomies for malignancies in the Kidneybank biobank, which was approved by the Biobank Research Ethics Committee (TCBio) of the University Medical Center Utrecht (UMCU) in January 2023 (TCBio 22–873). The study was approved by the TCBio of the UMCU under Protocol No. 23-039 and is in accordance with the Declaration of Helsinki and Dutch law.
+Conflict of Interest Statement
+All authors declare that they have no relevant conflict of interest that could have influenced the results or interpretation of the manuscript. F.H. is a cofounder of Goldfinch Biopharma. The results presented in this paper have not been published previously in whole or part, except in abstract format.
+Funding Sources
+This work was supported by the Dutch Kidney Foundation (15OP14, 18OKG19 to A.M.E. and CP11.18 to N.V.A.M.K.). A.M.E., L.R.C., G.G.S., A.J.C.R.S., R.R., and M.F.S. are part of the EU-funded consortium TheRaCil (European Union’s Horizon Europe research and innovation program) under Grant Agreement No. 101080717. O.S.A.’s contribution to this work was supported by the Medical Research Council (MR/S021329/1). F.H. is the William E. Harmon Professor of Pediatrics; this research was supported by grants from the National Institutes of Health to F.H. (R01-DK_068306). V.K. was supported by the Deutsche Forschungsgemeinschaft (VK-403877094). E.O. is supported by an Early PostdocMobility Stipendium, Swiss National Science Foundation (P2ZHP3_195181), and Kidney Research UK (Paed_RP_001_20180925). J.S. is supported by LifeArc, the MRC (MR/Y007808/1), Kidney Research UK (Paed_RP_001_20180925, RP_007_20210729) and the Northern Counties Kidney Research. F.S. is supported by NWO grant OCENW.GROOT.2019.029. K.B. and M.Ue. received funding from the Kerstan Foundation. The 100,000 Genomes Project is funded by the National Institute for Health Research and NHS England. The Wellcome Trust, Cancer Research UK and the Medical Research Council have also funded research infrastructure.
+Author Contributions
+Albertien M. van Eerde, Gijs van Haaften, Laura R. Claus, and Rozemarijn Snoek designed the study. Nine V.A.M. Knoers provided structural feedback on the study design and progress. Bert van der Zwaag, Laure Raymond, Laurent Mesnard, and Verena Klämbt were responsible for identification of
+TMEM72
+variants. Albertien M. van Eerde, Walter J. Brummelhuis, Maarten Rookmaaker, Alexandre Karras, Cyril Mousseaux, Verena Klämbt, and Friedhelm Hildebrandt gathered phenotype information on the patients. Omid Sadeghi-Alavijeh, Laura R. Claus, Daniel P. Gale, John A. Sayer, Eric Olinger, and Ruxandra Neatu carried out analyses on the 100,000 Genomes Project Dataset and John A. Sayer, Eric Olinger, and Ruxandra Neatu carried out analyses on the UK Biobank Dataset. Martin G. Elferink performed the genome-wide kinship analysis. Tri Q. Nguyen and Roel Broekhuizen performed the immunohistochemistry staining. Karen Duran designed the TMEM72 constructs. Edith Peters, Elena Sendino Garví, and Suzanne W. van der Veen performed the in vitro experiments. Aurelius J.C. Roskothen-Shevchuk and Gisela G. Slaats designed and performed the tubuloids experiments. Siebren Faber and Ronald Roepman designed and processed the affinity proteomics experiments, Marius Ueffing and Karsten Boldt performed the MS. Sanne M.C. Savelberg and Federico Tessadori performed the in vivo zebrafish experiments. Marijn F. Stokman provided expert input to the interpretation of findings. Laura R. Claus and Rozemarijn Snoek drafted the paper; Laura R. Claus, Siebren Faber, and Ronald Roepman revised the paper. All the aforementioned authors critically assessed the manuscript and approved its final version.
+Funding Statement
+This work was supported by the Dutch Kidney Foundation (15OP14, 18OKG19 to A.M.E. and CP11.18 to N.V.A.M.K.). A.M.E., L.R.C., G.G.S., A.J.C.R.S., R.R., and M.F.S. are part of the EU-funded consortium TheRaCil (European Union’s Horizon Europe research and innovation program) under Grant Agreement No. 101080717. O.S.A.’s contribution to this work was supported by the Medical Research Council (MR/S021329/1). F.H. is the William E. Harmon Professor of Pediatrics; this research was supported by grants from the National Institutes of Health to F.H. (R01-DK_068306). V.K. was supported by the Deutsche Forschungsgemeinschaft (VK-403877094). E.O. is supported by an Early PostdocMobility Stipendium, Swiss National Science Foundation (P2ZHP3_195181), and Kidney Research UK (Paed_RP_001_20180925). J.S. is supported by LifeArc, the MRC (MR/Y007808/1), Kidney Research UK (Paed_RP_001_20180925, RP_007_20210729) and the Northern Counties Kidney Research. F.S. is supported by NWO grant OCENW.GROOT.2019.029. K.B. and M.Ue. received funding from the Kerstan Foundation. The 100,000 Genomes Project is funded by the National Institute for Health Research and NHS England. The Wellcome Trust, Cancer Research UK and the Medical Research Council have also funded research infrastructure.
+Data Availability Statement
+Data are available on request. WES data cannot be shared for ethical/privacy reasons, but the authors would welcome on site demonstration of data filtering.
+Supplementary Material.
+Supplementary_material-Suppl.1-s1.png
+(461.8KB, png)
+Supplementary Material.
+Supplementary_material-Suppl.2-s2.png
+(229.7KB, png)
+Supplementary Material.
+Supplementary_material-Suppl.3-s3.png
+(3.4MB, png)
+Supplementary Material.
+Supplementary_material-Suppl.4-s4.png
+(3.4MB, png)
+Supplementary Material.
+Supplementary_material-Suppl.5-s5.png
+(272.6KB, png)
+Supplementary Material.
+Supplementary_material-Suppl.6-s6.png
+(95.8KB, png)
+Supplementary Material.
+Supplementary_material-Suppl.7-s7.png
+(211.9KB, png)
+Supplementary Material.
+Supplementary_material-Suppl.8-s8.docx
+(1.7MB, docx)
+Supplementary Material.
+Supplementary_material-Suppl.9-s9.xlsx
+(32.8KB, xlsx)
+Supplementary Material.
+Supplementary_material-Suppl.10-s10.xlsx
+(24KB, xlsx)
+Supplementary Material.
+Supplementary_material-Suppl.11-s11.xlsx
+(157.1KB, xlsx)
+Supplementary Material.
+Download video file
+(9.1MB, mp4)
+References
+1.
+Hill NR, Fatoba ST, Oke JL, Hirst JA, O’Callaghan CA, Lasserson DS, et al. Global prevalence of chronic kidney disease - a systematic review and meta-analysis. PLoS One. 2016;11(7):e0158765.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+2.
+Mills KT, Xu Y, Zhang W, Bundy JD, Chen CS, Kelly TN, et al. A systematic analysis of worldwide population-based data on the global burden of chronic kidney disease in 2010. Kidney Int. 2015;88(5):950–7.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+3.
+Coresh J. Update on the burden of CKD. J Am Soc Nephrol. 2017;28(4):1020–2.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+4.
+Snoek R, van Jaarsveld RH, Nguyen TQ, Peters EDJ, Elferink MG, Ernst RF, et al. Genetics-first approach improves diagnostics of ESKD patients 50 years. Nephrol Dial Transplant. 2020;37(2):349–57.
+[
+DOI
+] [
+PubMed
+] [
+Google Scholar
+]
+5.
+Connaughton DM, Kennedy C, Shril S, Mann N, Murray SL, Williams PA, et al. Monogenic causes of chronic kidney disease in adults. Kidney Int. 2019;95(4):914–28.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+6.
+Groopman EE, Marasa M, Cameron-Christie S, Petrovski S, Aggarwal VS, Milo-Rasouly H, et al. Diagnostic utility of exome sequencing for kidney disease. N Engl J Med. 2019;380(2):142–51.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+7.
+König JC, Karsay R, Gerß J, Schlingmann KP, Dahmer-Heath M, Telgmann AK, et al. Refining kidney survival in 383 genetically characterized patients with nephronophthisis. Kidney Int Rep. 2022;7(9):2016–28.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+8.
+Petzold F, Billot K, Chen X, Henry C, Filhol E, Martin Y, et al. The genetic landscape and clinical spectrum of nephronophthisis and related ciliopathies. Kidney Int. 2023;104(2):378–87.
+[
+DOI
+] [
+PubMed
+] [
+Google Scholar
+]
+9.
+McConnachie DJ, Stow JL, Mallett AJ. Ciliopathies and the kidney: a review. Am J Kidney Dis. 2021;77(3):410–9.
+[
+DOI
+] [
+PubMed
+] [
+Google Scholar
+]
+10.
+Srivastava S, Molinari E, Raman S, Sayer JA. Many genes-one disease? Genetics of nephronophthisis (NPHP) and NPHP-associated disorders. Front Pediatr. 2017;5:287.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+11.
+Snoek R, Van Setten J, Keating BJ, Israni AK, Jacobson PA, Oetting WS, et al. NPHP1 (Nephrocystin-1) gene deletions cause adult-onset ESRD. J Am Soc Nephrol. 2018;29(6):1772–9.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+12.
+Braun DA, Hildebrandt F. Ciliopathies. Cold Spring Harb Perspect Biol. 2017;9(3):a028191.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+13.
+Doreille A, Raymond L, Lebre AS, Linster C, Saraeva Lamri R, Karras A, et al. Nephronophthisis in young adults phenocopying thrombotic microangiopathy and severe nephrosclerosis. Clin J Am Soc Nephrol. 2021;16(4):615–7.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+14.
+Stokman MF, van der Zwaag B, van de Kar NCAJ, van Haelst MM, van Eerde AM, van der Heijden JW, et al. Clinical and genetic analyses of a Dutch cohort of 40 patients with a nephronophthisis-related ciliopathy. Pediatr Nephrol. 2018;33(10):1701–12.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+15.
+Ala-Mello S, Sankila EM, Koskimies O, De La Chapelle A, Kääriäinen H. Molecular studies in Finnish patients with familial juvenile nephronophthisis exclude a founder effect and support a common mutation causing mechanism. J Med Genet. 1998;35(4):279–83.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+16.
+Hildebrandt F, Strahm B, Nothwang HG, Gretz N, Schnieders B, Singh-Sawhney I, et al. Molecular genetic identification of families with juvenile nephronophthisis type 1: rate of progression to renal failure. APN Study Group. Arbeitsgemeinschaft für Pädiatrische Nephrologie. Kidney Int. 1997;51(1):261–9.
+[
+DOI
+] [
+PubMed
+] [
+Google Scholar
+]
+17.
+Omran H, Fernandez C, Jung M, Häffner K, Fargier B, Villaquiran A, et al. Identification of a new gene locus for adolescent nephronophthisis, on chromosome 3q22 in a large Venezuelan pedigree. Am J Hum Genet. 2000;66(1):118–27.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+18.
+Stokman M, Lilien M, Knoers N. Nephronophthisis. GeneReviews®; 2016.
+[
+Google Scholar
+]
+19.
+Wolf MTF, Bonsib SM, Larsen CP, Hildebrandt F. Nephronophthisis: a pathological and genetic perspective. Pediatr Nephrol. 2024;39(7):1977–2000.
+[
+DOI
+] [
+PubMed
+] [
+Google Scholar
+]
+20.
+Halbritter J, Porath JD, Diaz KA, Braun DA, Kohl S, Chaki M, et al. Identification of 99 novel mutations in a worldwide cohort of 1,056 patients with a nephronophthisis-related ciliopathy. Hum Genet. 2013;132(8):865–84.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+21.
+Hildebrandt F, Benzing T, Katsanis N. Ciliopathies. N Engl J Med. 2011;364(16):1533–43.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+22.
+Sang L, Miller JJ, Corbit KC, Giles RH, Brauer MJ, Otto EA, et al. Mapping the NPHP-JBTS-MKS protein network reveals ciliopathy disease genes and pathways. Cell. 2011;145(4):513–28.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+23.
+Singla V, Reiter JF. The primary cilium as the cell’s antenna: signaling at a sensory organelle. Science. 2006;313(5787):629–33.
+[
+DOI
+] [
+PubMed
+] [
+Google Scholar
+]
+24.
+Nachury MV, Mick DU. Establishing and regulating the composition of cilia for signal transduction. Nat Rev Mol Cell Biol. 2019;20(7):389–405.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+25.
+Srivastava S, Sayer JA. Nephronophthisis. J Pediatr Genet. 2014;3(2):103–14.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+26.
+Deutsch K, Klämbt V, Kitzler TM, Jobst-Schwan T, Schneider R, Buerger F, et al. Exome sequencing identifies a likely causative variant in 53% of families with ciliopathy-related features on renal ultrasound after excluding NPHP1 deletions. Genes Dis. 2024;11(5):101111.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+27.
+Ding J, Matsumiya T, Miki Y, Hayakari R, Shiba Y, Kawaguchi S, et al. ER export signals mediate plasma membrane localization of transmembrane protein TMEM72. FEBS J. 2023;290(10):2636–57.
+[
+DOI
+] [
+PubMed
+] [
+Google Scholar
+]
+28.
+Guna A, Hegde RS. Transmembrane domain recognition during membrane protein biogenesis and quality control. Curr Biol. 2018;28(8):R498–511.
+[
+DOI
+] [
+PubMed
+] [
+Google Scholar
+]
+29.
+Epting D, Decker E, Ott E, Eisenberger T, Bader I, Bachmann N, et al. The ciliary transition zone protein TMEM218 synergistically interacts with the NPHP module and its reduced dosage leads to a wide range of syndromic ciliopathies. Hum Mol Genet. 2022;31(14):2295–306.
+[
+DOI
+] [
+PubMed
+] [
+Google Scholar
+]
+30.
+Wrzesiński T, Szelag M, Cieślikowski WA, Ida A, Giles R, Zodro E, et al. Expression of pre-selected TMEMs with predicted ER localization as potential classifiers of ccRCC tumors. BMC Cancer. 2015;15(1):518.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+31.
+Su J, Tian X, Zhang Z, Xu W, Anwaier A, Ye S, et al. A novel amino acid metabolism-related gene risk signature for predicting prognosis in clear cell renal cell carcinoma. Front Oncol. 2022;12:1019949.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+32.
+Habuka M, Fagerberg L, Hallström BM, Kampf C, Edlund K, Sivertsson Å, et al. The kidney transcriptome and proteome defined by transcriptomics and antibody-based profiling. PLoS One. 2014;9(12):e116125.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+33.
+Uhlén M, Fagerberg L, Hallström BM, Lindskog C, Oksvold P, Mardinoglu A, et al. Tissue-based map of the human proteome. Science. 2015;347(6220):1260419.
+[
+DOI
+] [
+PubMed
+] [
+Google Scholar
+]
+34.
+Thiagarajan RD, Georgas KM, Rumballe BA, Lesieur E, Chiu HS, Taylor D, et al. Identification of anchor genes during kidney development defines ontological relationships, molecular subcompartments and regulatory pathways. PLoS One. 2011;6(2):17286.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+35.
+Sobreira N, Schiettecatte F, Valle D, Hamosh A. GeneMatcher: a matching tool for connecting investigators with an interest in the same gene. Hum Mutat. 2015;36(10):928–30.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+36.
+Caulfield M, Davies J, Dennys M, Elbahy L, Fowler T, Hill S, et al. The national genomics research and healthcare knowledgebase; 2019.
+[
+Google Scholar
+]
+37.
+O’Leary NA, Wright MW, Brister JR, Ciufo S, Haddad D, McVeigh R, et al. Reference sequence (RefSeq) database at NCBI: current status, taxonomic expansion, and functional annotation. Nucleic Acids Res. 2016;44(D1):D733–45.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+38.
+UniProt Consortium . UniProt: the universal protein knowledgebase in 2021. Nucleic Acids Res. 2021;49(D1):D480–9.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+39.
+Omasits U, Ahrens CH, Müller S, Wollscheid B. Protter: interactive protein feature visualization and integration with experimental proteomic data. Bioinformatics. 2014;30(6):884–6.
+[
+DOI
+] [
+PubMed
+] [
+Google Scholar
+]
+40.
+Gijzen L, Yousef Yengej FA, Schutgens F, Vormann MK, Ammerlaan CME, Nicolas A, et al. Culture and analysis of kidney tubuloids and perfused tubuloid cells-on-a-chip. Nat Protoc. 2021;16(4):2023–50.
+[
+DOI
+] [
+PubMed
+] [
+Google Scholar
+]
+41.
+Schutgens F, Rookmaaker MB, Margaritis T, Rios A, Ammerlaan C, Jansen J, et al. Tubuloids derived from human adult kidney and urine for personalized disease modeling. Nat Biotechnol. 2019;37(3):303–13.
+[
+DOI
+] [
+PubMed
+] [
+Google Scholar
+]
+42.
+Yousef Yengej FA, Pou Casellas C, Ammerlaan CME, Olde Hanhof CJA, Dilmen E, Beumer J, et al. Tubuloid differentiation to model the human distal nephron and collecting duct in health and disease. Cell Rep. 2024;43(1):113614.
+[
+DOI
+] [
+PubMed
+] [
+Google Scholar
+]
+43.
+Boldt K, van Reeuwijk J, Lu Q, Koutroumpas K, Nguyen T-MT, Texier Y, et al. An organelle-specific protein landscape identifies novel diseases and molecular mechanisms. Nat Commun. 2016;7:11491.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+44.
+Beyer T, Klose F, Kuret A, Hoffmann F, Lukowski R, Ueffing M, et al. Tissue- and isoform-specific protein complex analysis with natively processed bait proteins. J Proteomics. 2021;231:103947.
+[
+DOI
+] [
+PubMed
+] [
+Google Scholar
+]
+45.
+Cox J, Mann M. MaxQuant enables high peptide identification rates, individualized p.p.b.-range mass accuracies and proteome-wide protein quantification. Nat Biotechnol. 2008;26(12):1367–72.
+[
+DOI
+] [
+PubMed
+] [
+Google Scholar
+]
+46.
+Cox J, Hein MY, Luber CA, Paron I, Nagaraj N, Mann M. Accurate proteome-wide label-free quantification by delayed normalization and maximal peptide ratio extraction, termed MaxLFQ. Mol Cell Proteomics. 2014;13(9):2513–26.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+47.
+Szklarczyk D, Gable AL, Nastou KC, Lyon D, Kirsch R, Pyysalo S, et al. The STRING database in 2021: customizable protein-protein networks, and functional characterization of user-uploaded gene/measurement sets. Nucleic Acids Res. 2021;49(D1):D605–12.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+48.
+Deboever C, Tanigawa Y, Lindholm ME, McInnes G, Lavertu A, Ingelsson E, et al. Medical relevance of protein-truncating variants across 337,205 individuals in the UK biobank study. Nat Commun. 2018;9(1):1612.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+49.
+Karczewski KJ, Francioli LC, Tiao G, Cummings BB, Alföldi J, Wang Q, et al. The mutational constraint spectrum quantified from variation in 141,456 humans. Nature. 2020;581(7809):434–43.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+50.
+Adzhubei IA, Schmidt S, Peshkin L, Ramensky VE, Gerasimova A, Bork P, et al. A method and server for predicting damaging missense mutations. Nat Methods. 2010;7(4):248–9.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+51.
+Schwarz JM, Cooper DN, Schuelke M, Seelow D. Mutationtaster2: mutation prediction for the deep-sequencing age. Nat Methods. 2014;11(4):361–2.
+[
+DOI
+] [
+PubMed
+] [
+Google Scholar
+]
+52.
+Sim NL, Kumar P, Hu J, Henikoff S, Schneider G, Ng PC. SIFT web server: predicting effects of amino acid substitutions on proteins. Nucleic Acids Res. 2012;40(Web Server issue):W452–457.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+53.
+Richards S, Aziz N, Bale S, Bick D, Das S, Gastier-Foster J, et al. Standards and guidelines for the interpretation of sequence variants: a joint consensus recommendation of the American college of medical genetics and genomics and the association for molecular pathology. Genet Med. 2015;17(5):405–24.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+54.
+Sacksteder KA, Jones JM, South ST, Li X, Liu Y, Gould SJ. PEX19 binds multiple peroxisomal membrane proteins, is predominantly cytoplasmic, and is required for peroxisome membrane synthesis. J Cell Biol. 2000;148(5):931–44.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+55.
+Jones JM, Morrell JC, Gould SJ. PEX19 is a predominantly cytosolic chaperone and import receptor for class 1 peroxisomal membrane proteins. J Cell Biol. 2004;164(1):57–67.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+56.
+Wesoly J, Pstrąg N, Derylo K, Michalec-Wawiórka B, Derebecka N, Nowicka H, et al. Structural, topological, and functional characterization of transmembrane proteins TMEM213, 207, 116, 72 and 30B provides a potential link to ccRCC etiology. Am J Cancer Res. 2023;13(5):1863–83.
+[
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+57.
+Carithers LJ, Ardlie K, Barcus M, Branton PA, Britton A, Buia SA, et al. A novel approach to high-quality postmortem tissue procurement: the GTEx project. Biopreserv Biobank. 2015;13(5):311–9.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+58.
+Cummings BB, Karczewski KJ, Kosmicki JA, Seaby EG, Watts NA, Singer-Berk M, et al. Transcript expression-aware annotation improves rare variant interpretation. Nature. 2020;581:452–8.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+59.
+Zerbino DR, Achuthan P, Akanni W, Amode MR, Barrell D, Bhai J, et al. Ensembl 2018. Nucleic Acids Res. 2018;46(D1):D754–61.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+60.
+Papatheodorou I, Fonseca NA, Keays M, Tang YA, Barrera E, Bazant W, et al. Expression atlas: gene and protein expression across multiple studies and organisms. Nucleic Acids Res. 2018;46(D1):D246–51.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+61.
+Meyer JR, Krentz AD, Berg RL, Richardson JG, Pomeroy J, Hebbring SJ, et al. Kidney failure in Bardet–Biedl syndrome. Clin Genet. 2022;101(4):429–41.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+62.
+Wolf MTF, Hildebrandt F. Nephronophthisis. Pediatr Nephrol. 2011;26(2):181–94.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+63.
+Boulogne F, Claus LR, Wiersma H, Oelen R, Schukking F, de Klein N, et al. KidneyNetwork: using kidney-derived gene expression data to predict and prioritize novel genes involved in kidney disease. Eur J Hum Genet. 2023;31:1300–8.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+64.
+Mill P, Christensen ST, Pedersen LB. Primary cilia as dynamic and diverse signalling hubs in development and disease. Nat Rev Genet. 2023;24(7):421–41.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+65.
+Elliott KH, Balchand SK, Bonatto Paese CL, Chang CF, Yang Y, Brown KM, et al. Identification of a heterogeneous and dynamic ciliome during embryonic development and cell differentiation. Development. 2023;150(8):dev201237.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+66.
+Hansen JN, Sun H, Kahnert K, Westenius E, Johannesson A, Villegas C, et al. Intrinsic heterogeneity of primary cilia revealed through spatial proteomics. bioRxiv. 2024.
+[
+DOI
+] [
+PubMed
+] [
+Google Scholar
+]
+67.
+Majumder S, Cash A, Fisk HA. Non-overlapping distributions and functions of the VDAC family in ciliogenesis. Cells. 2015;4(3):331–53.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+68.
+Dishinger JF, Kee HL, Jenkins PM, Fan S, Hurd TW, Hammond JW, et al. Ciliary entry of the kinesin-2 motor KIF17 is regulated by importin-beta2 and RanGTP. Nat Cell Biol. 2010;12(7):703–10.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+69.
+Hurd TW, Fan S, Margolis BL. Localization of retinitis pigmentosa 2 to cilia is regulated by importin beta2. J Cell Sci. 2011;124(Pt 5):718–26.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+70.
+Kee HL, Dishinger JF, Blasius TL, Liu C-J, Margolis B, Verhey KJ. A size-exclusion permeability barrier and nucleoporins characterize a ciliary pore complex that regulates transport into cilia. Nat Cell Biol. 2012;14(4):431–7.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+71.
+Zhang Q, Liu Q, Austin C, Drummond I, Pierce EA. Knockdown of ttc26 disrupts ciliogenesis of the photoreceptor cells and the pronephros in zebrafish. Mol Biol Cell. 2012;23(16):3069–78.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+72.
+Argyriou C, D’Agostino MD, Braverman N. Peroxisome biogenesis disorders. Transl Sci Rare Dis. 2016;1(2):111–44.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+73.
+Waterham HR, Ferdinandusse S, Wanders RJA. Human disorders of peroxisome metabolism and biogenesis. Biochim Biophys Acta. 2016;1863(5):922–33.
+[
+DOI
+] [
+PubMed
+] [
+Google Scholar
+]
+74.
+Miyamoto T, Hosoba K, Itabashi T, Iwane AH, Akutsu SN, Ochiai H, et al. Insufficiency of ciliary cholesterol in hereditary Zellweger syndrome. EMBO J. 2020;39(12):e103499.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+75.
+Kırlı K, Karaca S, Dehne HJ, Samwer M, Pan KT, Lenz C, et al. A deep proteomics perspective on CRM1-mediated nuclear export and nucleocytoplasmic partitioning. Elife. 2015;4:e11466.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+76.
+Maharjan Y, Lee JN, Kwak SA, Dutta RK, Park C, Choe S-K, et al. TMEM135 regulates primary ciliogenesis through modulation of intracellular cholesterol distribution. EMBO Rep. 2020;21(5):e48901.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+77.
+Smith CL, Blake JA, Kadin JA, Richardson JE, Bult CJ; Mouse Genome Database Group . Mouse genome database (MGD)-2018: knowledgebase for the laboratory mouse. Nucleic Acids Res. 2018;46(D1):D836–42.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+78.
+Ajzenberg H, Slaats GG, Stokman MF, Arts HH, Logister I, Kroes HY, et al. Non-invasive sources of cells with primary cilia from pediatric and adult patients. Cilia. 2015;4(1):8.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+79.
+Molinari E, Srivastava S, Dewhurst RM, Sayer JA. Use of patient derived urine renal epithelial cells to confirm pathogenicity of PKHD1 alleles. BMC Nephrol. 2020;21(1):435.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+80.
+Porath B, Gainullin VG, Cornec-Le Gall E, Dillinger EK, Heyer CM, Hopp K, et al. Mutations in GANAB, encoding the glucosidase IIα subunit, cause autosomal-dominant polycystic kidney and liver disease. Am J Hum Genet. 2016;98(6):1193–207.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+81.
+Macia MS, Halbritter J, Delous M, Bredrup C, Gutter A, Filhol E, et al. Mutations in MAPKBP1 cause juvenile or late-onset cilia-independent nephronophthisis. Am J Hum Genet. 2017;100(2):372–33.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+82.
+Schönauer R, Jin W, Ertel A, Nemitz-Kliemchen M, Panitz N, Hantmann E, et al. Novel nephronophthisis-associated variants reveal functional importance of MAPKBP1 dimerization for centriolar recruitment. Kidney Int. 2020;98(4):958–69.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+83.
+Stokman MF, Saunier S, Benmerah A. Renal ciliopathies: sorting out therapeutic approaches for nephronophthisis. Front Cell Dev Biol. 2021;9:653138.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+84.
+Liebau MC, Höpker K, Müller RU, Schmedding I, Zank S, Schairer B, et al. Nephrocystin-4 regulates Pyk2-induced tyrosine phosphorylation of nephrocystin-1 to control targeting to monocilia. J Biol Chem. 2011;286(16):14237–45.
+[
+DOI
+] [
+PMC free article
+] [
+PubMed
+] [
+Google Scholar
+]
+Associated Data
+This section collects any data citations, data availability statements, or supplementary materials included in this article.
+Supplementary Materials
+Supplementary_material-Suppl.1-s1.png
+(461.8KB, png)
+Supplementary_material-Suppl.2-s2.png
+(229.7KB, png)
+Supplementary_material-Suppl.3-s3.png
+(3.4MB, png)
+Supplementary_material-Suppl.4-s4.png
+(3.4MB, png)
+Supplementary_material-Suppl.5-s5.png
+(272.6KB, png)
+Supplementary_material-Suppl.6-s6.png
+(95.8KB, png)
+Supplementary_material-Suppl.7-s7.png
+(211.9KB, png)
+Supplementary_material-Suppl.8-s8.docx
+(1.7MB, docx)
+Supplementary_material-Suppl.9-s9.xlsx
+(32.8KB, xlsx)
+Supplementary_material-Suppl.10-s10.xlsx
+(24KB, xlsx)
+Supplementary_material-Suppl.11-s11.xlsx
+(157.1KB, xlsx)
+Download video file
+(9.1MB, mp4)
+Data Availability Statement
+Data are available on request. WES data cannot be shared for ethical/privacy reasons, but the authors would welcome on site demonstration of data filtering.
+ACTIONS
+View on publisher site
+Cite
+Collections
+Permalink
+PERMALINK
+Copy
+RESOURCES
+Similar articles
+Cited by other articles
+Links to NCBI Databases
+Cite
+Copy
+Download .nbib
+.nbib
+Format:
+AMA
+APA
+MLA
+NLM
+Add to Collections
+Create a new collection
+Add to an existing collection
+Name your collection
+*
+Choose a collection
+Unable to load your collection due to an error
+Please try again
+Add
+Cancel
+Back to Top

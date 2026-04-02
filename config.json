@@ -21,5 +21,19 @@
     "generation_temperature": 0.2,
     "extraction_max_tokens": 500,
     "generation_max_tokens": 500
+  },
+  "paper_upload": {
+    "paper_extraction_model": "gpt-4",
+    "extraction_temperature": 0.1,
+    "extraction_max_tokens": 2000,
+    "entity_confidence_threshold": 0.70,
+    "auto_approve_threshold": 0.85,
+    "max_pages_per_paper": 10,
+    "max_file_size_mb": 50,
+    "pdf_storage_path": "./uploaded_papers/",
+    "max_papers_in_review": 50,
+    "enable_paper_nodes": true,
+    "include_paper_context_in_chat": true,
+    "min_confidence_for_chat_display": 0.60
   }
 }

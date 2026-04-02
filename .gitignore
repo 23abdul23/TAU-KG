@@ -8,6 +8,8 @@ __pycache__/
 # C extensions
 *.so
 
+chroma_db/
+
 # Distribution / packaging
 .Python
 build/
@@ -27,6 +29,15 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+
+chroma_db/*
+chroma_db/
+chroma_db
+
+
+uploaded_papers/
+data/paper_store.json
+data/*.tmp
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
