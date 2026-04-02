@@ -8,6 +8,8 @@ __pycache__/
 # C extensions
 *.so
 
+chroma_db/
+
 # Distribution / packaging
 .Python
 build/
