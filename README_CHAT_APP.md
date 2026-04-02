@@ -10,6 +10,7 @@ A local vector database-powered chat application that allows you to query and in
 - **Semantic Search**: Powered by sentence transformers for intelligent similarity matching
 - **Interactive Chat Interface**: Streamlit-based web application with real-time responses
 - **Rich Information Display**: Shows detailed gene/protein metadata with relevance scores
+- **Paper Ingestion**: Upload PDFs or paste PMC/NLM links to ingest papers into the same extraction pipeline
 - **Database Statistics**: View comprehensive stats about your dataset
 - **Quick Actions**: Random gene lookup, database stats, and gene name browsing
 - **Fallback Mode**: Works without API keys in basic mode
@@ -87,6 +88,12 @@ The chat application supports various types of queries:
 - **Database statistics** showing total genes, sources, and types
 - **Sample queries** to help you get started
 - **Clear chat history** option
+
+#### Paper Upload Workflow
+- **PDF upload** for local papers
+- **PMC/NLM links** for direct ingestion from National Library of Medicine article pages
+- **Same downstream pipeline** for metadata extraction, entity extraction, review, and graph merge
+- **Direct article access** links stored with the paper record when available
 
 #### Quick Actions
 - **🎲 Random Gene Info**: Get information about a random gene

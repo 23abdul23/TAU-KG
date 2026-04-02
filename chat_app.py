@@ -12,6 +12,12 @@ import random
 import tempfile
 import os
 
+# Paper integration imports
+try:
+    import deb_data_papers as papers_db
+    PAPERS_AVAILABLE = True
+except ImportError:
+    PAPERS_AVAILABLE = False
 
 # Load environment variables
 from dotenv import load_dotenv
@@ -32,6 +38,8 @@ if 'chat_history' not in st.session_state:
     st.session_state.chat_history = []
 if 'chat_citations' not in st.session_state:
     st.session_state.chat_citations = {}  # Store citations for each message
+if 'chat_papers' not in st.session_state:
+    st.session_state.chat_papers = {}  # Store paper results for each message
 if 'db_loaded' not in st.session_state:
     st.session_state.db_loaded = False
 if 'gene_network' not in st.session_state:
@@ -45,6 +53,15 @@ def initialize_database():
         with st.spinner("Initializing vector database..."):
             st.session_state.db_manager = VectorDBManager()
             st.session_state.db_manager.load_csv_to_vectordb("nodes_main.csv")
+            
+            # Load papers if available
+            if PAPERS_AVAILABLE and papers_db.papers_data:
+                try:
+                    st.session_state.db_manager.create_papers_collection()
+                    st.session_state.db_manager.load_papers_to_vectordb(papers_db.papers_data)
+                except Exception as e:
+                    st.warning(f"Could not load papers: {str(e)}")
+            
             st.session_state.db_loaded = True
         st.success("Vector database initialized successfully!")
         return True
@@ -58,6 +75,7 @@ def generate_enhanced_response(query: str, search_results: List[Dict[str, Any]],
         return {
             'response': "I couldn't find any relevant information in the gene/protein database for your query.",
             'citations': [],
+            'papers': [],
             'has_enhanced': False
         }
     
@@ -65,10 +83,13 @@ def generate_enhanced_response(query: str, search_results: List[Dict[str, Any]],
     try:
         enhanced_result = db_manager.generate_enhanced_response(query, search_results, max_tokens=1024)
         
+        # Search for related papers
+        papers = search_papers_for_query(query, n_results=3)
         
         return {
             'response': enhanced_result['gpt_response'],
             'citations': enhanced_result['citations'],
+            'papers': papers,
             'has_enhanced': enhanced_result['has_openai'],
             'has_citations': enhanced_result['has_citations'],
             'search_results': search_results
@@ -85,6 +106,7 @@ def generate_basic_response(query: str, search_results: List[Dict[str, Any]]) ->
         return {
             'response': "I couldn't find any relevant information in the gene/protein database for your query.",
             'citations': [],
+            'papers': [],
             'has_enhanced': False
         }
     
@@ -109,9 +131,13 @@ def generate_basic_response(query: str, search_results: List[Dict[str, Any]]) ->
     gene_names = [result['metadata']['node_name'] for result in search_results]
     response += f"\n**Related genes/proteins you might want to ask about**: {', '.join(gene_names[:3])}"
     
+    # Search for related papers
+    papers = search_papers_for_query(query, n_results=3)
+    
     return {
         'response': response,
         'citations': [],
+        'papers': papers,
         'has_enhanced': False,
         'has_citations': False,
         'search_results': search_results
@@ -626,6 +652,58 @@ def display_gene_network_tab():
             avg_genes = sum(len(q.get('genes', [])) for q in st.session_state.query_genes if isinstance(q, dict)) / max(1, total_queries)
             st.metric("Avg Genes/Query", f"{avg_genes:.1f}")
 
+def search_papers_for_query(query: str, n_results: int = 3) -> List[Dict[str, Any]]:
+    """Search for relevant papers using vector similarity"""
+    if not PAPERS_AVAILABLE or not st.session_state.db_manager:
+        return []
+    
+    try:
+        papers = st.session_state.db_manager.search_papers(query, n_results=n_results)
+        return papers if papers else []
+    except Exception as e:
+        st.warning(f"Could not search papers: {str(e)}")
+        return []
+
+def display_papers(papers: List[Dict[str, Any]]):
+    """Display paper results in a formatted way"""
+    if not papers:
+        return
+    
+    st.markdown("### 📄 Related Research Papers")
+    
+    for i, paper in enumerate(papers, 1):
+        with st.container():
+            # Paper title and PMID link
+            title = paper.get('title', 'Untitled')
+            pmid = paper.get('pmid', '')
+            
+            if pmid:
+                pmid_link = f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/"
+                st.markdown(f"**{i}. [{title}]({pmid_link})**")
+            else:
+                st.markdown(f"**{i}. {title}**")
+            
+            # Authors
+            if 'authors' in paper and paper['authors']:
+                st.write(f"👥 **Authors:** {paper['authors']}")
+            
+            # Publication info
+            info_parts = []
+            if 'publication_year' in paper and paper['publication_year']:
+                info_parts.append(f"({paper['publication_year']})")
+            if 'journal' in paper and paper['journal']:
+                info_parts.append(f"*{paper['journal']}*")
+            
+            if info_parts:
+                st.write(" ".join(info_parts))
+            
+            # Abstract
+            if 'abstract' in paper and paper['abstract']:
+                with st.expander("📖 Abstract"):
+                    st.write(paper['abstract'][:300] + "..." if len(paper['abstract']) > 300 else paper['abstract'])
+            
+            st.divider()
+
 def main():
     st.title("🧬 Gene/Protein Knowledge Chat")
     st.markdown("Ask questions about genes and proteins from your dataset!")
@@ -696,6 +774,9 @@ def main():
                             message_key = f"message_{i}"
                             if message_key in st.session_state.chat_citations:
                                 display_citations(st.session_state.chat_citations[message_key])
+                            # Display papers if they exist for this message
+                            if message_key in st.session_state.chat_papers:
+                                display_papers(st.session_state.chat_papers[message_key])
             
             # Chat input
             if prompt := st.chat_input("Ask about genes, proteins, or any related information..."):
@@ -729,6 +810,10 @@ def main():
                             if result.get('citations'):
                                 display_citations(result['citations'])
                             
+                            # Display papers if available
+                            if result.get('papers'):
+                                display_papers(result['papers'])
+                            
                             # Add status indicators
                             col1, col2, col3 = st.columns(3)
                             with col1:
@@ -754,10 +839,12 @@ def main():
                             # Add to chat history (just the main response for cleaner history)
                             st.session_state.chat_history.append(("assistant", result['response']))
                             
-                            # Store citations for this message
+                            # Store citations and papers for this message
+                            message_key = f"message_{len(st.session_state.chat_history) - 1}"
                             if result.get('citations'):
-                                message_key = f"message_{len(st.session_state.chat_history) - 1}"
                                 st.session_state.chat_citations[message_key] = result['citations']
+                            if result.get('papers'):
+                                st.session_state.chat_papers[message_key] = result['papers']
                             
                             # Show retrieved nodes in a dropdown
                             if search_results:

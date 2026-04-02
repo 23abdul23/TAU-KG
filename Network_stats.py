@@ -429,7 +429,7 @@ class NetworkAnalyzer:
         analysis_type = st.sidebar.selectbox(
             "Select Analysis Type",
             ["Community Structure", "Network Robustness", "Motif Analysis",
-             "Temporal Analysis", "Correlation Analysis"]
+             "Temporal Analysis", "Correlation Analysis", "Paper Analytics"]
         )
 
         if analysis_type == "Community Structure":
@@ -442,6 +442,8 @@ class NetworkAnalyzer:
             self._display_temporal_analysis()
         elif analysis_type == "Correlation Analysis":
             self._display_correlation_analysis()
+        elif analysis_type == "Paper Analytics":
+            self._display_paper_analytics()
 
     def _display_network_explorer(self):
         """Display interactive network explorer"""
@@ -544,6 +546,233 @@ class NetworkAnalyzer:
         type_df = pd.DataFrame(list(type_counts.items()),
                              columns=["Type", "Count"])
         st.bar_chart(type_df.set_index("Type"))
+    
+    def _display_paper_analytics(self):
+        """Display paper analytics and contributions"""
+        st.header("📄 Paper Analytics")
+        
+        try:
+            # Import paper analyzer
+            try:
+                import deb_data_papers as papers_db
+                PAPERS_AVAILABLE = True
+            except ImportError:
+                PAPERS_AVAILABLE = False
+            
+            if not PAPERS_AVAILABLE or not papers_db.papers_data:
+                st.warning("No papers loaded. Please upload papers first.")
+                return
+            
+            # Create paper analyzer
+            paper_analyzer = PaperAnalyzer(self.nodes_data, self.edges_data, papers_db.papers_data, papers_db.paper_entities)
+            
+            # Display tabs
+            tab1, tab2, tab3, tab4 = st.tabs([
+                "Paper Contributions",
+                "Entity Distribution",
+                "Co-citation Network",
+                "Timeline Analysis"
+            ])
+            
+            with tab1:
+                self._display_paper_contributions(paper_analyzer)
+            
+            with tab2:
+                self._display_paper_entity_distribution(paper_analyzer)
+            
+            with tab3:
+                self._display_paper_co_citation(paper_analyzer)
+            
+            with tab4:
+                self._display_paper_timeline(paper_analyzer)
+        
+        except Exception as e:
+            st.error(f"Error in paper analytics: {str(e)}")
+    
+    def _display_paper_contributions(self, paper_analyzer):
+        """Display which papers drive the graph"""
+        st.subheader("Top Contributing Papers")
+        
+        contributions = paper_analyzer.analyze_paper_contributions()
+        
+        if contributions:
+            contrib_df = pd.DataFrame(contributions)
+            
+            # Metrics
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                st.metric("Total Papers", len(contributions))
+            with col2:
+                st.metric("Avg Entities/Paper", 
+                         f"{contrib_df['entities'].mean():.1f}")
+            with col3:
+                st.metric("Avg Edges/Paper",
+                         f"{contrib_df['relationships'].mean():.1f}")
+            
+            # Bar chart of top papers
+            fig = go.Figure()
+            fig.add_trace(go.Bar(
+                x=contrib_df['title'].head(10),
+                y=contrib_df['entities'].head(10),
+                name='Entities',
+                marker_color='lightblue'
+            ))
+            fig.add_trace(go.Bar(
+                x=contrib_df['title'].head(10),
+                y=contrib_df['relationships'].head(10),
+                name='Relationships',
+                marker_color='orange'
+            ))
+            fig.update_layout(
+                title="Top 10 Contributing Papers",
+                xaxis_title="Paper",
+                yaxis_title="Count",
+                barmode='group',
+                height=500
+            )
+            st.plotly_chart(fig, use_container_width=True)
+            
+            # Detailed table
+            st.dataframe(contrib_df, use_container_width=True)
+    
+    def _display_paper_entity_distribution(self, paper_analyzer):
+        """Display entity type distribution across papers"""
+        st.subheader("Entity Types Distribution")
+        
+        dist = paper_analyzer.get_paper_entity_distribution()
+        
+        if dist:
+            dist_df = pd.DataFrame(dist)
+            
+            # Create figure with subplots for each entity type
+            fig = make_subplots(
+                rows=2, cols=2,
+                subplot_titles=tuple(dist_df['entity_type'].unique()[:4]),
+                specs=[[{"type": "pie"}, {"type": "pie"}],
+                       [{"type": "pie"}, {"type": "pie"}]]
+            )
+            
+            entity_types = dist_df['entity_type'].unique()
+            positions = [(1, 1), (1, 2), (2, 1), (2, 2)]
+            
+            for entity_type, pos in zip(entity_types[:4], positions):
+                data = dist_df[dist_df['entity_type'] == entity_type]
+                fig.add_trace(
+                    go.Pie(labels=data['count'], values=data['count'],
+                           name=entity_type),
+                    row=pos[0], col=pos[1]
+                )
+            
+            fig.update_layout(height=600, title_text="Entity Type Distribution Across Papers")
+            st.plotly_chart(fig, use_container_width=True)
+    
+    def _display_paper_co_citation(self, paper_analyzer):
+        """Display co-citation network"""
+        st.subheader("Paper Co-citation Network")
+        
+        cocitation = paper_analyzer.get_paper_co_citation_network()
+        
+        if cocitation:
+            st.write(f"**Total Papers:** {cocitation['total_papers']}")
+            st.write(f"**Shared Entities:** {cocitation['total_shared_entities']}")
+            
+            # Create network visualization
+            if cocitation['connections']:
+                fig = go.Figure()
+                
+                # Get unique papers
+                papers = set()
+                for conn in cocitation['connections']:
+                    papers.add(conn['paper1_title'])
+                    papers.add(conn['paper2_title'])
+                
+                papers = list(papers)[:15]  # Limit to top 15
+                
+                # Create connections
+                x_coords, y_coords = [], []
+                for i, paper in enumerate(papers):
+                    x_coords.append(i % 5)
+                    y_coords.append(i // 5)
+                
+                # Plot connections
+                for conn in cocitation['connections']:
+                    if conn['paper1_title'] in papers and conn['paper2_title'] in papers:
+                        idx1 = papers.index(conn['paper1_title'])
+                        idx2 = papers.index(conn['paper2_title'])
+                        
+                        fig.add_trace(go.Scatter(
+                            x=[x_coords[idx1], x_coords[idx2]],
+                            y=[y_coords[idx1], y_coords[idx2]],
+                            mode='lines',
+                            line=dict(width=conn['shared_entity_count'] / 2),
+                            hoverinfo='text',
+                            text=f"Shared: {conn['shared_entity_count']} entities",
+                            showlegend=False
+                        ))
+                
+                # Plot papers
+                fig.add_trace(go.Scatter(
+                    x=x_coords,
+                    y=y_coords,
+                    mode='markers+text',
+                    marker=dict(size=15, color='lightblue'),
+                    text=[p[:20] + "..." if len(p) > 20 else p for p in papers],
+                    textposition="top center"
+                ))
+                
+                fig.update_layout(
+                    title="Paper Co-citation Network (Top 15)",
+                    showlegend=False,
+                    height=500
+                )
+                st.plotly_chart(fig, use_container_width=True)
+    
+    def _display_paper_timeline(self, paper_analyzer):
+        """Display temporal analysis with papers"""
+        st.subheader("Publication Timeline")
+        
+        timeline = paper_analyzer.temporal_analysis_with_papers()
+        
+        if timeline and 'by_year' in timeline:
+            timeline_df = pd.DataFrame(timeline['by_year']).sort_values('year')
+            
+            fig = go.Figure()
+            
+            fig.add_trace(go.Scatter(
+                x=timeline_df['year'],
+                y=timeline_df['paper_count'],
+                name='Papers',
+                yaxis='y1',
+                line=dict(color='blue')
+            ))
+            
+            fig.add_trace(go.Scatter(
+                x=timeline_df['year'],
+                y=timeline_df['cumulative_entities'],
+                name='Cumulative Entities',
+                yaxis='y2',
+                line=dict(color='orange')
+            ))
+            
+            fig.update_layout(
+                title="Publication Timeline",
+                xaxis_title="Year",
+                yaxis=dict(title="Papers", color='blue'),
+                yaxis2=dict(title="Cumulative Entities", color='orange', overlaying='y', side='right'),
+                height=400
+            )
+            st.plotly_chart(fig, use_container_width=True)
+            
+            # Stats
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                st.metric("Total Papers in Timeline", len(timeline_df))
+            with col2:
+                st.metric("Year Range", 
+                         f"{timeline_df['year'].min()}-{timeline_df['year'].max()}")
+            with col3:
+                st.metric("Avg Papers/Year",
+                         f"{len(timeline_df) / max(1, timeline_df['year'].max() - timeline_df['year'].min() + 1):.1f}")
         
     def validate_graph_data(self):
         """
@@ -588,3 +817,159 @@ class NetworkAnalyzer:
         
         validation_results["is_valid"] = not bool(validation_results["errors"])
         return validation_results
+
+
+class PaperAnalyzer:
+    """Analyzer for paper contributions and metrics in the knowledge graph"""
+    
+    def __init__(self, nodes_data, edges_data, papers_data, paper_entities):
+        """Initialize PaperAnalyzer with graph and paper data"""
+        self.nodes_data = nodes_data
+        self.edges_data = edges_data
+        self.papers_data = papers_data
+        self.paper_entities = paper_entities
+    
+    def analyze_paper_contributions(self):
+        """Analyze which papers drive graph contributions"""
+        contributions = []
+        
+        for paper_id, paper_meta in self.papers_data.items():
+            paper_title = paper_meta.get('title', f'Paper {paper_id}')
+            authors = paper_meta.get('authors', 'Unknown')
+            pmid = paper_meta.get('pmid', '')
+            publication_year = paper_meta.get('publication_year', 'Unknown')
+            
+            # Count entities from this paper
+            entities = len(self.paper_entities.get(paper_id, {}))
+            
+            # Count relationships from this paper
+            relationships = sum(1 for edge in self.edges_data 
+                              if edge.get('source_paper') == paper_id)
+            
+            contributions.append({
+                'paper_id': paper_id,
+                'title': paper_title,
+                'authors': authors,
+                'pmid': pmid,
+                'year': publication_year,
+                'entities': entities,
+                'relationships': relationships,
+                'total_contribution': entities + relationships
+            })
+        
+        # Sort by total contribution
+        return sorted(contributions, key=lambda x: x['total_contribution'], reverse=True)
+    
+    def get_paper_entity_distribution(self):
+        """Get distribution of entity types across papers"""
+        distribution = []
+        
+        entity_type_counts = defaultdict(lambda: defaultdict(int))
+        
+        for paper_id, entities_dict in self.paper_entities.items():
+            for entity_name, entity_info in entities_dict.items():
+                entity_type = entity_info.get('type', 'Unknown')
+                entity_type_counts[entity_type][paper_id] += 1
+        
+        # Format output
+        for entity_type, paper_counts in entity_type_counts.items():
+            for paper_id, count in paper_counts.items():
+                paper_title = self.papers_data.get(paper_id, {}).get('title', '')
+                distribution.append({
+                    'entity_type': entity_type,
+                    'paper_id': paper_id,
+                    'paper_title': paper_title,
+                    'count': count
+                })
+        
+        return distribution
+    
+    def get_paper_co_citation_network(self):
+        """Get papers sharing entities (co-citation network)"""
+        # Build paper-to-entities mapping
+        paper_entities_map = {}
+        for paper_id, entities_dict in self.paper_entities.items():
+            paper_entities_map[paper_id] = set(entities_dict.keys())
+        
+        # Find connections between papers
+        connections = []
+        total_shared = 0
+        
+        paper_ids = list(paper_entities_map.keys())
+        for i, paper1_id in enumerate(paper_ids):
+            for paper2_id in paper_ids[i+1:]:
+                shared_entities = paper_entities_map[paper1_id] & paper_entities_map[paper2_id]
+                
+                if shared_entities:
+                    paper1_title = self.papers_data.get(paper1_id, {}).get('title', f'Paper {paper1_id}')
+                    paper2_title = self.papers_data.get(paper2_id, {}).get('title', f'Paper {paper2_id}')
+                    
+                    connections.append({
+                        'paper1_id': paper1_id,
+                        'paper1_title': paper1_title,
+                        'paper2_id': paper2_id,
+                        'paper2_title': paper2_title,
+                        'shared_entity_count': len(shared_entities),
+                        'shared_entities': list(shared_entities)[:5]  # Show first 5
+                    })
+                    total_shared += len(shared_entities)
+        
+        # Sort by shared entities count
+        connections = sorted(connections, key=lambda x: x['shared_entity_count'], reverse=True)
+        
+        return {
+            'total_papers': len(paper_ids),
+            'total_shared_entities': total_shared,
+            'connections': connections[:20]  # Top 20 connections
+        }
+    
+    def temporal_analysis_with_papers(self):
+        """Analyze temporal distribution of papers and their contributions"""
+        timeline = defaultdict(lambda: {
+            'paper_count': 0,
+            'entity_count': 0,
+            'cumulative_entities': 0,
+            'relationships': 0
+        })
+        
+        cumulative_entities = 0
+        
+        for paper_id, paper_meta in self.papers_data.items():
+            year = paper_meta.get('publication_year', 'Unknown')
+            
+            if year and year != 'Unknown':
+                timeline[year]['paper_count'] += 1
+                
+                # Count entities for this paper
+                entities_count = len(self.paper_entities.get(paper_id, {}))
+                timeline[year]['entity_count'] += entities_count
+                cumulative_entities += entities_count
+                timeline[year]['cumulative_entities'] = cumulative_entities
+                
+                # Count relationships for this paper
+                relationships = sum(1 for edge in self.edges_data 
+                                  if edge.get('source_paper') == paper_id)
+                timeline[year]['relationships'] += relationships
+        
+        # Convert to sorted list
+        timeline_by_year = []
+        for year in sorted(timeline.keys()):
+            if isinstance(year, str):
+                try:
+                    year_int = int(year)
+                    data = timeline[year]
+                    timeline_by_year.append({
+                        'year': year_int,
+                        'paper_count': data['paper_count'],
+                        'entity_count': data['entity_count'],
+                        'cumulative_entities': data['cumulative_entities'],
+                        'relationships': data['relationships']
+                    })
+                except ValueError:
+                    pass
+        
+        return {
+            'by_year': timeline_by_year,
+            'total_years': len(timeline_by_year),
+            'total_papers': len(self.papers_data)
+        }
