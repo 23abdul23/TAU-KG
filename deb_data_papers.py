@@ -16,6 +16,7 @@ from __future__ import annotations
 import copy
 import json
 import os
+import threading
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
@@ -63,6 +64,7 @@ paper_edges: List[Dict[str, Any]] = []
 paper_metadata: Dict[str, Any] = _default_paper_metadata()
 
 _STORE_LOADED = False
+_STORE_LOCK = threading.RLock()
 
 
 def _normalize_entity_bucket(raw_bucket: Optional[Dict[str, Any]]) -> Dict[str, List[Dict[str, Any]]]:
@@ -130,56 +132,11 @@ def _recompute_metadata(existing_metadata: Optional[Dict[str, Any]] = None) -> D
     return metadata
 
 
-def load_store() -> Dict[str, Any]:
-    """Load persisted paper data from disk into the in-memory store."""
-    global papers_data, paper_entities, paper_edges, paper_metadata, _STORE_LOADED
-
-    if os.path.exists(STORE_PATH):
-        with open(STORE_PATH, "r", encoding="utf-8") as handle:
-            payload = json.load(handle)
-    else:
-        payload = {}
-
-    papers_raw = payload.get("papers_data", [])
-    entities_raw = payload.get("paper_entities", {})
-    edges_raw = payload.get("paper_edges", [])
-    metadata_raw = payload.get("paper_metadata", {})
-
-    papers_data = copy.deepcopy(papers_raw) if isinstance(papers_raw, list) else []
-    paper_entities = {}
-    if isinstance(entities_raw, dict):
-        for paper_id, bucket in entities_raw.items():
-            paper_entities[str(paper_id)] = _normalize_entity_bucket(bucket)
-
-    paper_edges = []
-    if isinstance(edges_raw, list):
-        for edge in edges_raw:
-            if isinstance(edge, dict):
-                paper_edges.append(_normalize_edge(edge))
-
-    paper_metadata = _recompute_metadata(metadata_raw)
-    _STORE_LOADED = True
-    return {
-        "papers_data": papers_data,
-        "paper_entities": paper_entities,
-        "paper_edges": paper_edges,
-        "paper_metadata": paper_metadata,
-    }
-
-
-def ensure_loaded() -> None:
-    """Ensure the JSON-backed store has been loaded."""
-    if not _STORE_LOADED:
-        load_store()
-
-
-def save_store() -> str:
-    """Persist the in-memory paper store to disk atomically."""
+def _save_store_locked() -> str:
+    """Persist the in-memory paper store to disk. Caller must hold `_STORE_LOCK`."""
     global paper_metadata
 
-    ensure_loaded()
     paper_metadata = _recompute_metadata(paper_metadata)
-
     os.makedirs(DATA_DIR, exist_ok=True)
     payload = {
         "version": STORE_VERSION,
@@ -189,11 +146,64 @@ def save_store() -> str:
         "paper_metadata": paper_metadata,
     }
 
-    temp_path = f"{STORE_PATH}.tmp"
+    temp_path = f"{STORE_PATH}.{threading.get_ident()}.tmp"
     with open(temp_path, "w", encoding="utf-8") as handle:
         json.dump(payload, handle, indent=2, ensure_ascii=True)
+        handle.flush()
+        os.fsync(handle.fileno())
     os.replace(temp_path, STORE_PATH)
     return STORE_PATH
+
+
+def load_store() -> Dict[str, Any]:
+    """Load persisted paper data from disk into the in-memory store."""
+    global papers_data, paper_entities, paper_edges, paper_metadata, _STORE_LOADED
+    with _STORE_LOCK:
+        if os.path.exists(STORE_PATH):
+            with open(STORE_PATH, "r", encoding="utf-8") as handle:
+                payload = json.load(handle)
+        else:
+            payload = {}
+
+        papers_raw = payload.get("papers_data", [])
+        entities_raw = payload.get("paper_entities", {})
+        edges_raw = payload.get("paper_edges", [])
+        metadata_raw = payload.get("paper_metadata", {})
+
+        papers_data = copy.deepcopy(papers_raw) if isinstance(papers_raw, list) else []
+        paper_entities = {}
+        if isinstance(entities_raw, dict):
+            for paper_id, bucket in entities_raw.items():
+                paper_entities[str(paper_id)] = _normalize_entity_bucket(bucket)
+
+        paper_edges = []
+        if isinstance(edges_raw, list):
+            for edge in edges_raw:
+                if isinstance(edge, dict):
+                    paper_edges.append(_normalize_edge(edge))
+
+        paper_metadata = _recompute_metadata(metadata_raw)
+        _STORE_LOADED = True
+        return {
+            "papers_data": papers_data,
+            "paper_entities": paper_entities,
+            "paper_edges": paper_edges,
+            "paper_metadata": paper_metadata,
+        }
+
+
+def ensure_loaded() -> None:
+    """Ensure the JSON-backed store has been loaded."""
+    with _STORE_LOCK:
+        if not _STORE_LOADED:
+            load_store()
+
+
+def save_store() -> str:
+    """Persist the in-memory paper store to disk atomically."""
+    with _STORE_LOCK:
+        ensure_loaded()
+        return _save_store_locked()
 
 
 def add_paper(
@@ -227,14 +237,31 @@ def add_paper(
     Returns:
         dict: The stored paper record
     """
-    ensure_loaded()
+    with _STORE_LOCK:
+        ensure_loaded()
 
-    normalized_authors = authors if isinstance(authors, list) else [authors] if authors else []
-    existing = next((paper for paper in papers_data if paper.get("paper_id") == paper_id), None)
+        normalized_authors = authors if isinstance(authors, list) else [authors] if authors else []
+        existing = next((paper for paper in papers_data if paper.get("paper_id") == paper_id), None)
 
-    if existing:
-        existing.update(
-            {
+        if existing:
+            existing.update(
+                {
+                    "title": title,
+                    "authors": normalized_authors,
+                    "pmid": pmid,
+                    "doi": doi,
+                    "abstract": abstract,
+                    "pdf_path": pdf_path,
+                    "publication_date": publication_date,
+                    "source": source,
+                    "source_url": source_url,
+                    "sections": sections or [],
+                }
+            )
+            paper = existing
+        else:
+            paper = {
+                "paper_id": paper_id,
                 "title": title,
                 "authors": normalized_authors,
                 "pmid": pmid,
@@ -245,30 +272,14 @@ def add_paper(
                 "source": source,
                 "source_url": source_url,
                 "sections": sections or [],
+                "upload_date": datetime.now().isoformat(),
+                "extraction_status": "pending",
+                "notes": "",
             }
-        )
-        paper = existing
-    else:
-        paper = {
-            "paper_id": paper_id,
-            "title": title,
-            "authors": normalized_authors,
-            "pmid": pmid,
-            "doi": doi,
-            "abstract": abstract,
-            "pdf_path": pdf_path,
-            "publication_date": publication_date,
-            "source": source,
-            "source_url": source_url,
-            "sections": sections or [],
-            "upload_date": datetime.now().isoformat(),
-            "extraction_status": "pending",
-            "notes": "",
-        }
-        papers_data.append(paper)
+            papers_data.append(paper)
 
-    save_store()
-    return copy.deepcopy(paper)
+        _save_store_locked()
+        return copy.deepcopy(paper)
 
 
 def add_entities(paper_id, entity_type, entities):
@@ -280,32 +291,34 @@ def add_entities(paper_id, entity_type, entities):
         entity_type (str): One of genes, proteins, diseases, pathways
         entities (list): List of extracted entities
     """
-    ensure_loaded()
-    if entity_type not in ENTITY_TYPES:
-        raise ValueError(f"Unsupported entity type: {entity_type}")
+    with _STORE_LOCK:
+        ensure_loaded()
+        if entity_type not in ENTITY_TYPES:
+            raise ValueError(f"Unsupported entity type: {entity_type}")
 
-    if paper_id not in paper_entities:
-        paper_entities[paper_id] = _empty_entity_bucket()
+        if paper_id not in paper_entities:
+            paper_entities[paper_id] = _empty_entity_bucket()
 
-    paper_entities[paper_id][entity_type] = copy.deepcopy(entities) if isinstance(entities, list) else []
-    paper_metadata["last_extraction_date"] = datetime.now().isoformat()
-    save_store()
+        paper_entities[paper_id][entity_type] = copy.deepcopy(entities) if isinstance(entities, list) else []
+        paper_metadata["last_extraction_date"] = datetime.now().isoformat()
+        _save_store_locked()
 
 
 def set_paper_entities(paper_id: str, entities_by_type: Dict[str, List[Dict[str, Any]]]) -> Dict[str, List[Dict[str, Any]]]:
     """Replace all entity buckets for a paper and persist them."""
-    ensure_loaded()
-    current = _normalize_entity_bucket(paper_entities.get(paper_id))
+    with _STORE_LOCK:
+        ensure_loaded()
+        current = _normalize_entity_bucket(paper_entities.get(paper_id))
 
-    for entity_type in ENTITY_TYPES:
-        if entity_type in entities_by_type:
-            values = entities_by_type.get(entity_type, [])
-            current[entity_type] = copy.deepcopy(values) if isinstance(values, list) else []
+        for entity_type in ENTITY_TYPES:
+            if entity_type in entities_by_type:
+                values = entities_by_type.get(entity_type, [])
+                current[entity_type] = copy.deepcopy(values) if isinstance(values, list) else []
 
-    paper_entities[paper_id] = current
-    paper_metadata["last_review_date"] = datetime.now().isoformat()
-    save_store()
-    return copy.deepcopy(current)
+        paper_entities[paper_id] = current
+        paper_metadata["last_review_date"] = datetime.now().isoformat()
+        _save_store_locked()
+        return copy.deepcopy(current)
 
 
 def add_edges(paper_id, edges):
@@ -316,33 +329,35 @@ def add_edges(paper_id, edges):
         paper_id (str): Paper ID
         edges (list): List of relationship dicts
     """
-    ensure_loaded()
-    if not isinstance(edges, list):
-        return
+    with _STORE_LOCK:
+        ensure_loaded()
+        if not isinstance(edges, list):
+            return
 
-    for edge in edges:
-        if isinstance(edge, dict):
-            paper_edges.append(_normalize_edge(edge, paper_id=paper_id))
+        for edge in edges:
+            if isinstance(edge, dict):
+                paper_edges.append(_normalize_edge(edge, paper_id=paper_id))
 
-    paper_metadata["last_extraction_date"] = datetime.now().isoformat()
-    save_store()
+        paper_metadata["last_extraction_date"] = datetime.now().isoformat()
+        _save_store_locked()
 
 
 def set_paper_relationships(paper_id: str, relationships: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     """Replace all stored relationships for a paper and persist them."""
-    ensure_loaded()
-    retained_edges = [edge for edge in paper_edges if edge.get("paper_id") != paper_id]
+    with _STORE_LOCK:
+        ensure_loaded()
+        retained_edges = [edge for edge in paper_edges if edge.get("paper_id") != paper_id]
 
-    normalized_relationships: List[Dict[str, Any]] = []
-    if isinstance(relationships, list):
-        for relationship in relationships:
-            if isinstance(relationship, dict):
-                normalized_relationships.append(_normalize_edge(relationship, paper_id=paper_id))
+        normalized_relationships: List[Dict[str, Any]] = []
+        if isinstance(relationships, list):
+            for relationship in relationships:
+                if isinstance(relationship, dict):
+                    normalized_relationships.append(_normalize_edge(relationship, paper_id=paper_id))
 
-    paper_edges[:] = retained_edges + normalized_relationships
-    paper_metadata["last_review_date"] = datetime.now().isoformat()
-    save_store()
-    return copy.deepcopy(normalized_relationships)
+        paper_edges[:] = retained_edges + normalized_relationships
+        paper_metadata["last_review_date"] = datetime.now().isoformat()
+        _save_store_locked()
+        return copy.deepcopy(normalized_relationships)
 
 
 def update_paper_status(paper_id, status):
@@ -353,18 +368,101 @@ def update_paper_status(paper_id, status):
         paper_id (str): Paper ID
         status (str): pending, extracted, reviewed, approved, skipped
     """
-    ensure_loaded()
+    with _STORE_LOCK:
+        ensure_loaded()
 
-    for paper in papers_data:
-        if paper.get("paper_id") == paper_id:
-            paper["extraction_status"] = status
-            if status == "extracted":
-                paper_metadata["last_extraction_date"] = datetime.now().isoformat()
-            if status in {"reviewed", "approved", "skipped"}:
-                paper_metadata["last_review_date"] = datetime.now().isoformat()
-            save_store()
-            return copy.deepcopy(paper)
-    return None
+        for paper in papers_data:
+            if paper.get("paper_id") == paper_id:
+                paper["extraction_status"] = status
+                if status == "extracted":
+                    paper_metadata["last_extraction_date"] = datetime.now().isoformat()
+                if status in {"reviewed", "approved", "skipped"}:
+                    paper_metadata["last_review_date"] = datetime.now().isoformat()
+                _save_store_locked()
+                return copy.deepcopy(paper)
+        return None
+
+
+def upsert_extracted_paper(
+    paper_id: str,
+    title: str,
+    authors: List[str],
+    pmid: str,
+    doi: str,
+    abstract: str,
+    pdf_path: str,
+    publication_date: str,
+    entities_by_type: Dict[str, List[Dict[str, Any]]],
+    relationships: List[Dict[str, Any]],
+    source: str = "user_uploaded",
+    source_url: str = "",
+    sections: Optional[List[Dict[str, Any]]] = None,
+    extraction_status: str = "extracted",
+) -> Dict[str, Any]:
+    """Atomically upsert a paper, its entities, and relationships in one disk write."""
+    with _STORE_LOCK:
+        ensure_loaded()
+
+        normalized_authors = authors if isinstance(authors, list) else [authors] if authors else []
+        existing = next((paper for paper in papers_data if paper.get("paper_id") == paper_id), None)
+
+        if existing:
+            existing.update(
+                {
+                    "title": title,
+                    "authors": normalized_authors,
+                    "pmid": pmid,
+                    "doi": doi,
+                    "abstract": abstract,
+                    "pdf_path": pdf_path,
+                    "publication_date": publication_date,
+                    "source": source,
+                    "source_url": source_url,
+                    "sections": sections or [],
+                    "extraction_status": extraction_status,
+                }
+            )
+            paper = existing
+        else:
+            paper = {
+                "paper_id": paper_id,
+                "title": title,
+                "authors": normalized_authors,
+                "pmid": pmid,
+                "doi": doi,
+                "abstract": abstract,
+                "pdf_path": pdf_path,
+                "publication_date": publication_date,
+                "source": source,
+                "source_url": source_url,
+                "sections": sections or [],
+                "upload_date": datetime.now().isoformat(),
+                "extraction_status": extraction_status,
+                "notes": "",
+            }
+            papers_data.append(paper)
+
+        bucket = _empty_entity_bucket()
+        for entity_type in ENTITY_TYPES:
+            values = entities_by_type.get(entity_type, []) if isinstance(entities_by_type, dict) else []
+            bucket[entity_type] = copy.deepcopy(values) if isinstance(values, list) else []
+        paper_entities[paper_id] = bucket
+
+        retained_edges = [edge for edge in paper_edges if edge.get("paper_id") != paper_id]
+        normalized_relationships: List[Dict[str, Any]] = []
+        if isinstance(relationships, list):
+            for relationship in relationships:
+                if isinstance(relationship, dict):
+                    normalized_relationships.append(_normalize_edge(relationship, paper_id=paper_id))
+        paper_edges[:] = retained_edges + normalized_relationships
+
+        now_iso = datetime.now().isoformat()
+        paper_metadata["last_extraction_date"] = now_iso
+        if extraction_status in {"reviewed", "approved", "skipped"}:
+            paper_metadata["last_review_date"] = now_iso
+
+        _save_store_locked()
+        return copy.deepcopy(paper)
 
 
 def get_paper_by_id(paper_id):

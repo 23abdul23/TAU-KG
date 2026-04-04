@@ -25,6 +25,11 @@ try:
 except ImportError:
     GRAPH_DATA_AVAILABLE = False
 
+try:
+    from citations import extract_entities_with_llm as extract_query_entities
+except Exception:
+    extract_query_entities = None
+
 # Load environment variables
 from dotenv import load_dotenv
 load_dotenv()
@@ -58,6 +63,11 @@ if 'selected_chat_turn_index' not in st.session_state:
     st.session_state.selected_chat_turn_index = 0
 if 'next_query_input' not in st.session_state:
     st.session_state.next_query_input = ""
+if 'clear_next_query_input_pending' not in st.session_state:
+    st.session_state.clear_next_query_input_pending = False
+if st.session_state.clear_next_query_input_pending:
+    st.session_state.next_query_input = ""
+    st.session_state.clear_next_query_input_pending = False
 
 
 QUERY_COLOR_PALETTE = [
@@ -83,6 +93,40 @@ NODE_TYPE_COLORS = {
     "entity": "#9467bd",
 }
 
+NODE_TYPE_SHAPES = {
+    "gene": "dot",
+    "protein": "square",
+    "gene/protein": "hexagon",
+    "disease": "diamond",
+    "pathway": "triangle",
+    "paper": "database",
+    "entity": "dot",
+}
+
+
+def schedule_next_query_input_clear() -> None:
+    """Clear the query box on the next rerun before the widget is recreated."""
+    st.session_state.clear_next_query_input_pending = True
+
+
+def normalize_node_type(node_type: Optional[str], default: str = "entity") -> str:
+    """Canonicalize node type labels across curated, vector, and paper-derived sources."""
+    raw = re.sub(r"\s+", "", str(node_type or "")).strip().lower()
+    mapping = {
+        "gene": "gene",
+        "genes": "gene",
+        "protein": "protein",
+        "proteins": "protein",
+        "disease": "disease",
+        "diseases": "disease",
+        "pathway": "pathway",
+        "pathways": "pathway",
+        "gene/protein": "gene/protein",
+        "geneprotein": "gene/protein",
+        "gene-protein": "gene/protein",
+    }
+    return mapping.get(raw, str(node_type or default).strip() or default)
+
 
 def distance_to_similarity_percent(distance) -> float:
     """Convert vector distance into a bounded similarity percentage for display."""
@@ -91,6 +135,91 @@ def distance_to_similarity_percent(distance) -> float:
     except (TypeError, ValueError):
         return 0.0
     return 100.0 / (1.0 + numeric_distance)
+
+
+def _normalize_result_key(result: Dict[str, Any]) -> str:
+    metadata = result.get("metadata", {}) if isinstance(result, dict) else {}
+    return re.sub(r"\s+", " ", str(metadata.get("node_name", "")).strip()).lower()
+
+
+def _merge_search_results(results: List[Dict[str, Any]], limit: int) -> List[Dict[str, Any]]:
+    merged: Dict[str, Dict[str, Any]] = {}
+
+    for result in results:
+        key = _normalize_result_key(result)
+        if not key:
+            continue
+
+        current = merged.get(key)
+        similarity = result.get("similarity_score", distance_to_similarity_percent(result.get("distance")))
+        if not current or similarity > current.get("similarity_score", 0.0):
+            merged[key] = result
+
+    ranked = sorted(merged.values(), key=lambda item: item.get("similarity_score", 0.0), reverse=True)
+    return ranked[:limit]
+
+
+def _build_query_variants(query: str) -> List[str]:
+    base_query = re.sub(r"\s+", " ", str(query or "")).strip()
+    variants = [base_query] if base_query else []
+
+    extracted_entities: Dict[str, List[str]] = {}
+    if extract_query_entities and base_query:
+        try:
+            extracted = extract_query_entities(base_query) or {}
+            if isinstance(extracted, dict):
+                extracted_entities = {
+                    key: [str(item).strip() for item in value if str(item).strip()]
+                    for key, value in extracted.items()
+                    if isinstance(value, list)
+                }
+        except Exception:
+            extracted_entities = {}
+
+    ordered_terms: List[str] = []
+    for entity_type in ("genes", "proteins", "diseases", "pathways", "keywords"):
+        ordered_terms.extend(extracted_entities.get(entity_type, []))
+
+    if ordered_terms:
+        variants.append(" ".join(ordered_terms[:8]))
+
+    genes = extracted_entities.get("genes", [])
+    proteins = extracted_entities.get("proteins", [])
+    diseases = extracted_entities.get("diseases", [])
+    pathways = extracted_entities.get("pathways", [])
+
+    anchor_terms = genes[:3] + proteins[:2] + diseases[:2] + pathways[:2]
+    for term in anchor_terms:
+        variants.append(f"{base_query} {term}")
+
+    if genes and diseases:
+        variants.append(f"{' '.join(genes[:2])} {' '.join(diseases[:2])} mechanism pathway interaction")
+    if genes and pathways:
+        variants.append(f"{' '.join(genes[:2])} {' '.join(pathways[:2])} regulation network")
+    if proteins and diseases:
+        variants.append(f"{' '.join(proteins[:2])} {' '.join(diseases[:2])} disease mechanism")
+
+    deduped_variants = list(dict.fromkeys(variant for variant in variants if variant))
+    return deduped_variants[:8]
+
+
+def _search_query_seed_nodes(db_manager: VectorDBManager, query: str, limit: int) -> Tuple[List[Dict[str, Any]], List[str]]:
+    """Run several focused searches so one prompt can seed a denser graph."""
+    query_variants = _build_query_variants(query)
+    if not query_variants:
+        return [], []
+
+    per_query_limit = max(5, min(limit, 10))
+    collected: List[Dict[str, Any]] = []
+
+    for index, variant in enumerate(query_variants):
+        try:
+            variant_limit = limit if index == 0 else per_query_limit
+            collected.extend(db_manager.search_similar(variant, n_results=variant_limit))
+        except Exception:
+            continue
+
+    return _merge_search_results(collected, limit), query_variants
 
 
 def render_pyvis_network(net: Network, height: int) -> None:
@@ -144,7 +273,7 @@ def singularize_entity_type(entity_type: str) -> str:
         "diseases": "disease",
         "pathways": "pathway",
     }
-    return mapping.get(entity_type, entity_type or "entity")
+    return normalize_node_type(mapping.get(entity_type, entity_type or "entity"))
 
 
 def safe_float(value: Any, default: float = 0.0) -> float:
@@ -172,7 +301,7 @@ def build_graph_node_lookup() -> Dict[str, Dict[str, Any]]:
             node_lookup[key] = {
                 "key": key,
                 "name": name,
-                "type": str(node.get("type", "entity") or "entity"),
+                "type": normalize_node_type(node.get("type", "entity")),
                 "source": normalize_source_name(node.get("source_type") or node.get("node_source"), "CURATED_GRAPH"),
                 "cluster": node.get("cluster", ""),
             }
@@ -189,7 +318,7 @@ def build_graph_node_lookup() -> Dict[str, Dict[str, Any]]:
                     node_lookup[key] = {
                         "key": key,
                         "name": existing.get("name", name),
-                        "type": existing.get("type", singularize_entity_type(entity_type)),
+                        "type": normalize_node_type(existing.get("type", singularize_entity_type(entity_type))),
                         "source": existing.get("source", "PAPER_INGEST"),
                         "cluster": existing.get("cluster", ""),
                     }
@@ -256,7 +385,7 @@ def merge_search_results(raw_results: List[Dict[str, Any]]) -> List[Dict[str, An
         key = normalize_node_key(node_name)
         similarity = result.get("similarity_score", distance_to_similarity_percent(result.get("distance")))
         source = normalize_source_name(metadata.get("node_source"), "UNKNOWN")
-        node_type = str(metadata.get("node_type", "entity") or "entity")
+        node_type = normalize_node_type(metadata.get("node_type", "entity"))
 
         current = merged.get(key)
         if not current or similarity > current["similarity_score"]:
@@ -283,13 +412,13 @@ def merge_search_results(raw_results: List[Dict[str, Any]]) -> List[Dict[str, An
 def collect_network_filter_options() -> Tuple[List[str], List[str]]:
     """Collect the available node types and sources from current state and graph data."""
     node_lookup = build_graph_node_lookup()
-    node_types: Set[str] = {node.get("type", "entity") for node in node_lookup.values()}
+    node_types: Set[str] = {normalize_node_type(node.get("type", "entity")) for node in node_lookup.values()}
     sources: Set[str] = {node.get("source", "CURATED_GRAPH") for node in node_lookup.values()}
 
     for query_data in st.session_state.query_genes:
         for result in query_data.get("genes", []):
             metadata = result.get("metadata", {})
-            node_types.add(str(metadata.get("node_type", "entity") or "entity"))
+            node_types.add(normalize_node_type(metadata.get("node_type", "entity")))
             sources.add(normalize_source_name(metadata.get("node_source"), "UNKNOWN"))
 
     node_types.discard("")
@@ -304,7 +433,7 @@ def filter_seed_results(raw_results: List[Dict[str, Any]], settings: Dict[str, A
     for result in merge_search_results(raw_results):
         metadata = result.get("metadata", {})
         similarity = result.get("similarity_score", 0.0)
-        node_type = str(metadata.get("node_type", "entity") or "entity")
+        node_type = normalize_node_type(metadata.get("node_type", "entity"))
         source = normalize_source_name(metadata.get("node_source"), "UNKNOWN")
 
         if similarity < settings["min_similarity"]:
@@ -331,7 +460,7 @@ def build_node_payload(
     """Create a consistent node payload used by both single and compound graphs."""
     lookup = node_lookup.get(key, {})
     metadata_override = metadata_override or {}
-    node_type = str(metadata_override.get("node_type") or lookup.get("type") or "entity")
+    node_type = normalize_node_type(metadata_override.get("node_type") or lookup.get("type") or "entity")
     node_source = normalize_source_name(
         metadata_override.get("node_source") or lookup.get("source"),
         "CURATED_GRAPH" if lookup else "UNKNOWN",
@@ -415,7 +544,7 @@ def build_network_payload(query_entries: List[Dict[str, Any]], settings: Dict[st
                     continue
 
                 neighbor_lookup = node_lookup.get(neighbor_key, {})
-                neighbor_type = str(neighbor_lookup.get("type", "entity") or "entity")
+                neighbor_type = normalize_node_type(neighbor_lookup.get("type", "entity"))
                 neighbor_source = normalize_source_name(neighbor_lookup.get("source"), edge.get("provenance", "CURATED_GRAPH"))
 
                 if settings["allowed_types"] and neighbor_type not in settings["allowed_types"]:
@@ -484,6 +613,124 @@ def build_network_payload(query_entries: List[Dict[str, Any]], settings: Dict[st
         "edges": edges,
         "seed_counts": seed_counts,
         "total_queries": len(query_entries),
+        "multi_query_nodes": multi_query_nodes,
+        "seed_total": seed_total,
+    }
+
+
+def _merge_node_metadata(current: Dict[str, Any], incoming: Dict[str, Any]) -> Dict[str, Any]:
+    """Prefer more specific metadata when the same node appears in multiple query graphs."""
+    merged = dict(current)
+    current_type = normalize_node_type(merged.get("node_type", "entity"))
+    incoming_type = normalize_node_type(incoming.get("node_type", "entity"))
+
+    if current_type == "entity" and incoming_type != "entity":
+        merged["node_type"] = incoming_type
+    elif current_type != incoming_type and incoming_type == "gene/protein":
+        merged["node_type"] = incoming_type
+    if not merged.get("node_id") and incoming.get("node_id"):
+        merged["node_id"] = incoming["node_id"]
+    if merged.get("node_source") in {"", "UNKNOWN"} and incoming.get("node_source"):
+        merged["node_source"] = incoming["node_source"]
+    return merged
+
+
+def merge_network_payloads(payloads: List[Dict[str, Any]], max_nodes: int, max_edges: int) -> Dict[str, Any]:
+    """Merge several independently-built query payloads into one compound network."""
+    node_registry: Dict[str, Dict[str, Any]] = {}
+    edge_registry: Dict[Tuple[str, str, str], Dict[str, Any]] = {}
+    seed_counts: Dict[str, int] = {}
+
+    for payload in payloads:
+        for query, count in payload.get("seed_counts", {}).items():
+            seed_counts[query] = count
+
+        for node in payload.get("nodes", []):
+            key = node.get("key")
+            if not key:
+                continue
+
+            current = node_registry.get(key)
+            if current:
+                current["queries"].update(node.get("queries", set()))
+                current["similarity_score"] = max(current.get("similarity_score", 0.0), node.get("similarity_score", 0.0))
+                current["is_seed"] = current.get("is_seed", False) or node.get("is_seed", False)
+                current["metadata"] = _merge_node_metadata(current.get("metadata", {}), node.get("metadata", {}))
+            else:
+                node_registry[key] = {
+                    "key": key,
+                    "name": node.get("name", ""),
+                    "metadata": dict(node.get("metadata", {})),
+                    "similarity_score": node.get("similarity_score", 0.0),
+                    "queries": set(node.get("queries", set())),
+                    "is_seed": bool(node.get("is_seed", False)),
+                }
+
+        for edge in payload.get("edges", []):
+            source_key = edge.get("source_key")
+            target_key = edge.get("target_key")
+            relation = str(edge.get("relation", "related"))
+            if not source_key or not target_key:
+                continue
+
+            edge_key = tuple(sorted([source_key, target_key])) + (relation,)
+            current = edge_registry.get(edge_key)
+            if current:
+                current["score"] = max(current.get("score", 0.0), edge.get("score", 0.0))
+                current["queries"].update(edge.get("queries", set()))
+                current["provenance"].update(edge.get("provenance", set()))
+            else:
+                edge_registry[edge_key] = {
+                    "source_key": source_key,
+                    "target_key": target_key,
+                    "score": edge.get("score", 0.0),
+                    "relation": relation,
+                    "provenance": set(edge.get("provenance", set())),
+                    "queries": set(edge.get("queries", set())),
+                }
+
+    edges = list(edge_registry.values())
+    edges.sort(key=lambda item: (len(item.get("queries", set())), item.get("score", 0.0)), reverse=True)
+    edges = edges[:max_edges]
+
+    connected_node_keys = {edge["source_key"] for edge in edges} | {edge["target_key"] for edge in edges}
+    for node in node_registry.values():
+        if node.get("is_seed"):
+            connected_node_keys.add(node["key"])
+
+    nodes = [node_registry[key] for key in connected_node_keys if key in node_registry]
+
+    node_edge_counts: Dict[str, int] = {key: 0 for key in connected_node_keys}
+    for edge in edges:
+        if edge["source_key"] in node_edge_counts:
+            node_edge_counts[edge["source_key"]] += 1
+        if edge["target_key"] in node_edge_counts:
+            node_edge_counts[edge["target_key"]] += 1
+
+    nodes.sort(
+        key=lambda item: (
+            len(item.get("queries", set())),
+            node_edge_counts.get(item["key"], 0),
+            1 if item.get("is_seed") else 0,
+            item.get("similarity_score", 0.0),
+        ),
+        reverse=True,
+    )
+    nodes = nodes[:max_nodes]
+    allowed_node_keys = {node["key"] for node in nodes}
+    edges = [
+        edge for edge in edges
+        if edge["source_key"] in allowed_node_keys and edge["target_key"] in allowed_node_keys
+    ]
+
+    multi_query_nodes = sum(1 for node in nodes if len(node.get("queries", set())) > 1)
+    seed_total = sum(1 for node in nodes if node.get("is_seed"))
+
+    return {
+        "nodes": nodes,
+        "edges": edges,
+        "seed_counts": seed_counts,
+        "total_queries": len(payloads),
         "multi_query_nodes": multi_query_nodes,
         "seed_total": seed_total,
     }
@@ -940,15 +1187,16 @@ def build_pyvis_network_graph(network_payload: Dict[str, Any], query_order: List
     for node in nodes:
         metadata = node["metadata"]
         query_membership = sorted(node.get("queries", set()))
-        node_type = metadata.get("node_type", "entity")
+        node_type = normalize_node_type(metadata.get("node_type", "entity"))
         base_color = NODE_TYPE_COLORS.get(node_type, NODE_TYPE_COLORS["entity"])
+        node_shape = NODE_TYPE_SHAPES.get(node_type, NODE_TYPE_SHAPES["entity"])
 
         if len(query_membership) > 1:
-            color = "#FFD700"
+            border_color = "#FFD700"
         elif query_membership:
-            color = QUERY_COLOR_PALETTE[query_order.index(query_membership[0]) % len(QUERY_COLOR_PALETTE)]
+            border_color = QUERY_COLOR_PALETTE[query_order.index(query_membership[0]) % len(QUERY_COLOR_PALETTE)]
         else:
-            color = base_color
+            border_color = "#444444"
 
         similarity = node.get("similarity_score", 0.0)
         size = max(16, min(40, 10 + (similarity / 6)))
@@ -965,9 +1213,15 @@ def build_pyvis_network_graph(network_payload: Dict[str, Any], query_order: List
         net.add_node(
             node["key"],
             label=metadata.get("node_name", node["name"]),
-            color=color,
+            color={
+                "background": base_color,
+                "border": border_color,
+                "highlight": {"background": base_color, "border": "#111111"},
+                "hover": {"background": base_color, "border": "#111111"},
+            },
             title=tooltip,
             size=size,
+            shape=node_shape,
             font={"size": 12},
             borderWidth=3 if node.get("is_seed") else 1,
             borderWidthSelected=5,
@@ -1036,6 +1290,55 @@ def build_pyvis_network_graph(network_payload: Dict[str, Any], query_order: List
     return net
 
 
+def render_network_legend() -> None:
+    """Render a compact legend beside the graph."""
+    st.markdown("**Legend**")
+    st.markdown("**Node Types**")
+
+    type_rows = [
+        ("gene", "Gene"),
+        ("protein", "Protein"),
+        ("gene/protein", "Gene/Protein"),
+        ("pathway", "Pathway"),
+        ("disease", "Disease"),
+    ]
+    for node_type, label in type_rows:
+        color = NODE_TYPE_COLORS.get(node_type, NODE_TYPE_COLORS["entity"])
+        st.markdown(
+            f"<div style='display:flex;align-items:center;gap:8px;margin:4px 0;'>"
+            f"<span style='display:inline-block;width:12px;height:12px;border-radius:50%;background:{color};border:1px solid #333;'></span>"
+            f"<span>{label}</span>"
+            f"</div>",
+            unsafe_allow_html=True,
+        )
+
+    st.markdown("**Query Role**")
+    st.markdown(
+        "<div style='display:flex;align-items:center;gap:8px;margin:4px 0;'>"
+        "<span style='display:inline-block;width:12px;height:12px;border-radius:50%;background:#bbbbbb;border:3px solid #FFD700;'></span>"
+        "<span>Appears in multiple selected queries</span>"
+        "</div>",
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        "<div style='display:flex;align-items:center;gap:8px;margin:4px 0;'>"
+        "<span style='display:inline-block;width:12px;height:12px;border-radius:50%;background:#bbbbbb;border:3px solid #1f77b4;'></span>"
+        "<span>Single-query node</span>"
+        "</div>",
+        unsafe_allow_html=True,
+    )
+    st.caption("Node fill color shows biological type. Border color shows query membership.")
+
+
+def render_network_with_legend(net: Network, height: int) -> None:
+    """Render the graph with a right-side legend."""
+    graph_col, legend_col = st.columns([5, 2])
+    with graph_col:
+        render_pyvis_network(net, height=height)
+    with legend_col:
+        render_network_legend()
+
+
 def build_single_query_network_graph(query_entry: Dict[str, Any], settings: Dict[str, Any]) -> Tuple[Optional[Network], Dict[str, Any]]:
     """Create a single-query graph using configured seeds and real edge expansion."""
     payload = build_network_payload([query_entry], settings)
@@ -1050,7 +1353,8 @@ def build_compound_query_network_graph(selected_queries: List[str], query_genes_
         for query_data in query_genes_data
         if isinstance(query_data, dict) and query_data.get("query") in selected_queries
     ]
-    payload = build_network_payload(selected_entries, settings)
+    per_query_payloads = [build_network_payload([entry], settings) for entry in selected_entries]
+    payload = merge_network_payloads(per_query_payloads, settings["max_nodes"], settings["max_edges"])
     graph = build_pyvis_network_graph(payload, selected_queries, height_px=700)
     return graph, payload
 
@@ -1286,7 +1590,7 @@ def display_gene_network_tab_v2():
         if query_entry:
             graph, payload = build_single_query_network_graph(query_entry, settings)
             if graph:
-                render_pyvis_network(graph, height=650)
+                render_network_with_legend(graph, height=650)
 
                 stats_cols = st.columns(4)
                 stats_cols[0].metric("Displayed Nodes", len(payload.get("nodes", [])))
@@ -1325,7 +1629,7 @@ def display_gene_network_tab_v2():
         else:
             graph, payload = build_compound_query_network_graph(selected_queries, st.session_state.query_genes, settings)
             if graph:
-                render_pyvis_network(graph, height=700)
+                render_network_with_legend(graph, height=700)
 
                 col1, col2, col3, col4 = st.columns(4)
                 col1.metric("Displayed Nodes", len(payload.get("nodes", [])))
@@ -1602,7 +1906,7 @@ def main():
             st.session_state.chat_papers = {}  # Clear related papers
             st.session_state.query_genes = []  # Also clear network data
             st.session_state.selected_chat_turn_index = 0
-            st.session_state.next_query_input = ""
+            schedule_next_query_input_clear()
             st.rerun()
     
     # Tab 1: Chat Interface
@@ -1660,17 +1964,19 @@ def main():
 
                     with st.spinner("Searching database and generating enhanced response..."):
                         try:
-                            # Search the vector database
-                            search_results = st.session_state.db_manager.search_similar(
+                            # Search the vector database with entity-aware query expansion.
+                            search_results, query_variants = _search_query_seed_nodes(
+                                st.session_state.db_manager,
                                 prompt,
-                                n_results=st.session_state.search_result_limit,
+                                st.session_state.search_result_limit,
                             )
                             
                             # Store query and genes for network visualization
                             if search_results:
                                 st.session_state.query_genes.append({
                                     'query': prompt,
-                                    'genes': search_results
+                                    'genes': search_results,
+                                    'query_variants': query_variants,
                                 })
                             
                             # Generate enhanced response with GPT-4 and citations
@@ -1687,7 +1993,7 @@ def main():
                                 st.session_state[f"search_results_{assistant_index + 1}"] = search_results
 
                             st.session_state.selected_chat_turn_index = len(get_chat_turns()) - 1
-                            st.session_state.next_query_input = ""
+                            schedule_next_query_input_clear()
                             st.rerun()
                             
                             # Display citations if available
@@ -1797,7 +2103,7 @@ def main():
                             error_msg = f"Sorry, I encountered an error while searching: {str(e)}"
                             st.session_state.chat_history.append(("assistant", error_msg))
                             st.session_state.selected_chat_turn_index = len(get_chat_turns()) - 1
-                            st.session_state.next_query_input = ""
+                            schedule_next_query_input_clear()
                             st.rerun()
 
             st.markdown("---")

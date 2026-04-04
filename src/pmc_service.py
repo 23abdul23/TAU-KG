@@ -4,7 +4,7 @@ src/pmc_service.py
 Robust PMC ingestion service built on official NCBI APIs.
 
 Pipeline:
-PMCID -> E-utilities metadata -> OA check -> BioC full text -> section parsing -> normalized text
+PMCID -> E-utilities metadata -> HTML full text -> BioC fallback -> section parsing -> normalized text
 """
 
 import gzip
@@ -30,7 +30,7 @@ EUTILS_SUMMARY_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcg
 PMC_OA_URL = "https://www.ncbi.nlm.nih.gov/pmc/utils/oa/oa.fcgi"
 BIOC_URL_TEMPLATE = "https://www.ncbi.nlm.nih.gov/research/bionlp/RESTful/pmcoa.cgi/BioC_json/{pmcid}/unicode"
 
-SECTION_SKIP_KEYWORDS = {"references", "acknowledgements", "acknowledgments"}
+SECTION_SKIP_KEYWORDS = {"references", "acknowledgements", "acknowledgments", "metadata"}
 SECTION_PRIORITY = ["abstract", "introduction", "methods", "results", "discussion", "conclusion"]
 PMC_MAX_REQUESTS_PER_SECOND = 3
 PMC_FETCH_WORKER_RECOMMENDATION = 3
@@ -67,6 +67,74 @@ class _PerSecondRateLimiter:
 
 
 _PMC_RATE_LIMITER = _PerSecondRateLimiter(PMC_MAX_REQUESTS_PER_SECOND)
+
+
+def _clean_section_heading(raw_section: str) -> str:
+    """Normalize a raw PMC section heading for bucket matching."""
+    text = (raw_section or "").strip().lower()
+    if not text:
+        return ""
+
+    text = re.sub(r"^\s*\d+[\.\)]\s*", "", text)
+    text = re.sub(r"\s+", " ", text)
+    return text.strip(" :.-")
+
+
+def normalize_section_type(raw_section: str) -> str:
+    """Map varied PMC headings into a stable set of canonical buckets."""
+    text = _clean_section_heading(raw_section)
+    if not text:
+        return "unknown"
+
+    if text == "on this page":
+        return "metadata"
+
+    metadata_markers = [
+        "acknowledg",
+        "declaration of interests",
+        "competing interests",
+        "author contributions",
+        "authors' contributions",
+        "contributor information",
+        "footnotes",
+        "references",
+        "web resources",
+        "associated data",
+        "data availability",
+        "code availability",
+        "data and code availability",
+    ]
+    if any(marker in text for marker in metadata_markers):
+        return "metadata"
+
+    supplementary_markers = [
+        "supplementary",
+        "supplemental",
+        "figures & tables",
+        "figures and tables",
+    ]
+    if any(marker in text for marker in supplementary_markers):
+        return "supplementary"
+
+    if "abstract" in text or text == "summary":
+        return "abstract"
+    if "intro" in text or "background" in text:
+        return "introduction"
+    if (
+        "method" in text
+        or "materials" in text
+        or "data and method" in text
+        or text == "methods"
+    ):
+        return "methods"
+    if "result" in text or "finding" in text or "application" in text:
+        return "results"
+    if "discussion" in text or "outlook" in text or "challenge, promise, and outlook" in text:
+        return "discussion"
+    if "conclusion" in text:
+        return "conclusion"
+
+    return text
 
 
 class _PMCHTMLMainExtractor(HTMLParser):
@@ -166,7 +234,7 @@ class _PMCHTMLMainExtractor(HTMLParser):
             self.in_heading = False
             heading_text = " ".join(self.heading_buffer).strip()
             if heading_text:
-                self.current_section = _normalize_section_type(heading_text)
+                self.current_section = normalize_section_type(heading_text)
             return
 
         if tag == "p" and self.in_paragraph:
@@ -443,31 +511,6 @@ def fetch_bioc_full_text(pmcid: str, retries: int = DEFAULT_HTTP_RETRIES) -> Dic
     )
 
 
-def _normalize_section_type(raw_section: str) -> str:
-    text = (raw_section or "").strip().lower()
-    if not text:
-        return "unknown"
-
-    if "abstract" in text:
-        return "abstract"
-    if "intro" in text:
-        return "introduction"
-    if "method" in text or "materials" in text:
-        return "methods"
-    if "result" in text:
-        return "results"
-    if "discussion" in text:
-        return "discussion"
-    if "conclusion" in text:
-        return "conclusion"
-    if "acknowledg" in text:
-        return "acknowledgements"
-    if "reference" in text or text == "ref":
-        return "references"
-
-    return text
-
-
 def parse_bioc_sections(bioc_payload: Dict[str, Any]) -> List[Dict[str, str]]:
     """Parse BioC JSON into section list with type/text."""
     sections: List[Dict[str, str]] = []
@@ -485,7 +528,7 @@ def parse_bioc_sections(bioc_payload: Dict[str, Any]) -> List[Dict[str, str]]:
                 or infons.get("section")
                 or "unknown"
             )
-            section_type = _normalize_section_type(raw_section)
+            section_type = normalize_section_type(raw_section)
 
             sections.append({"type": section_type, "text": text})
 
@@ -565,7 +608,7 @@ def process_pmc_url_advanced(
     max_chars: Optional[int] = None,
     retries: int = DEFAULT_HTTP_RETRIES,
 ) -> Dict[str, Any]:
-    """Unified PMC ingestion using official APIs with retry and PMC-aware rate limiting."""
+    """Unified PMC ingestion with HTML-first extraction and BioC fallback."""
     pmcid = extract_pmcid(url)
     metadata: Dict[str, Any] = {
         "pmcid": pmcid,
@@ -573,15 +616,18 @@ def process_pmc_url_advanced(
         "authors": [],
         "journal": "",
         "pubdate": "",
+        "pmid": "",
+        "doi": "",
     }
 
     oa_available = False
     sections: List[Dict[str, str]] = []
     text: Optional[str] = None
+    html_result: Optional[Dict[str, Any]] = None
 
     with ThreadPoolExecutor(max_workers=2) as executor:
         metadata_future = executor.submit(fetch_metadata_eutils, pmcid, retries)
-        bioc_future = executor.submit(fetch_bioc_full_text, pmcid, retries)
+        html_future = executor.submit(process_pmc_url_html_fallback, url, max_chars, retries)
 
         try:
             metadata = metadata_future.result()
@@ -589,7 +635,21 @@ def process_pmc_url_advanced(
             logger.warning("Metadata fetch failed for %s after retries: %s", pmcid, exc)
 
         try:
-            bioc_payload = bioc_future.result()
+            html_result = html_future.result()
+            sections = html_result.get("sections", []) or []
+            text = html_result.get("text") or None
+            oa_available = bool(text)
+        except Exception as exc:
+            logger.warning("HTML fetch failed for %s after retries: %s", pmcid, exc)
+
+    if html_result:
+        metadata["title"] = metadata.get("title") or html_result.get("title", "")
+        metadata["pmid"] = html_result.get("pmid", "")
+        metadata["doi"] = html_result.get("doi", "")
+
+    if text is None:
+        try:
+            bioc_payload = fetch_bioc_full_text(pmcid, retries=retries)
             sections = parse_bioc_sections(bioc_payload)
             text = normalize_sections_to_text(sections, max_chars=max_chars)
             oa_available = bool(text)
@@ -608,6 +668,8 @@ def process_pmc_url_advanced(
         "authors": metadata.get("authors", []),
         "journal": metadata.get("journal", ""),
         "pubdate": metadata.get("pubdate", ""),
+        "pmid": metadata.get("pmid", ""),
+        "doi": metadata.get("doi", ""),
         "text": text,
         "sections": sections,
         "oa_available": oa_available,

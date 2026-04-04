@@ -1,0 +1,220 @@
+2026-04-04 12:42:46,950 - citations - INFO - Searching PubMed for user query: 'How are BRCA1 mutations linked to breast cancer mechanisms in the text?' (called from vector_db_manager)
+2026-04-04 12:42:46,951 - citations - INFO - Citation parameters: max_citations=5, prioritize_reviews=True, max_age_years=5
+2026-04-04 12:42:46,951 - citations - INFO - Environment check - NCBI_API_KEY: Available
+2026-04-04 12:42:46,951 - citations - INFO - Environment check - OPENAI_CLIENT: Available
+2026-04-04 12:42:46,951 - citations - INFO - Entity extraction method: LLM-based
+2026-04-04 12:42:46,951 - citations - INFO - Extracting entities using OpenAI API
+2026-04-04 12:42:49,790 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-04 12:42:49,792 - citations - INFO - Extracted 4 entities using LLM: Genes:1, Diseases:1, Keywords:2
+2026-04-04 12:42:49,792 - citations - INFO - Extracted entities - Genes: 1, Diseases: 1, Keywords: 2
+2026-04-04 12:42:53,777 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-04 12:42:53,783 - citations - INFO - Generated LLM-optimized PubMed query: ("BRCA1"[Gene Name] OR "BRCA1"[Title/Abstract]) AND ("Breast Neoplasms"[MeSH Terms] OR "breast cancer"[Title/Abstract]) AND ("Mutation"[MeSH Terms] OR "mutations"[Title/Abstract]) AND ("Mechanisms"[Title/Abstract] OR "Mechanisms"[MeSH Subheading])
+2026-04-04 12:42:53,783 - citations - INFO - Optimized query: ("BRCA1"[Gene Name] OR "BRCA1"[Title/Abstract]) AND ("Breast Neoplasms"[MeSH Terms] OR "breast cancer"[Title/Abstract]) AND ("Mutation"[MeSH Terms] OR "mutations"[Title/Abstract]) AND ("Mechanisms"[Title/Abstract] OR "Mechanisms"[MeSH Subheading])
+2026-04-04 12:42:53,784 - citations - INFO - Constructed PubMed query: (("BRCA1"[Gene Name] OR "BRCA1"[Title/Abstract]) AND ("Breast Neoplasms"[MeSH Terms] OR "breast cancer"[Title/Abstract]) AND ("Mutation"[MeSH Terms] OR "mutations"[Title/Abstract]) AND ("Mechanisms"[Title/Abstract] OR "Mechanisms"[MeSH Subheading])) AND (Review[Publication Type] AND (2021/01/01[PDAT] : 2026/12/31[PDAT]))
+2026-04-04 12:42:53,784 - citations - INFO - Attempting primary search method (JSON esearch -> XML efetch)...
+2026-04-04 12:42:53,784 - citations - INFO - Trying JSON esearch -> XML efetch...
+2026-04-04 12:42:55,386 - citations - INFO - Found 10 PMIDs via JSON esearch, fetching details...
+2026-04-04 12:42:57,835 - citations - INFO - Primary search method successful - found 10 citations
+2026-04-04 12:42:57,835 - citations - INFO - PubMed search completed in 4.05 seconds.
+2026-04-04 12:42:57,835 - citations - INFO - Raw citations before sorting/filtering: 10
+2026-04-04 12:42:57,836 - citations - INFO - Limited citations from 10 to 5 based on max_citations=5
+2026-04-04 12:42:57,836 - citations - INFO - Potential genes identified in top citations: BRCA, BRCA1, BRCA2, CDK4, PARP
+2026-04-04 12:42:57,836 - citations - INFO - Top citation 1: 'Management of Metastatic Hormone Receptor-Positive Breast Cancer Beyond CDK4/6 Inhibitors.', PMID: 40434676, Year: 2025
+2026-04-04 12:42:57,836 - citations - INFO - Top citation 2: 'Combination strategies with PARP inhibitors in BRCA-mutated triple-negative breast cancer: overcoming resistance mechanisms.', PMID: 39572842, Year: 2025
+2026-04-04 12:42:57,836 - citations - INFO - Top citation 3: 'BRCA1 & BRCA2 methylation as a prognostic and predictive biomarker in cancer: Implementation in liquid biopsy in the era of precision medicine.', PMID: 39643918, Year: 2024
+2026-04-04 12:42:57,837 - citations - INFO - Returning 5 citations
+2026-04-04 12:43:03,944 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-04 12:43:45,532 - citations - INFO - Searching PubMed for user query: 'How is APOE associated with Alzheimer’s disease in the study?' (called from vector_db_manager)
+2026-04-04 12:43:45,532 - citations - INFO - Citation parameters: max_citations=5, prioritize_reviews=True, max_age_years=5
+2026-04-04 12:43:45,532 - citations - INFO - Environment check - NCBI_API_KEY: Available
+2026-04-04 12:43:45,532 - citations - INFO - Environment check - OPENAI_CLIENT: Available
+2026-04-04 12:43:45,532 - citations - INFO - Entity extraction method: LLM-based
+2026-04-04 12:43:45,532 - citations - INFO - Extracting entities using OpenAI API
+2026-04-04 12:43:48,391 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-04 12:43:48,393 - citations - INFO - Extracted 4 entities using LLM: Genes:1, Diseases:1, Keywords:2
+2026-04-04 12:43:48,393 - citations - INFO - Extracted entities - Genes: 1, Diseases: 1, Keywords: 2
+2026-04-04 12:43:50,633 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-04 12:43:50,638 - citations - INFO - Generated LLM-optimized PubMed query: ("APOE"[Gene Name] OR "APOE"[Title/Abstract]) AND ("Alzheimer Disease"[MeSH Terms] OR "Alzheimer’s disease"[Title/Abstract]) AND ("association"[Title/Abstract] OR "associated"[Title/Abstract]) AND "study"[Publication Type]
+2026-04-04 12:43:50,639 - citations - INFO - Optimized query: ("APOE"[Gene Name] OR "APOE"[Title/Abstract]) AND ("Alzheimer Disease"[MeSH Terms] OR "Alzheimer’s disease"[Title/Abstract]) AND ("association"[Title/Abstract] OR "associated"[Title/Abstract]) AND "study"[Publication Type]
+2026-04-04 12:43:50,639 - citations - INFO - Constructed PubMed query: (("APOE"[Gene Name] OR "APOE"[Title/Abstract]) AND ("Alzheimer Disease"[MeSH Terms] OR "Alzheimer’s disease"[Title/Abstract]) AND ("association"[Title/Abstract] OR "associated"[Title/Abstract]) AND "study"[Publication Type]) AND (Review[Publication Type] AND (2021/01/01[PDAT] : 2026/12/31[PDAT]))
+2026-04-04 12:43:50,639 - citations - INFO - Attempting primary search method (JSON esearch -> XML efetch)...
+2026-04-04 12:43:50,639 - citations - INFO - Trying JSON esearch -> XML efetch...
+2026-04-04 12:43:52,088 - citations - WARNING - Empty ID list returned in JSON esearch
+2026-04-04 12:43:52,089 - citations - WARNING - Primary method yielded no results, trying XML esearch -> efetch...
+2026-04-04 12:43:52,089 - citations - INFO - Network settings - PROXY_CONFIG: {}
+2026-04-04 12:43:53,547 - citations - INFO - XML esearch response status code: 200
+2026-04-04 12:43:53,547 - citations - INFO - XML esearch response length: 827 bytes
+2026-04-04 12:43:53,547 - citations - WARNING - No PMIDs found via XML esearch.
+2026-04-04 12:43:53,547 - citations - INFO - PubMed search completed in 2.91 seconds.
+2026-04-04 12:43:53,547 - citations - WARNING - No relevant citations found for query 'How is APOE associated with Alzheimer’s disease in the study?' matching the criteria.
+2026-04-04 12:43:53,547 - citations - INFO - Returning 0 citations
+2026-04-04 12:44:00,522 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-04 12:44:41,965 - citations - INFO - Searching PubMed for user query: 'What is the role of EGFR in tumor progression in cancer-related pathways?' (called from vector_db_manager)
+2026-04-04 12:44:41,965 - citations - INFO - Citation parameters: max_citations=5, prioritize_reviews=True, max_age_years=5
+2026-04-04 12:44:41,965 - citations - INFO - Environment check - NCBI_API_KEY: Available
+2026-04-04 12:44:41,965 - citations - INFO - Environment check - OPENAI_CLIENT: Available
+2026-04-04 12:44:41,966 - citations - INFO - Entity extraction method: LLM-based
+2026-04-04 12:44:41,966 - citations - INFO - Extracting entities using OpenAI API
+2026-04-04 12:44:44,055 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-04 12:44:44,058 - citations - INFO - Extracted 4 entities using LLM: Genes:1, Diseases:1, Pathways:1, Keywords:1
+2026-04-04 12:44:44,059 - citations - INFO - Extracted entities - Genes: 1, Diseases: 1, Pathways: 1, Keywords: 1
+2026-04-04 12:44:47,040 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-04 12:44:47,041 - citations - INFO - Generated LLM-optimized PubMed query: ("EGFR"[Gene Name] OR "Epidermal Growth Factor Receptor"[MeSH Terms]) AND ("Neoplasms"[MeSH Terms] OR "cancer"[Title/Abstract]) AND ("Neoplasm Progression"[MeSH Terms] OR "tumor progression"[Title/Abstract]) AND ("role"[Title/Abstract] OR "function"[Title/Abstract])
+2026-04-04 12:44:47,041 - citations - INFO - Optimized query: ("EGFR"[Gene Name] OR "Epidermal Growth Factor Receptor"[MeSH Terms]) AND ("Neoplasms"[MeSH Terms] OR "cancer"[Title/Abstract]) AND ("Neoplasm Progression"[MeSH Terms] OR "tumor progression"[Title/Abstract]) AND ("role"[Title/Abstract] OR "function"[Title/Abstract])
+2026-04-04 12:44:47,041 - citations - INFO - Constructed PubMed query: (("EGFR"[Gene Name] OR "Epidermal Growth Factor Receptor"[MeSH Terms]) AND ("Neoplasms"[MeSH Terms] OR "cancer"[Title/Abstract]) AND ("Neoplasm Progression"[MeSH Terms] OR "tumor progression"[Title/Abstract]) AND ("role"[Title/Abstract] OR "function"[Title/Abstract])) AND (Review[Publication Type] AND (2021/01/01[PDAT] : 2026/12/31[PDAT]))
+2026-04-04 12:44:47,041 - citations - INFO - Attempting primary search method (JSON esearch -> XML efetch)...
+2026-04-04 12:44:47,042 - citations - INFO - Trying JSON esearch -> XML efetch...
+2026-04-04 12:44:48,613 - citations - INFO - Found 10 PMIDs via JSON esearch, fetching details...
+2026-04-04 12:44:51,029 - citations - INFO - Primary search method successful - found 10 citations
+2026-04-04 12:44:51,029 - citations - INFO - PubMed search completed in 3.99 seconds.
+2026-04-04 12:44:51,029 - citations - INFO - Raw citations before sorting/filtering: 10
+2026-04-04 12:44:51,029 - citations - INFO - Limited citations from 10 to 5 based on max_citations=5
+2026-04-04 12:44:51,029 - citations - INFO - Potential genes identified in top citations: CEACAM6
+2026-04-04 12:44:51,030 - citations - INFO - Top citation 1: 'Glioblastoma-A Contemporary Overview of Epidemiology, Classification, Pathogenesis, Diagnosis, and Treatment: A Review Article.', PMID: 41465586, Year: 2025
+2026-04-04 12:44:51,030 - citations - INFO - Top citation 2: 'Aging and senescence: Key players in brain tumor progression and drug resistance.', PMID: 40068246, Year: 2025
+2026-04-04 12:44:51,030 - citations - INFO - Top citation 3: 'Tumor-associated Tn and STn antigens: from molecular mechanism to precision diagnosis and treatment.', PMID: 41383589, Year: 2025
+2026-04-04 12:44:51,030 - citations - INFO - Returning 5 citations
+2026-04-04 12:44:56,290 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-04 12:44:59,911 - citations - INFO - Searching PubMed for user query: 'Which protein–protein interactions involving TP53 are critical for cancer progression?' (called from vector_db_manager)
+2026-04-04 12:44:59,911 - citations - INFO - Citation parameters: max_citations=5, prioritize_reviews=True, max_age_years=5
+2026-04-04 12:44:59,912 - citations - INFO - Environment check - NCBI_API_KEY: Available
+2026-04-04 12:44:59,912 - citations - INFO - Environment check - OPENAI_CLIENT: Available
+2026-04-04 12:44:59,912 - citations - INFO - Entity extraction method: LLM-based
+2026-04-04 12:44:59,912 - citations - INFO - Extracting entities using OpenAI API
+2026-04-04 12:45:01,814 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-04 12:45:01,815 - citations - INFO - Extracted 4 entities using LLM: Genes:1, Diseases:1, Keywords:2
+2026-04-04 12:45:01,815 - citations - INFO - Extracted entities - Genes: 1, Diseases: 1, Keywords: 2
+2026-04-04 12:45:03,661 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-04 12:45:03,662 - citations - INFO - Generated LLM-optimized PubMed query: ("TP53"[Gene Name] AND "protein-protein interactions"[Title/Abstract]) AND ("cancer"[MeSH Terms] AND "progression"[Title/Abstract])
+2026-04-04 12:45:03,663 - citations - INFO - Optimized query: ("TP53"[Gene Name] AND "protein-protein interactions"[Title/Abstract]) AND ("cancer"[MeSH Terms] AND "progression"[Title/Abstract])
+2026-04-04 12:45:03,663 - citations - INFO - Constructed PubMed query: (("TP53"[Gene Name] AND "protein-protein interactions"[Title/Abstract]) AND ("cancer"[MeSH Terms] AND "progression"[Title/Abstract])) AND (Review[Publication Type] AND (2021/01/01[PDAT] : 2026/12/31[PDAT]))
+2026-04-04 12:45:03,663 - citations - INFO - Attempting primary search method (JSON esearch -> XML efetch)...
+2026-04-04 12:45:03,663 - citations - INFO - Trying JSON esearch -> XML efetch...
+2026-04-04 12:45:05,132 - citations - WARNING - Empty ID list returned in JSON esearch
+2026-04-04 12:45:05,134 - citations - WARNING - Primary method yielded no results, trying XML esearch -> efetch...
+2026-04-04 12:45:05,134 - citations - INFO - Network settings - PROXY_CONFIG: {}
+2026-04-04 12:45:06,584 - citations - INFO - XML esearch response status code: 200
+2026-04-04 12:45:06,584 - citations - INFO - XML esearch response length: 731 bytes
+2026-04-04 12:45:06,584 - citations - WARNING - No PMIDs found via XML esearch.
+2026-04-04 12:45:06,584 - citations - INFO - PubMed search completed in 2.92 seconds.
+2026-04-04 12:45:06,584 - citations - WARNING - No relevant citations found for query 'Which protein–protein interactions involving TP53 are critical for cancer progression?' matching the criteria.
+2026-04-04 12:45:06,584 - citations - INFO - Returning 0 citations
+2026-04-04 12:45:12,135 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-04 12:45:20,378 - citations - INFO - Searching PubMed for user query: 'How does BRCA1 protein dysfunction affect DNA repair pathways?' (called from vector_db_manager)
+2026-04-04 12:45:20,378 - citations - INFO - Citation parameters: max_citations=5, prioritize_reviews=True, max_age_years=5
+2026-04-04 12:45:20,378 - citations - INFO - Environment check - NCBI_API_KEY: Available
+2026-04-04 12:45:20,378 - citations - INFO - Environment check - OPENAI_CLIENT: Available
+2026-04-04 12:45:20,379 - citations - INFO - Entity extraction method: LLM-based
+2026-04-04 12:45:20,379 - citations - INFO - Extracting entities using OpenAI API
+2026-04-04 12:45:22,624 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-04 12:45:22,630 - citations - INFO - Extracted 4 entities using LLM: Genes:1, Proteins:1, Pathways:1, Keywords:1
+2026-04-04 12:45:22,633 - citations - INFO - Extracted entities - Genes: 1, Proteins: 1, Pathways: 1, Keywords: 1
+2026-04-04 12:45:24,688 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-04 12:45:24,691 - citations - INFO - Generated LLM-optimized PubMed query: ("BRCA1"[Gene Name] OR "BRCA1 protein"[Substance Name]) AND ("DNA repair"[MeSH Terms] OR "DNA repair pathways"[Title/Abstract]) AND ("dysfunction"[Title/Abstract] OR "dysfunction"[MeSH Terms])
+2026-04-04 12:45:24,691 - citations - INFO - Optimized query: ("BRCA1"[Gene Name] OR "BRCA1 protein"[Substance Name]) AND ("DNA repair"[MeSH Terms] OR "DNA repair pathways"[Title/Abstract]) AND ("dysfunction"[Title/Abstract] OR "dysfunction"[MeSH Terms])
+2026-04-04 12:45:24,691 - citations - INFO - Constructed PubMed query: (("BRCA1"[Gene Name] OR "BRCA1 protein"[Substance Name]) AND ("DNA repair"[MeSH Terms] OR "DNA repair pathways"[Title/Abstract]) AND ("dysfunction"[Title/Abstract] OR "dysfunction"[MeSH Terms])) AND (Review[Publication Type] AND (2021/01/01[PDAT] : 2026/12/31[PDAT]))
+2026-04-04 12:45:24,691 - citations - INFO - Attempting primary search method (JSON esearch -> XML efetch)...
+2026-04-04 12:45:24,692 - citations - INFO - Trying JSON esearch -> XML efetch...
+2026-04-04 12:45:26,159 - citations - INFO - Found 2 PMIDs via JSON esearch, fetching details...
+2026-04-04 12:45:27,847 - citations - INFO - Primary search method successful - found 2 citations
+2026-04-04 12:45:27,848 - citations - INFO - PubMed search completed in 3.16 seconds.
+2026-04-04 12:45:27,848 - citations - INFO - Raw citations before sorting/filtering: 2
+2026-04-04 12:45:27,848 - citations - INFO - Limited citations from 2 to 2 based on max_citations=5
+2026-04-04 12:45:27,848 - citations - INFO - Potential genes identified in top citations: BRCA, TNBC
+2026-04-04 12:45:27,849 - citations - INFO - Top citation 1: 'PARPi, BRCA, and gaps: controversies and future research.', PMID: 39004561, Year: 2024
+2026-04-04 12:45:27,849 - citations - INFO - Top citation 2: 'DNA damage response inhibitors: An avenue for TNBC treatment.', PMID: 33556453, Year: 2021
+2026-04-04 12:45:27,849 - citations - INFO - Returning 2 citations
+2026-04-04 12:45:32,242 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-04 12:45:41,659 - citations - INFO - Searching PubMed for user query: 'Which proteins interacting with APP are implicated in Alzheimer’s disease?' (called from vector_db_manager)
+2026-04-04 12:45:41,659 - citations - INFO - Citation parameters: max_citations=5, prioritize_reviews=True, max_age_years=5
+2026-04-04 12:45:41,659 - citations - INFO - Environment check - NCBI_API_KEY: Available
+2026-04-04 12:45:41,660 - citations - INFO - Environment check - OPENAI_CLIENT: Available
+2026-04-04 12:45:41,660 - citations - INFO - Entity extraction method: LLM-based
+2026-04-04 12:45:41,660 - citations - INFO - Extracting entities using OpenAI API
+2026-04-04 12:45:43,695 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-04 12:45:43,699 - citations - INFO - Extracted 3 entities using LLM: Proteins:1, Diseases:1, Keywords:1
+2026-04-04 12:45:43,700 - citations - INFO - Extracted entities - Proteins: 1, Diseases: 1, Keywords: 1
+2026-04-04 12:45:45,311 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-04 12:45:45,313 - citations - INFO - Generated LLM-optimized PubMed query: ("APP"[Gene Name] AND "Protein Interaction Maps"[MeSH Terms]) AND ("Alzheimer Disease"[MeSH Terms] OR "Alzheimer’s disease"[Title/Abstract])
+2026-04-04 12:45:45,313 - citations - INFO - Optimized query: ("APP"[Gene Name] AND "Protein Interaction Maps"[MeSH Terms]) AND ("Alzheimer Disease"[MeSH Terms] OR "Alzheimer’s disease"[Title/Abstract])
+2026-04-04 12:45:45,313 - citations - INFO - Constructed PubMed query: (("APP"[Gene Name] AND "Protein Interaction Maps"[MeSH Terms]) AND ("Alzheimer Disease"[MeSH Terms] OR "Alzheimer’s disease"[Title/Abstract])) AND (Review[Publication Type] AND (2021/01/01[PDAT] : 2026/12/31[PDAT]))
+2026-04-04 12:45:45,314 - citations - INFO - Attempting primary search method (JSON esearch -> XML efetch)...
+2026-04-04 12:45:45,314 - citations - INFO - Trying JSON esearch -> XML efetch...
+2026-04-04 12:45:46,865 - citations - INFO - Found 3 PMIDs via JSON esearch, fetching details...
+2026-04-04 12:45:49,025 - citations - INFO - Primary search method successful - found 3 citations
+2026-04-04 12:45:49,025 - citations - INFO - PubMed search completed in 3.71 seconds.
+2026-04-04 12:45:49,026 - citations - INFO - Raw citations before sorting/filtering: 3
+2026-04-04 12:45:49,026 - citations - INFO - Limited citations from 3 to 3 based on max_citations=5
+2026-04-04 12:45:49,026 - citations - INFO - Potential genes identified in top citations: HMGB1
+2026-04-04 12:45:49,026 - citations - INFO - Top citation 1: 'Mining Alzheimer's Interactomes, Macromolecular Complexes and Pathways for Drug Discovery.', PMID: 40855644, Year: 2025
+2026-04-04 12:45:49,026 - citations - INFO - Top citation 2: 'Structural Studies Providing Insights into Production and Conformational Behavior of Amyloid-β Peptide Associated with Alzheimer's Disease Development.', PMID: 34068293, Year: 2021
+2026-04-04 12:45:49,026 - citations - INFO - Top citation 3: 'Meta-Analysis of Methamphetamine Modulation on Amyloid Precursor Protein through HMGB1 in Alzheimer's Disease.', PMID: 33946401, Year: 2021
+2026-04-04 12:45:49,026 - citations - INFO - Returning 3 citations
+2026-04-04 12:45:58,509 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-04 12:46:05,905 - citations - INFO - Searching PubMed for user query: 'How does disruption of the PI3K-Akt signaling pathway lead to cancer development?' (called from vector_db_manager)
+2026-04-04 12:46:05,905 - citations - INFO - Citation parameters: max_citations=5, prioritize_reviews=True, max_age_years=5
+2026-04-04 12:46:05,906 - citations - INFO - Environment check - NCBI_API_KEY: Available
+2026-04-04 12:46:05,906 - citations - INFO - Environment check - OPENAI_CLIENT: Available
+2026-04-04 12:46:05,906 - citations - INFO - Entity extraction method: LLM-based
+2026-04-04 12:46:05,906 - citations - INFO - Extracting entities using OpenAI API
+2026-04-04 12:46:08,084 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-04 12:46:08,085 - citations - INFO - Extracted 6 entities using LLM: Proteins:2, Diseases:1, Pathways:1, Keywords:2
+2026-04-04 12:46:08,085 - citations - INFO - Extracted entities - Proteins: 2, Diseases: 1, Pathways: 1, Keywords: 2
+2026-04-04 12:46:12,481 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-04 12:46:12,484 - citations - INFO - Generated LLM-optimized PubMed query: ("PI3K"[Gene Name] OR "PI3K"[MeSH Terms] OR "phosphoinositide 3-kinase"[Title/Abstract]) AND 
+("Akt"[Gene Name] OR "Akt"[MeSH Terms] OR "protein kinase B"[Title/Abstract]) AND 
+("Neoplasms"[MeSH Terms] OR "cancer"[Title/Abstract]) AND 
+("Signal Transduction"[MeSH Terms] OR "signaling pathway"[Title/Abstract]) AND 
+("disruption"[Title/Abstract] OR "inhibition"[Title/Abstract] OR "blockade"[Title/Abstract]) AND 
+("development"[Title/Abstract] OR "progression"[Title/Abstract] OR "onset"[Title/Abstract])
+2026-04-04 12:46:12,484 - citations - INFO - Optimized query: ("PI3K"[Gene Name] OR "PI3K"[MeSH Terms] OR "phosphoinositide 3-kinase"[Title/Abstract]) AND 
+("Akt"[Gene Name] OR "Akt"[MeSH Terms] OR "protein kinase B"[Title/Abstract]) AND 
+("Neoplasms"[MeSH Terms] OR "cancer"[Title/Abstract]) AND 
+("Signal Transduction"[MeSH Terms] OR "signaling pathway"[Title/Abstract]) AND 
+("disruption"[Title/Abstract] OR "inhibition"[Title/Abstract] OR "blockade"[Title/Abstract]) AND 
+("development"[Title/Abstract] OR "progression"[Title/Abstract] OR "onset"[Title/Abstract])
+2026-04-04 12:46:12,484 - citations - INFO - Constructed PubMed query: (("PI3K"[Gene Name] OR "PI3K"[MeSH Terms] OR "phosphoinositide 3-kinase"[Title/Abstract]) AND 
+("Akt"[Gene Name] OR "Akt"[MeSH Terms] OR "protein kinase B"[Title/Abstract]) AND 
+("Neoplasms"[MeSH Terms] OR "cancer"[Title/Abstract]) AND 
+("Signal Transduction"[MeSH Terms] OR "signaling pathway"[Title/Abstract]) AND 
+("disruption"[Title/Abstract] OR "inhibition"[Title/Abstract] OR "blockade"[Title/Abstract]) AND 
+("development"[Title/Abstract] OR "progression"[Title/Abstract] OR "onset"[Title/Abstract])) AND (Review[Publication Type] AND (2021/01/01[PDAT] : 2026/12/31[PDAT]))
+2026-04-04 12:46:12,484 - citations - INFO - Attempting primary search method (JSON esearch -> XML efetch)...
+2026-04-04 12:46:12,484 - citations - INFO - Trying JSON esearch -> XML efetch...
+2026-04-04 12:46:14,037 - citations - INFO - Found 10 PMIDs via JSON esearch, fetching details...
+2026-04-04 12:46:16,439 - citations - INFO - Primary search method successful - found 10 citations
+2026-04-04 12:46:16,439 - citations - INFO - PubMed search completed in 3.96 seconds.
+2026-04-04 12:46:16,440 - citations - INFO - Raw citations before sorting/filtering: 10
+2026-04-04 12:46:16,440 - citations - INFO - Limited citations from 10 to 5 based on max_citations=5
+2026-04-04 12:46:16,440 - citations - INFO - Potential genes identified in top citations: HER2, PI3K
+2026-04-04 12:46:16,441 - citations - INFO - Top citation 1: 'HER2-Positive Breast Cancer Treatment and Resistance.', PMID: 39821040, Year: 2025
+2026-04-04 12:46:16,441 - citations - INFO - Top citation 2: 'The PI3K/Akt/mTOR Signaling Pathway in Triple-Negative Breast Cancer: A Resistance Pathway and a Prime Target for Targeted Therapies.', PMID: 40647529, Year: 2025
+2026-04-04 12:46:16,441 - citations - INFO - Top citation 3: 'Current and emerging treatment approaches for hormone receptor-positive/human epidermal growth factor receptor 2-negative metastatic breast cancer.', PMID: 38211404, Year: 2024
+2026-04-04 12:46:16,441 - citations - INFO - Returning 5 citations
+2026-04-04 12:46:22,954 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-04 12:46:28,171 - citations - INFO - Searching PubMed for user query: 'How does the MAPK signaling pathway contribute to tumor progression?' (called from vector_db_manager)
+2026-04-04 12:46:28,172 - citations - INFO - Citation parameters: max_citations=5, prioritize_reviews=True, max_age_years=5
+2026-04-04 12:46:28,172 - citations - INFO - Environment check - NCBI_API_KEY: Available
+2026-04-04 12:46:28,172 - citations - INFO - Environment check - OPENAI_CLIENT: Available
+2026-04-04 12:46:28,172 - citations - INFO - Entity extraction method: LLM-based
+2026-04-04 12:46:28,172 - citations - INFO - Extracting entities using OpenAI API
+2026-04-04 12:46:30,564 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-04 12:46:30,566 - citations - INFO - Extracted 2 entities using LLM: Diseases:1, Pathways:1
+2026-04-04 12:46:30,566 - citations - INFO - Extracted entities - Diseases: 1, Pathways: 1
+2026-04-04 12:46:32,851 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2026-04-04 12:46:32,852 - citations - INFO - Generated LLM-optimized PubMed query: ("MAPK Signaling System"[MeSH Terms] OR "MAPK pathway"[Title/Abstract] OR "Mitogen-Activated Protein Kinase pathway"[Title/Abstract]) AND ("Neoplasms/pathology"[MeSH Terms] OR "tumor progression"[Title/Abstract] OR "cancer progression"[Title/Abstract])
+2026-04-04 12:46:32,852 - citations - INFO - Optimized query: ("MAPK Signaling System"[MeSH Terms] OR "MAPK pathway"[Title/Abstract] OR "Mitogen-Activated Protein Kinase pathway"[Title/Abstract]) AND ("Neoplasms/pathology"[MeSH Terms] OR "tumor progression"[Title/Abstract] OR "cancer progression"[Title/Abstract])
+2026-04-04 12:46:32,852 - citations - INFO - Constructed PubMed query: (("MAPK Signaling System"[MeSH Terms] OR "MAPK pathway"[Title/Abstract] OR "Mitogen-Activated Protein Kinase pathway"[Title/Abstract]) AND ("Neoplasms/pathology"[MeSH Terms] OR "tumor progression"[Title/Abstract] OR "cancer progression"[Title/Abstract])) AND (Review[Publication Type] AND (2021/01/01[PDAT] : 2026/12/31[PDAT]))
+2026-04-04 12:46:32,852 - citations - INFO - Attempting primary search method (JSON esearch -> XML efetch)...
+2026-04-04 12:46:32,853 - citations - INFO - Trying JSON esearch -> XML efetch...
+2026-04-04 12:46:34,520 - citations - INFO - Found 10 PMIDs via JSON esearch, fetching details...
+2026-04-04 12:46:36,826 - citations - INFO - Primary search method successful - found 10 citations
+2026-04-04 12:46:36,827 - citations - INFO - PubMed search completed in 3.97 seconds.
+2026-04-04 12:46:36,827 - citations - INFO - Raw citations before sorting/filtering: 10
+2026-04-04 12:46:36,827 - citations - INFO - Limited citations from 10 to 5 based on max_citations=5
+2026-04-04 12:46:36,827 - citations - INFO - Potential genes identified in top citations: MAPK
+2026-04-04 12:46:36,827 - citations - INFO - Top citation 1: 'Cutaneous Histiocytoses.', PMID: 41651609, Year: 2026
+2026-04-04 12:46:36,827 - citations - INFO - Top citation 2: 'Immunotherapy in Melanoma.', PMID: 40847234, Year: 2025
+2026-04-04 12:46:36,827 - citations - INFO - Top citation 3: 'Targeting the MAPK Pathway in Cancer.', PMID: 41516092, Year: 2025
+2026-04-04 12:46:36,827 - citations - INFO - Returning 5 citations
+2026-04-04 12:46:42,672 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
