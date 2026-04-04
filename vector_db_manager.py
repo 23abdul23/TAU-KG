@@ -51,7 +51,14 @@ class VectorDBManager:
         self.client = chromadb.PersistentClient(path=db_path)
         
         # Initialize sentence transformer for embeddings
-        self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
+        hf_token = os.getenv("HF_TOKEN")
+        if hf_token:
+            try:
+                self.embedding_model = SentenceTransformer("all-MiniLM-L6-v2", token=hf_token)
+            except TypeError:
+                self.embedding_model = SentenceTransformer("all-MiniLM-L6-v2", use_auth_token=hf_token)
+        else:
+            self.embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
         
         # Initialize OpenAI client if available
         self.openai_client = None
@@ -133,6 +140,42 @@ class VectorDBManager:
         publication_date = str(hydrated.get("publication_date", "") or "")
         hydrated["publication_year"] = publication_date[:4] if len(publication_date) >= 4 else ""
         return hydrated
+
+    def _build_paper_entity_document_text(
+        self,
+        paper_id: str,
+        entity_type: str,
+        entity: Dict[str, Any],
+        source_name: str,
+    ) -> str:
+        """Build a richer entity document so vector search has entity and paper context."""
+        node_type = {
+            "genes": "gene",
+            "proteins": "protein",
+            "diseases": "disease",
+            "pathways": "pathway",
+        }.get(entity_type, "entity")
+
+        entity_name = str(entity.get("name", "")).strip()
+        context = str(entity.get("context", "")).strip()
+        paper_title = ""
+        paper_abstract = ""
+
+        if PAPERS_DB_AVAILABLE and paper_id:
+            paper_record = papers_db.get_paper_by_id(paper_id)
+            if paper_record:
+                paper_title = str(paper_record.get("title", "")).strip()
+                paper_abstract = str(paper_record.get("abstract", "")).strip()
+
+        parts = [entity_name, f"Type: {node_type}", f"Source: {source_name}"]
+        if paper_title:
+            parts.append(f"Paper: {paper_title}")
+        if context:
+            parts.append(f"Context: {context[:250]}")
+        elif paper_abstract:
+            parts.append(f"Paper abstract: {paper_abstract[:250]}")
+
+        return " | ".join(part for part in parts if part)
     
     def load_csv_to_vectordb(self, csv_path: str, batch_size: int = 100):
         """
@@ -358,9 +401,12 @@ class VectorDBManager:
         ids = []
         added = 0
         skipped = 0
+        added_by_type = {entity_type: 0 for entity_type in entity_types}
+        candidates_by_type = {entity_type: 0 for entity_type in entity_types}
 
         # Use stable deterministic IDs to prevent duplicate insertions.
         for paper_id, entity_type, name in candidates:
+            candidates_by_type[entity_type] += 1
             normalized = ''.join(ch if ch.isalnum() else '_' for ch in name.lower()).strip('_')
             doc_id = f"paper_node_{entity_type}_{normalized}"
             if doc_id in existing_ids:
@@ -374,7 +420,7 @@ class VectorDBManager:
                 "pathways": "pathway",
             }.get(entity_type, "entity")
 
-            doc_text = f"{name} - Type: {node_type} - Source: {source_name}"
+            doc_text = self._build_paper_entity_document_text(paper_id, entity_type, entity, source_name)
             metadata = {
                 "node_index": self._stable_numeric_id(doc_id),
                 "node_id": name,
@@ -389,14 +435,17 @@ class VectorDBManager:
             ids.append(doc_id)
             existing_ids.add(doc_id)
             added += 1
+            added_by_type[entity_type] += 1
 
         if ids:
-            self.collection.add(documents=documents, metadatas=metadatas, ids=ids)
+            self.collection.upsert(documents=documents, metadatas=metadatas, ids=ids)
 
         return {
             "total_candidates": len(candidates),
             "added": added,
             "skipped": skipped,
+            "added_by_type": added_by_type,
+            "candidates_by_type": candidates_by_type,
         }
     
     def _format_context_for_gpt(self, search_results: List[Dict[str, Any]]) -> str:
@@ -582,6 +631,43 @@ Citation {i}:
         except:
             self.papers_collection = self.client.create_collection(name=collection_name)
             print(f"Created new papers collection: {collection_name}")
+
+    def _get_or_create_collection(self, collection_name: str):
+        """Return a collection, creating it on demand."""
+        try:
+            return self.client.get_collection(name=collection_name)
+        except Exception:
+            return self.client.create_collection(name=collection_name)
+
+    def upsert_paper_to_vectordb(self, paper: Dict[str, Any], collection_name: str = "papers") -> Dict[str, int]:
+        """Upsert a single paper document into the papers collection."""
+        if not paper:
+            return {"upserted": 0}
+
+        collection = self._get_or_create_collection(collection_name)
+        self.papers_collection = collection
+
+        paper_id = str(paper.get("paper_id", "")).strip()
+        if not paper_id:
+            return {"upserted": 0}
+
+        document = f"{paper.get('title', '')} {paper.get('abstract', '')}"
+        metadata = {
+            "paper_id": paper_id,
+            "title": str(paper.get("title", "")),
+            "authors": "|".join(paper.get("authors", []))[:500],
+            "pmid": str(paper.get("pmid", "")),
+            "doi": str(paper.get("doi", "")),
+            "publication_date": str(paper.get("publication_date", "")),
+            "upload_date": str(paper.get("upload_date", "")),
+            "extraction_status": str(paper.get("extraction_status", "pending")),
+        }
+        collection.upsert(
+            documents=[document],
+            metadatas=[metadata],
+            ids=[f"paper_{paper_id}"],
+        )
+        return {"upserted": 1}
     
     def load_papers_to_vectordb(self, papers_data: List[Dict[str, Any]], batch_size: int = 50) -> None:
         """
@@ -632,7 +718,7 @@ Citation {i}:
                     ids.append(f"paper_{paper.get('paper_id', start_idx + len(documents))}")
                 
                 try:
-                    self.papers_collection.add(
+                    self.papers_collection.upsert(
                         documents=documents,
                         metadatas=metadatas,
                         ids=ids
@@ -692,6 +778,46 @@ Citation {i}:
         except Exception as e:
             print(f"Error searching papers: {e}")
             return []
+
+    def upsert_paper_entities_to_vectordb(
+        self,
+        paper_id: str,
+        entities: Dict[str, Any],
+        collection_name: str = "paper_entities",
+    ) -> Dict[str, int]:
+        """Replace a single paper's entity documents in the entity collection."""
+        collection = self._get_or_create_collection(collection_name)
+
+        normalized_paper_id = str(paper_id).strip()
+        if not normalized_paper_id:
+            return {"upserted": 0}
+
+        try:
+            collection.delete(where={"paper_id": normalized_paper_id})
+        except Exception:
+            pass
+
+        documents = []
+        metadatas = []
+        ids = []
+
+        for entity_type in ["genes", "proteins", "diseases", "pathways"]:
+            for entity_index, entity in enumerate(entities.get(entity_type, [])):
+                documents.append(self._build_paper_entity_document_text(normalized_paper_id, entity_type, entity, "PAPER_INGEST"))
+                metadatas.append({
+                    "paper_id": normalized_paper_id,
+                    "entity_name": str(entity.get("name", "")),
+                    "entity_type": entity_type,
+                    "confidence": float(entity.get("confidence", 0.0)),
+                    "approved": bool(entity.get("approved", False)),
+                    "mapped_to_existing": str(entity.get("mapped_to_existing", "")),
+                })
+                ids.append(f"entity_{normalized_paper_id}_{entity_type}_{entity_index}")
+
+        if ids:
+            collection.upsert(documents=documents, metadatas=metadatas, ids=ids)
+
+        return {"upserted": len(ids)}
     
     def load_paper_entities_to_vectordb(self, paper_entities: Dict[str, Any], collection_name: str = "paper_entities") -> None:
         """
@@ -701,10 +827,7 @@ Citation {i}:
             paper_entities: Dictionary mapping paper_id to extracted entities
             collection_name: Name of the entities collection
         """
-        try:
-            entities_collection = self.client.get_collection(name=collection_name)
-        except:
-            entities_collection = self.client.create_collection(name=collection_name)
+        entities_collection = self._get_or_create_collection(collection_name)
         
         total_entities = sum(
             len(entities.get(etype, []))
@@ -726,8 +849,8 @@ Citation {i}:
         with tqdm(total=total_entities, desc="Loading entities", unit="entities") as pbar:
             for paper_id, entities in paper_entities.items():
                 for entity_type in ['genes', 'proteins', 'diseases', 'pathways']:
-                    for entity in entities.get(entity_type, []):
-                        doc_text = f"{entity.get('name', '')} {entity.get('context', '')[:200]}"
+                    for entity_index, entity in enumerate(entities.get(entity_type, [])):
+                        doc_text = self._build_paper_entity_document_text(str(paper_id), entity_type, entity, "PAPER_INGEST")
                         
                         metadata = {
                             "paper_id": str(paper_id),
@@ -740,11 +863,11 @@ Citation {i}:
                         
                         documents.append(doc_text)
                         metadatas.append(metadata)
-                        ids.append(f"entity_{paper_id}_{entity_type}_{len(ids)}")
+                        ids.append(f"entity_{paper_id}_{entity_type}_{entity_index}")
                         
                         if len(documents) >= batch_size:
                             try:
-                                entities_collection.add(
+                                entities_collection.upsert(
                                     documents=documents,
                                     metadatas=metadatas,
                                     ids=ids
@@ -759,7 +882,7 @@ Citation {i}:
         # Load remaining documents
         if documents:
             try:
-                entities_collection.add(
+                entities_collection.upsert(
                     documents=documents,
                     metadatas=metadatas,
                     ids=ids

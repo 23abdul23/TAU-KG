@@ -25,6 +25,11 @@ try:
 except ImportError:
     GRAPH_DATA_AVAILABLE = False
 
+try:
+    from citations import extract_entities_with_llm as extract_query_entities
+except Exception:
+    extract_query_entities = None
+
 # Load environment variables
 from dotenv import load_dotenv
 load_dotenv()
@@ -58,6 +63,11 @@ if 'selected_chat_turn_index' not in st.session_state:
     st.session_state.selected_chat_turn_index = 0
 if 'next_query_input' not in st.session_state:
     st.session_state.next_query_input = ""
+if 'clear_next_query_input_pending' not in st.session_state:
+    st.session_state.clear_next_query_input_pending = False
+if st.session_state.clear_next_query_input_pending:
+    st.session_state.next_query_input = ""
+    st.session_state.clear_next_query_input_pending = False
 
 
 QUERY_COLOR_PALETTE = [
@@ -84,6 +94,11 @@ NODE_TYPE_COLORS = {
 }
 
 
+def schedule_next_query_input_clear() -> None:
+    """Clear the query box on the next rerun before the widget is recreated."""
+    st.session_state.clear_next_query_input_pending = True
+
+
 def distance_to_similarity_percent(distance) -> float:
     """Convert vector distance into a bounded similarity percentage for display."""
     try:
@@ -91,6 +106,91 @@ def distance_to_similarity_percent(distance) -> float:
     except (TypeError, ValueError):
         return 0.0
     return 100.0 / (1.0 + numeric_distance)
+
+
+def _normalize_result_key(result: Dict[str, Any]) -> str:
+    metadata = result.get("metadata", {}) if isinstance(result, dict) else {}
+    return re.sub(r"\s+", " ", str(metadata.get("node_name", "")).strip()).lower()
+
+
+def _merge_search_results(results: List[Dict[str, Any]], limit: int) -> List[Dict[str, Any]]:
+    merged: Dict[str, Dict[str, Any]] = {}
+
+    for result in results:
+        key = _normalize_result_key(result)
+        if not key:
+            continue
+
+        current = merged.get(key)
+        similarity = result.get("similarity_score", distance_to_similarity_percent(result.get("distance")))
+        if not current or similarity > current.get("similarity_score", 0.0):
+            merged[key] = result
+
+    ranked = sorted(merged.values(), key=lambda item: item.get("similarity_score", 0.0), reverse=True)
+    return ranked[:limit]
+
+
+def _build_query_variants(query: str) -> List[str]:
+    base_query = re.sub(r"\s+", " ", str(query or "")).strip()
+    variants = [base_query] if base_query else []
+
+    extracted_entities: Dict[str, List[str]] = {}
+    if extract_query_entities and base_query:
+        try:
+            extracted = extract_query_entities(base_query) or {}
+            if isinstance(extracted, dict):
+                extracted_entities = {
+                    key: [str(item).strip() for item in value if str(item).strip()]
+                    for key, value in extracted.items()
+                    if isinstance(value, list)
+                }
+        except Exception:
+            extracted_entities = {}
+
+    ordered_terms: List[str] = []
+    for entity_type in ("genes", "proteins", "diseases", "pathways", "keywords"):
+        ordered_terms.extend(extracted_entities.get(entity_type, []))
+
+    if ordered_terms:
+        variants.append(" ".join(ordered_terms[:8]))
+
+    genes = extracted_entities.get("genes", [])
+    proteins = extracted_entities.get("proteins", [])
+    diseases = extracted_entities.get("diseases", [])
+    pathways = extracted_entities.get("pathways", [])
+
+    anchor_terms = genes[:3] + proteins[:2] + diseases[:2] + pathways[:2]
+    for term in anchor_terms:
+        variants.append(f"{base_query} {term}")
+
+    if genes and diseases:
+        variants.append(f"{' '.join(genes[:2])} {' '.join(diseases[:2])} mechanism pathway interaction")
+    if genes and pathways:
+        variants.append(f"{' '.join(genes[:2])} {' '.join(pathways[:2])} regulation network")
+    if proteins and diseases:
+        variants.append(f"{' '.join(proteins[:2])} {' '.join(diseases[:2])} disease mechanism")
+
+    deduped_variants = list(dict.fromkeys(variant for variant in variants if variant))
+    return deduped_variants[:8]
+
+
+def _search_query_seed_nodes(db_manager: VectorDBManager, query: str, limit: int) -> Tuple[List[Dict[str, Any]], List[str]]:
+    """Run several focused searches so one prompt can seed a denser graph."""
+    query_variants = _build_query_variants(query)
+    if not query_variants:
+        return [], []
+
+    per_query_limit = max(5, min(limit, 10))
+    collected: List[Dict[str, Any]] = []
+
+    for index, variant in enumerate(query_variants):
+        try:
+            variant_limit = limit if index == 0 else per_query_limit
+            collected.extend(db_manager.search_similar(variant, n_results=variant_limit))
+        except Exception:
+            continue
+
+    return _merge_search_results(collected, limit), query_variants
 
 
 def render_pyvis_network(net: Network, height: int) -> None:
@@ -1602,7 +1702,7 @@ def main():
             st.session_state.chat_papers = {}  # Clear related papers
             st.session_state.query_genes = []  # Also clear network data
             st.session_state.selected_chat_turn_index = 0
-            st.session_state.next_query_input = ""
+            schedule_next_query_input_clear()
             st.rerun()
     
     # Tab 1: Chat Interface
@@ -1660,17 +1760,19 @@ def main():
 
                     with st.spinner("Searching database and generating enhanced response..."):
                         try:
-                            # Search the vector database
-                            search_results = st.session_state.db_manager.search_similar(
+                            # Search the vector database with entity-aware query expansion.
+                            search_results, query_variants = _search_query_seed_nodes(
+                                st.session_state.db_manager,
                                 prompt,
-                                n_results=st.session_state.search_result_limit,
+                                st.session_state.search_result_limit,
                             )
                             
                             # Store query and genes for network visualization
                             if search_results:
                                 st.session_state.query_genes.append({
                                     'query': prompt,
-                                    'genes': search_results
+                                    'genes': search_results,
+                                    'query_variants': query_variants,
                                 })
                             
                             # Generate enhanced response with GPT-4 and citations
@@ -1687,7 +1789,7 @@ def main():
                                 st.session_state[f"search_results_{assistant_index + 1}"] = search_results
 
                             st.session_state.selected_chat_turn_index = len(get_chat_turns()) - 1
-                            st.session_state.next_query_input = ""
+                            schedule_next_query_input_clear()
                             st.rerun()
                             
                             # Display citations if available
@@ -1797,7 +1899,7 @@ def main():
                             error_msg = f"Sorry, I encountered an error while searching: {str(e)}"
                             st.session_state.chat_history.append(("assistant", error_msg))
                             st.session_state.selected_chat_turn_index = len(get_chat_turns()) - 1
-                            st.session_state.next_query_input = ""
+                            schedule_next_query_input_clear()
                             st.rerun()
 
             st.markdown("---")

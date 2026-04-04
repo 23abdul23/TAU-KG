@@ -19,7 +19,7 @@ import hashlib
 import time
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
-from typing import Optional
+from typing import Any, Dict, List, Optional
 import sys
 
 # Add parent directory to path for imports
@@ -135,7 +135,7 @@ def _render_live_entity_summary_panel():
 
 def _sync_paper_nodes_to_vector_db():
     """Index paper data and merge unique paper-derived nodes into main vector collection."""
-    manager = VectorDBManager()
+    manager = _get_vector_db_manager()
 
     if papers_db.papers_data:
         manager.load_papers_to_vectordb(papers_db.papers_data)
@@ -149,6 +149,177 @@ def _sync_paper_nodes_to_vector_db():
     )
     db_stats = manager.get_database_stats()
     return sync_stats, db_stats
+
+
+@st.cache_resource(show_spinner=False)
+def _get_vector_db_manager():
+    """Reuse the vector DB manager across reruns to avoid reloading embeddings."""
+    return VectorDBManager()
+
+
+def _flush_pending_toasts():
+    """Show queued toast notifications once per rerun."""
+    pending_toasts = st.session_state.get("pending_toasts", [])
+    if not pending_toasts:
+        return
+
+    for toast in pending_toasts:
+        st.toast(toast.get("message", "Paper saved"), icon=toast.get("icon", "✅"))
+    st.session_state.pending_toasts = []
+
+
+def _build_stable_paper_id(
+    source_key: str,
+    pmid: str,
+    doi: str,
+    title: str,
+    file_path: str,
+    source_url: str,
+) -> str:
+    """Generate a deterministic paper ID so autosave stays idempotent."""
+    normalized_pmid = str(pmid or "").strip()
+    if normalized_pmid:
+        return normalized_pmid
+
+    normalized_doi = str(doi or "").strip().lower()
+    if normalized_doi:
+        return f"doi_{hashlib.sha1(normalized_doi.encode('utf-8')).hexdigest()[:16]}"
+
+    seed = "|".join([
+        str(source_key or ""),
+        str(file_path or ""),
+        str(source_url or ""),
+        str(title or ""),
+    ])
+    return f"paper_{hashlib.sha1(seed.encode('utf-8')).hexdigest()[:16]}"
+
+
+def _prepare_entities_for_storage(extracted_entities: Dict[str, Any]) -> Dict[str, Any]:
+    """Normalize extracted entity payloads before storing them."""
+    prepared = {}
+    for entity_type in ["genes", "proteins", "diseases", "pathways"]:
+        prepared_entities = []
+        for entity in extracted_entities.get(entity_type, []):
+            if not isinstance(entity, dict):
+                continue
+            prepared_entity = dict(entity)
+            prepared_entity["approved"] = False
+            prepared_entity["mapped_to_existing"] = ""
+            prepared_entities.append(prepared_entity)
+        prepared[entity_type] = prepared_entities
+    return prepared
+
+
+def _prepare_relationships_for_storage(extracted_entities: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """Normalize extracted relationship payloads before storing them."""
+    relationships = []
+    for relationship in extracted_entities.get("relationships", []):
+        if not isinstance(relationship, dict):
+            continue
+        prepared_relationship = dict(relationship)
+        prepared_relationship["approved"] = False
+        relationships.append(prepared_relationship)
+    return relationships
+
+
+def _build_autosave_toast_message(
+    paper_title: str,
+    prepared_entities: Dict[str, Any],
+    relationships: List[Dict[str, Any]],
+    sync_stats: Dict[str, Any],
+) -> str:
+    """Build the user-facing autosave notification."""
+    added_by_type = sync_stats.get("added_by_type", {})
+    return (
+        f"Saved '{paper_title[:60] or 'Untitled paper'}' to the vector DB. "
+        f"Genes {len(prepared_entities.get('genes', []))} (+{added_by_type.get('genes', 0)} new), "
+        f"Proteins {len(prepared_entities.get('proteins', []))} (+{added_by_type.get('proteins', 0)} new), "
+        f"Diseases {len(prepared_entities.get('diseases', []))} (+{added_by_type.get('diseases', 0)} new), "
+        f"Pathways {len(prepared_entities.get('pathways', []))} (+{added_by_type.get('pathways', 0)} new), "
+        f"Relationships {len(relationships)}."
+    )
+
+
+def _auto_save_paper_and_index(
+    source_key: str,
+    metadata: Dict[str, Any],
+    title: str,
+    authors: List[str],
+    pmid_input: str,
+    doi_input: str,
+    publication_date,
+    clean_text: str,
+    file_path: str,
+    source_url: str,
+    extraction_state_key: str,
+) -> Dict[str, Any]:
+    """Persist a completed extraction and index it into the vector DB once."""
+    autosaved_papers = st.session_state.autosaved_papers
+    if source_key in autosaved_papers:
+        return autosaved_papers[source_key]
+
+    extracted_entities = st.session_state[extraction_state_key]["extracted_entities"]
+    prepared_entities = _prepare_entities_for_storage(extracted_entities)
+    relationships = _prepare_relationships_for_storage(extracted_entities)
+    paper_id = _build_stable_paper_id(
+        source_key=source_key,
+        pmid=pmid_input,
+        doi=doi_input,
+        title=title,
+        file_path=file_path,
+        source_url=source_url,
+    )
+
+    stored_paper = papers_db.upsert_extracted_paper(
+        paper_id=paper_id,
+        title=title,
+        authors=authors,
+        pmid=pmid_input,
+        doi=doi_input,
+        abstract=metadata.get("abstract", ""),
+        pdf_path=file_path,
+        publication_date=publication_date.isoformat(),
+        entities_by_type=prepared_entities,
+        relationships=relationships,
+        source="pmc_link" if source_url else "user_uploaded",
+        source_url=source_url,
+        sections=metadata.get("sections", []),
+        extraction_status="extracted",
+    )
+
+    manager = _get_vector_db_manager()
+    manager.upsert_paper_to_vectordb(stored_paper)
+    manager.upsert_paper_entities_to_vectordb(paper_id, prepared_entities)
+    sync_stats = manager.sync_paper_entities_to_main_collection(
+        {paper_id: prepared_entities},
+        source_name="PAPER_INGEST",
+        only_approved=False,
+    )
+
+    save_result = {
+        "paper_id": paper_id,
+        "title": title,
+        "entity_counts": {
+            "genes": len(prepared_entities.get("genes", [])),
+            "proteins": len(prepared_entities.get("proteins", [])),
+            "diseases": len(prepared_entities.get("diseases", [])),
+            "pathways": len(prepared_entities.get("pathways", [])),
+            "relationships": len(relationships),
+        },
+        "sync_stats": sync_stats,
+        "saved_at": datetime.now().isoformat(),
+    }
+    autosaved_papers[source_key] = save_result
+    st.session_state.paper_save_status[source_key] = {"status": "saved", "details": save_result}
+    st.session_state.pending_toasts.append({
+        "icon": "✅",
+        "message": _build_autosave_toast_message(title, prepared_entities, relationships, sync_stats),
+    })
+
+    if paper_id not in st.session_state.uploaded_papers:
+        st.session_state.uploaded_papers.append(paper_id)
+    st.session_state.pop(extraction_state_key, None)
+    return save_result
 
 
 def _make_streamlit_key(prefix: str, source_key: str) -> str:
@@ -350,6 +521,12 @@ def initialize_session_state():
         st.session_state.ai_executor = ThreadPoolExecutor(max_workers=AI_EXTRACT_WORKERS)
     if "ai_jobs" not in st.session_state:
         st.session_state.ai_jobs = {}
+    if "autosaved_papers" not in st.session_state:
+        st.session_state.autosaved_papers = {}
+    if "pending_toasts" not in st.session_state:
+        st.session_state.pending_toasts = []
+    if "paper_save_status" not in st.session_state:
+        st.session_state.paper_save_status = {}
 
 
 def create_upload_directory():
@@ -536,6 +713,56 @@ def process_extracted_paper(metadata, clean_text: str, source_label: str, file_p
                         f"(confidence: {rel.get('confidence', 0):.2f})"
                     )
 
+    save_state = st.session_state.paper_save_status.get(source_key, {})
+    if extraction_state_key in st.session_state and source_key not in st.session_state.autosaved_papers:
+        try:
+            save_result = _auto_save_paper_and_index(
+                source_key=source_key,
+                metadata=metadata,
+                title=title,
+                authors=authors,
+                pmid_input=pmid_input,
+                doi_input=doi_input,
+                publication_date=publication_date,
+                clean_text=clean_text,
+                file_path=file_path,
+                source_url=source_url,
+                extraction_state_key=extraction_state_key,
+            )
+            logger.info(f"Paper autosaved and indexed: {save_result['paper_id']}")
+            st.rerun()
+        except Exception as e:
+            save_state = {"status": "error", "error": str(e)}
+            st.session_state.paper_save_status[source_key] = save_state
+            logger.error(f"Autosave error for {source_key}: {e}", exc_info=True)
+
+    save_state = st.session_state.paper_save_status.get(source_key, save_state)
+    if save_state.get("status") == "saved":
+        details = save_state.get("details", {})
+        entity_counts = details.get("entity_counts", {})
+        sync_stats = details.get("sync_stats", {})
+        st.success(
+            "Auto-saved to paper store and vector DB. "
+            f"Paper ID: `{details.get('paper_id', '')}` | "
+            f"New nodes added: {sync_stats.get('added', 0)}"
+        )
+        st.caption(
+            "Entities indexed: "
+            f"genes {entity_counts.get('genes', 0)}, "
+            f"proteins {entity_counts.get('proteins', 0)}, "
+            f"diseases {entity_counts.get('diseases', 0)}, "
+            f"pathways {entity_counts.get('pathways', 0)}, "
+            f"relationships {entity_counts.get('relationships', 0)}."
+        )
+        return
+    if save_state.get("status") == "error":
+        st.error(f"Automatic save failed: {save_state.get('error', 'Unknown error')}")
+        if st.button("Retry automatic save", key=f"retry_save_{source_key}"):
+            st.session_state.paper_save_status.pop(source_key, None)
+            st.session_state.autosaved_papers.pop(source_key, None)
+            st.rerun()
+        return
+
     # Save paper to database
     if extraction_state_key in st.session_state:
         if st.button("💾 Save Paper & Entities to Database", key=f"save_btn_{source_key}"):
@@ -620,6 +847,7 @@ def main():
     initialize_session_state()
     _poll_ai_jobs()
     _poll_pmc_jobs()
+    _flush_pending_toasts()
     
     # Page header
     st.title("📤 Upload Research Papers")
