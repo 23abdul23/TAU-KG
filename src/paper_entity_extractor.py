@@ -23,6 +23,11 @@ from typing import List, Dict, Any, Tuple, Optional
 from datetime import datetime
 import logging
 
+try:
+    from dotenv import load_dotenv
+except ImportError:
+    load_dotenv = None
+
 logger = logging.getLogger(__name__)
 
 try:
@@ -31,6 +36,31 @@ try:
 except ImportError:
     OPENAI_AVAILABLE = False
     logger.error("OpenAI library not installed. Install with: pip install openai")
+
+from src.pmc_service import normalize_section_type
+
+if load_dotenv:
+    load_dotenv()
+
+
+DEFAULT_EXTRACTION_MAX_CHARS = 9000
+EXTRACTION_SECTION_PRIORITY = [
+    "abstract",
+    "results",
+    "discussion",
+    "conclusion",
+    "introduction",
+    "methods",
+]
+EXTRACTION_SECTION_BUDGETS = {
+    "abstract": 0.20,
+    "results": 0.30,
+    "discussion": 0.25,
+    "conclusion": 0.10,
+    "introduction": 0.10,
+    "methods": 0.05,
+}
+EXTRACTION_FALLBACK_BUCKETS = ["supplementary", "other"]
 
 
 def get_openai_client():
@@ -45,7 +75,147 @@ def get_openai_client():
     return openai.OpenAI(api_key=api_key)
 
 
-def build_extraction_prompt(paper_text: str, title: str = "", abstract: str = "") -> str:
+def _get_max_extraction_chars() -> int:
+    """Read the configurable section-aware context size budget from the environment."""
+    raw_value = os.getenv("PAPER_ENTITY_EXTRACTION_MAX_CHARS", "").strip()
+    if not raw_value:
+        return DEFAULT_EXTRACTION_MAX_CHARS
+
+    try:
+        parsed_value = int(raw_value)
+        return max(1000, parsed_value)
+    except ValueError:
+        logger.warning(
+            "Invalid PAPER_ENTITY_EXTRACTION_MAX_CHARS=%r. Using default %s.",
+            raw_value,
+            DEFAULT_EXTRACTION_MAX_CHARS,
+        )
+        return DEFAULT_EXTRACTION_MAX_CHARS
+
+
+def _truncate_text(text: str, max_chars: int) -> str:
+    """Trim text to a stable boundary without cutting far past the requested budget."""
+    text = (text or "").strip()
+    if len(text) <= max_chars:
+        return text
+
+    truncated = text[:max_chars]
+    last_boundary = max(
+        truncated.rfind("\n"),
+        truncated.rfind(". "),
+        truncated.rfind("; "),
+        truncated.rfind(", "),
+        truncated.rfind(" "),
+    )
+    if last_boundary >= int(max_chars * 0.7):
+        truncated = truncated[:last_boundary]
+    return truncated.strip()
+
+
+def _join_bucket_texts(parts: List[str]) -> str:
+    """Combine unique section fragments while keeping their original order."""
+    seen = set()
+    ordered_parts = []
+    for part in parts:
+        clean_part = (part or "").strip()
+        if not clean_part or clean_part in seen:
+            continue
+        seen.add(clean_part)
+        ordered_parts.append(clean_part)
+    return "\n\n".join(ordered_parts)
+
+
+def build_entity_extraction_context(
+    paper_text: str,
+    sections: Optional[List[Dict[str, Any]]] = None,
+    abstract: str = "",
+    max_chars: Optional[int] = None,
+) -> str:
+    """Build a section-aware extraction context under a configurable char budget."""
+    extraction_limit = max_chars or _get_max_extraction_chars()
+    if not sections:
+        return _truncate_text(paper_text, extraction_limit)
+
+    bucketed_sections: Dict[str, List[str]] = {bucket: [] for bucket in EXTRACTION_SECTION_PRIORITY}
+    bucketed_sections["supplementary"] = []
+    bucketed_sections["other"] = []
+
+    if abstract.strip():
+        bucketed_sections["abstract"].append(abstract.strip())
+
+    for section in sections:
+        section_type = normalize_section_type(section.get("type", ""))
+        section_text = (section.get("text") or "").strip()
+        if not section_text or section_type == "metadata":
+            continue
+
+        target_bucket = section_type if section_type in bucketed_sections else "other"
+        bucketed_sections[target_bucket].append(section_text)
+
+    bucket_texts = {
+        bucket: _join_bucket_texts(parts)
+        for bucket, parts in bucketed_sections.items()
+    }
+
+    if not any(bucket_texts.values()):
+        return _truncate_text(paper_text, extraction_limit)
+
+    selected_texts = {bucket: "" for bucket in bucket_texts}
+    remaining_chars = extraction_limit
+
+    for bucket in EXTRACTION_SECTION_PRIORITY:
+        bucket_text = bucket_texts.get(bucket, "")
+        if not bucket_text or remaining_chars <= 0:
+            continue
+
+        bucket_budget = int(extraction_limit * EXTRACTION_SECTION_BUDGETS[bucket])
+        if bucket_budget <= 0:
+            continue
+
+        selected_text = _truncate_text(bucket_text, min(bucket_budget, remaining_chars))
+        selected_texts[bucket] = selected_text
+        remaining_chars -= len(selected_text)
+
+    redistribution_order = EXTRACTION_SECTION_PRIORITY + EXTRACTION_FALLBACK_BUCKETS
+    for bucket in redistribution_order:
+        if remaining_chars <= 0:
+            break
+
+        bucket_text = bucket_texts.get(bucket, "")
+        already_selected = selected_texts.get(bucket, "")
+        if not bucket_text:
+            continue
+
+        remaining_bucket_text = bucket_text[len(already_selected):].strip()
+        if not remaining_bucket_text:
+            continue
+
+        extra_text = _truncate_text(remaining_bucket_text, remaining_chars)
+        if not extra_text:
+            continue
+
+        if already_selected:
+            selected_texts[bucket] = f"{already_selected}\n\n{extra_text}".strip()
+        else:
+            selected_texts[bucket] = extra_text
+        remaining_chars -= len(extra_text)
+
+    ordered_parts = []
+    for bucket in redistribution_order:
+        bucket_text = selected_texts.get(bucket, "").strip()
+        if bucket_text:
+            ordered_parts.append(f"{bucket.upper()}:\n{bucket_text}")
+
+    merged_context = "\n\n".join(ordered_parts).strip()
+    return _truncate_text(merged_context or paper_text, extraction_limit)
+
+
+def build_extraction_prompt(
+    paper_text: str,
+    title: str = "",
+    abstract: str = "",
+    sections: Optional[List[Dict[str, Any]]] = None,
+) -> Tuple[str, str]:
     """
     Build GPT-4 prompt for entity extraction from paper.
     
@@ -113,14 +283,20 @@ IMPORTANT:
 - Extract top 10 relationships only
 - Return valid JSON only, no other text"""
 
+    extraction_context = build_entity_extraction_context(
+        paper_text,
+        sections=sections,
+        abstract=abstract,
+    )
+
     user_message = f"""Please extract entities and relationships from this paper:
 
 TITLE: {title if title else "Not provided"}
 
 ABSTRACT: {abstract if abstract else "Not provided"}
 
-FULL TEXT (first 5000 characters):
-{paper_text[:5000]}
+FULL TEXT (section-aware excerpt):
+{extraction_context}
 
 Extract entities and relationships. Respond ONLY with valid JSON."""
 
@@ -131,6 +307,7 @@ def extract_entities_from_text(
     paper_text: str,
     title: str = "",
     abstract: str = "",
+    sections: Optional[List[Dict[str, Any]]] = None,
     existing_entities: Optional[Dict[str, List[str]]] = None
 ) -> Dict[str, Any]:
     """
@@ -175,7 +352,12 @@ def extract_entities_from_text(
         }
     
     # Build extraction prompt
-    system_prompt, user_message = build_extraction_prompt(paper_text, title, abstract)
+    system_prompt, user_message = build_extraction_prompt(
+        paper_text,
+        title,
+        abstract,
+        sections=sections,
+    )
     
     try:
         logger.info("Calling GPT-4 for entity extraction...")

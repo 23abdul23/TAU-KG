@@ -33,6 +33,7 @@ from src.pdf_processor import (
 )
 from src.pmc_service import (
     PMC_FETCH_WORKER_RECOMMENDATION,
+    normalize_section_type,
     process_pmc_url_advanced,
     process_pmc_url_html_fallback,
 )
@@ -343,21 +344,39 @@ def _make_uploaded_file_source_key(uploaded_file) -> str:
     return f"pdf_{digest.hexdigest()[:16]}"
 
 
+def _extract_abstract_from_sections(sections: Optional[List[Dict[str, Any]]]) -> str:
+    """Recover an abstract from normalized PMC sections when metadata does not provide one."""
+    if not sections:
+        return ""
+
+    abstract_parts = []
+    for section in sections:
+        if normalize_section_type(section.get("type", "")) != "abstract":
+            continue
+        section_text = (section.get("text") or "").strip()
+        if section_text:
+            abstract_parts.append(section_text)
+
+    return "\n\n".join(abstract_parts).strip()
+
+
 def _fetch_pmc_payload(pmc_url: str):
-    """Background fetch: API-first PMC ingestion with HTML fallback."""
+    """Background fetch: HTML-first PMC ingestion with BioC fallback."""
     advanced = process_pmc_url_advanced(pmc_url)
+    sections = advanced.get("sections", [])
+    abstract_text = _extract_abstract_from_sections(sections)
 
     metadata = {
         "title": advanced.get("title", ""),
         "authors": advanced.get("authors", []),
-        "abstract": "",
+        "abstract": abstract_text,
         "keywords": [],
         "pmcid": advanced.get("pmcid", ""),
-        "pmid": "",
-        "doi": "",
+        "pmid": advanced.get("pmid", ""),
+        "doi": advanced.get("doi", ""),
         "journal": advanced.get("journal", ""),
         "publication_date": advanced.get("pubdate", ""),
-        "sections": advanced.get("sections", []),
+        "sections": sections,
     }
 
     full_text = advanced.get("text")
@@ -367,7 +386,7 @@ def _fetch_pmc_payload(pmc_url: str):
         fallback_metadata = {
             "title": fallback.get("title", ""),
             "authors": fallback.get("authors", []),
-            "abstract": "",
+            "abstract": _extract_abstract_from_sections(fallback.get("sections", [])),
             "keywords": [],
             "pmcid": fallback.get("pmcid", ""),
             "pmid": fallback.get("pmid", ""),
@@ -417,24 +436,43 @@ def _get_existing_entities_for_boosting():
     }
 
 
-def _run_entity_extraction(clean_text: str, title: str, abstract: str):
+def _run_entity_extraction(
+    clean_text: str,
+    title: str,
+    abstract: str,
+    sections: Optional[List[Dict[str, Any]]] = None,
+):
     """Worker function for background AI entity extraction."""
     existing_entities = _get_existing_entities_for_boosting()
     return extract_entities_from_text(
         clean_text,
         title=title,
         abstract=abstract,
+        sections=sections,
         existing_entities=existing_entities,
     )
 
 
-def _submit_ai_job(source_key: str, clean_text: str, title: str, abstract: str, force: bool = False):
+def _submit_ai_job(
+    source_key: str,
+    clean_text: str,
+    title: str,
+    abstract: str,
+    sections: Optional[List[Dict[str, Any]]] = None,
+    force: bool = False,
+):
     """Submit asynchronous AI extraction for a paper if not already submitted."""
     existing = st.session_state.ai_jobs.get(source_key)
     if not force and existing and existing.get("status") in {"running", "done", "error"}:
         return
 
-    future = st.session_state.ai_executor.submit(_run_entity_extraction, clean_text, title, abstract)
+    future = st.session_state.ai_executor.submit(
+        _run_entity_extraction,
+        clean_text,
+        title,
+        abstract,
+        sections,
+    )
     st.session_state.ai_jobs[source_key] = {
         "status": "running",
         "future": future,
@@ -658,7 +696,13 @@ def process_extracted_paper(metadata, clean_text: str, source_label: str, file_p
         st.markdown(f"**Source URL:** [{source_url}]({source_url})")
 
     # Autonomous asynchronous entity extraction (no manual click required).
-    _submit_ai_job(source_key, clean_text, title, metadata.get("abstract", ""))
+    _submit_ai_job(
+        source_key,
+        clean_text,
+        title,
+        metadata.get("abstract", ""),
+        metadata.get("sections", []),
+    )
 
     ai_job = st.session_state.ai_jobs.get(source_key, {})
     ai_status = ai_job.get("status")
@@ -668,7 +712,14 @@ def process_extracted_paper(metadata, clean_text: str, source_label: str, file_p
     elif ai_status == "error":
         st.error(f"❌ Extraction error: {ai_job.get('error', 'Unknown error')}")
         if st.button("Retry AI extraction", key=f"retry_ai_{source_key}"):
-            _submit_ai_job(source_key, clean_text, title, metadata.get("abstract", ""), force=True)
+            _submit_ai_job(
+                source_key,
+                clean_text,
+                title,
+                metadata.get("abstract", ""),
+                metadata.get("sections", []),
+                force=True,
+            )
             st.rerun()
     elif ai_status == "done":
         extracted = ai_job.get("result", {})
