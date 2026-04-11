@@ -5,6 +5,20 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: taukg-streamlit
+    env_file:
+      - .env
     ports:
-      - "8501:8501"
-    restart: always
+      - "8778:8778"
+    volumes:
+      - taukg_chroma_db:/app/chroma_db
+      - taukg_uploaded_papers:/app/uploaded_papers
+      - taukg_data:/app/data
+      - taukg_model_cache:/root/.cache
+    restart: unless-stopped
+
+volumes:
+  taukg_chroma_db:
+  taukg_uploaded_papers:
+  taukg_data:
+  taukg_model_cache:

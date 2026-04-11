@@ -33,6 +33,20 @@ A local vector database-powered chat application that allows you to query and in
    streamlit run chat_app.py
    ```
 
+### Docker Deployment
+
+1. Copy `.env.example` to `.env` and set your API keys.
+2. Build and start the containerized app:
+   ```bash
+   docker compose up -d --build
+   ```
+3. Open the app on port `8778`:
+   ```text
+   http://YOUR_SERVER_IP:8778
+   ```
+
+The Docker setup runs `chat_app.py`, persists `chroma_db`, `uploaded_papers`, `data`, and the model cache in Docker volumes, and restarts automatically unless you stop it.
+
 ### Manual Setup
 
 If you prefer to install manually:
