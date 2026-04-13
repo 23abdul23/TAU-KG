@@ -8,18 +8,13 @@ from typing import List, Dict, Any
 import json
 from tqdm import tqdm
 import time
+from src.llm_provider import LLMClient
 
 # Load environment variables
 from dotenv import load_dotenv
 load_dotenv()
 
-# Enhanced imports for GPT-4 and PubMed integration
-try:
-    import openai
-    OPENAI_AVAILABLE = True
-except ImportError:
-    OPENAI_AVAILABLE = False
-    print("Warning: OpenAI not available. Enhanced responses disabled.")
+# Enhanced imports for LLM and PubMed integration
 
 try:
     from citations import fetch_pubmed_citations, Citation
@@ -60,15 +55,12 @@ class VectorDBManager:
         else:
             self.embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
         
-        # Initialize OpenAI client if available
-        self.openai_client = None
-        if OPENAI_AVAILABLE:
-            openai_api_key = os.getenv("OPENAI_API_KEY")
-            if openai_api_key:
-                self.openai_client = openai.OpenAI(api_key=openai_api_key)
-                print("OpenAI client initialized for enhanced responses.")
-            else:
-                print("Warning: OPENAI_API_KEY not found. Enhanced responses disabled.")
+        # Initialize active LLM client based on LLM_PROVIDER.
+        self.llm_client = LLMClient()
+        if self.llm_client.is_available():
+            print(f"{self.llm_client.get_provider_label()} client initialized for enhanced responses.")
+        else:
+            print(f"Warning: LLM client unavailable ({self.llm_client.unavailable_reason}). Enhanced responses disabled.")
         
         # Get or create collection
         try:
@@ -491,8 +483,8 @@ Gene/Protein {i}:
         Returns:
             GPT-4 generated response
         """
-        if not self.openai_client:
-            return "Enhanced responses not available (OpenAI client not initialized)."
+        if not self.llm_client.is_available():
+            return "Enhanced responses not available (LLM client not initialized)."
         
         system_prompt = f"""You are a concise biomedical AI assistant. Provide BRIEF, focused responses about genes/proteins.
 
@@ -518,16 +510,15 @@ Provide a CONCISE response covering:
 Keep it brief but informative."""
 
         try:
-            response = self.openai_client.chat.completions.create(
-                model="gpt-4",
-                messages=[
-                    {"role": "system", "content": system_prompt}
-                ],
+            response = self.llm_client.generate_text(
+                system_prompt="You are a concise biomedical AI assistant.",
+                user_prompt=system_prompt,
+                model=os.getenv("CHAT_LLM_MODEL", ""),
                 max_tokens=max_tokens,
-                temperature=0.1
+                temperature=0.1,
             )
-            
-            return response.choices[0].message.content.strip()
+
+            return response.text.strip()
             
         except Exception as e:
             return f"Error generating enhanced response: {str(e)}"
@@ -614,7 +605,9 @@ Citation {i}:
             'search_results': search_results,
             'context_used': context,
             'citations_context_used': citations_context,
-            'has_openai': self.openai_client is not None,
+            'has_openai': self.llm_client.is_available(),
+            'has_llm': self.llm_client.is_available(),
+            'llm_provider': self.llm_client.provider,
             'has_citations': CITATIONS_AVAILABLE
         }
     

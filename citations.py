@@ -33,16 +33,15 @@ logger = get_logger(__name__)
 # Import configuration
 from src.utils import load_config
 CONFIG = load_config("config.json")
+from src.llm_provider import LLMClient
 
 # Don't remove proxy environment variables - let them be used if proxy is enabled
 
-try:
-    import openai
-    OPENAI_AVAILABLE = True
-    logger.info("OpenAI library loaded for enhanced entity extraction")
-except ImportError:
-    OPENAI_AVAILABLE = False
-    logger.warning("OpenAI library not found. Will use regex-based extraction only.")
+LLM_CLIENT = LLMClient()
+if LLM_CLIENT.is_available():
+    logger.info("LLM client initialized with provider: %s", LLM_CLIENT.get_provider_label())
+else:
+    logger.warning("LLM client unavailable: %s", LLM_CLIENT.unavailable_reason)
 
 # Get configurable parameters from config.json
 MAX_RETRIES = CONFIG["pubmed"]["max_retries"]
@@ -77,15 +76,7 @@ from src.utils import load_config
 CONFIG = load_config("config.json")
 
 
-try:
-    import openai
-    OPENAI_AVAILABLE = True
-    logger = logging.getLogger(__name__)
-    logger.info("OpenAI library loaded for enhanced entity extraction")
-except ImportError:
-    OPENAI_AVAILABLE = False
-    logger = logging.getLogger(__name__)
-    logger.warning("OpenAI library not found. Will use regex-based extraction only.")
+logger = logging.getLogger(__name__)
 
 # Set up logging
 logging.basicConfig(
@@ -130,15 +121,7 @@ from src.utils import load_config
 CONFIG = load_config("config.json")
 
 
-try:
-    import openai
-    OPENAI_AVAILABLE = True
-    logger = logging.getLogger(__name__)
-    logger.info("OpenAI library loaded for enhanced entity extraction")
-except ImportError:
-    OPENAI_AVAILABLE = False
-    logger = logging.getLogger(__name__)
-    logger.warning("OpenAI library not found. Will use regex-based extraction only.")
+logger = logging.getLogger(__name__)
 
 # Set up logging
 logging.basicConfig(
@@ -187,47 +170,11 @@ if NCBI_API_KEY:
 else:
     logger.warning("NCBI_API_KEY not found in environment. Using unauthenticated requests (rate limits apply).")
 
-# --- OpenAI Client Setup ---
-OPENAI_CLIENT = None
-if OPENAI_AVAILABLE:
-    openai_api_key = os.getenv("OPENAI_API_KEY")
-    if openai_api_key:
-        try:
-            # Configure proxy for OpenAI if needed
-            http_proxy = None
-            if "network" in CONFIG and CONFIG.get("network", {}).get("use_proxy", False):
-                http_proxy = CONFIG["network"].get("http_proxy", "")
-                
-            # Initialize OpenAI client with proper proxy configuration
-            if http_proxy and http_proxy.strip():
-                try:
-                    # Create a properly configured httpx client with the proxy
-                    # Fix the proxy URL encoding issues with @ symbol in password
-                    # Create httpx transport configuration
-                    logger.info("Initializing OpenAI client with proxy configuration")
-                    
-                    # Create httpx client with proper proxy settings
-                    transport = httpx.HTTPTransport(proxy=httpx.URL(http_proxy))
-                    http_client = httpx.Client(transport=transport)
-                    OPENAI_CLIENT = openai.OpenAI(
-                        api_key=openai_api_key,
-                        http_client=http_client
-                    )
-                    logger.info("Successfully initialized OpenAI client with proxy configuration")
-                except Exception as e:
-                    logger.error(f"Failed to initialize OpenAI client with proxy: {e}")
-                    logger.info("Falling back to standard OpenAI client without proxy")
-                    OPENAI_CLIENT = openai.OpenAI(api_key=openai_api_key)
-            else:
-                logger.info("Initializing OpenAI client without proxy configuration")
-                OPENAI_CLIENT = openai.OpenAI(api_key=openai_api_key)
-                
-            logger.info("OpenAI client initialized for entity extraction.")
-        except Exception as e:
-            logger.error(f"Failed to initialize OpenAI client: {e}")
-            OPENAI_CLIENT = None
-    else:
-        logger.warning("OPENAI_API_KEY not set. Enhanced entity extraction disabled.")
+# --- LLM Client Setup ---
+if LLM_CLIENT.is_available():
+    logger.info("LLM provider ready for entity extraction: %s", LLM_CLIENT.get_provider_label())
+else:
+    logger.warning("LLM-based extraction disabled: %s", LLM_CLIENT.unavailable_reason)
 
 
 class Citation:
@@ -266,12 +213,12 @@ class Citation:
         }
 
 def extract_entities_with_llm(text: str) -> Dict[str, List[str]]:
-    if not OPENAI_CLIENT:
-        logger.warning("OpenAI client not available. Falling back to regex extraction.")
+    if not LLM_CLIENT.is_available():
+        logger.warning("LLM client not available. Falling back to regex extraction.")
         return extract_entities_from_text(text)
     
     try:
-        logger.info("Extracting entities using OpenAI API")
+        logger.info("Extracting entities using %s API", LLM_CLIENT.get_provider_label())
         
         # Improved prompt for precise entity extraction
         system_prompt = """
@@ -314,36 +261,17 @@ def extract_entities_with_llm(text: str) -> Dict[str, List[str]]:
         extraction_temperature = citation_config.get("extraction_temperature", 0.1)
         extraction_max_tokens = citation_config.get("extraction_max_tokens", 500)
         
-        # Check if the model supports JSON response format
-        json_supported_models = ["gpt-4-1106-preview", "gpt-4-turbo", "gpt-4o", "gpt-3.5-turbo-1106"]
-        use_json_format = any(model in entity_model for model in json_supported_models)
-        
-        if use_json_format:
-            response = OPENAI_CLIENT.chat.completions.create(
-                model=entity_model,
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_prompt}
-                ],
-                response_format={"type": "json_object"},
-                temperature=extraction_temperature,
-                max_tokens=extraction_max_tokens
-            )
-        else:
-            # For models that don't support JSON format, modify the prompt
-            modified_system_prompt = system_prompt + "\n\nIMPORTANT: Return your response as valid JSON only, with no additional text or explanations."
-            response = OPENAI_CLIENT.chat.completions.create(
-                model=entity_model,
-                messages=[
-                    {"role": "system", "content": modified_system_prompt},
-                    {"role": "user", "content": user_prompt}
-                ],
-                temperature=extraction_temperature,
-                max_tokens=extraction_max_tokens
-            )
-        
+        llm_response = LLM_CLIENT.generate_text(
+            system_prompt=system_prompt,
+            user_prompt=user_prompt,
+            model=entity_model,
+            temperature=extraction_temperature,
+            max_tokens=extraction_max_tokens,
+            json_mode=True,
+        )
+
         # Parse the response JSON
-        result = json.loads(response.choices[0].message.content)
+        result = json.loads(llm_response.text)
         
         # Ensure all expected keys exist
         expected_keys = ["genes", "proteins", "diseases", "pathways", "keywords"]
@@ -358,7 +286,7 @@ def extract_entities_with_llm(text: str) -> Dict[str, List[str]]:
         return result
         
     except Exception as e:
-        logger.error(f"Error using OpenAI for entity extraction: {e}", exc_info=True)
+        logger.error(f"Error using LLM for entity extraction: {e}", exc_info=True)
         logger.info("Falling back to regex-based entity extraction")
         return extract_entities_from_text(text)
 
@@ -580,7 +508,7 @@ def generate_improved_query_with_llm(question: str, entities: Dict[str, List[str
     Returns:
         Tuple of (optimized query string, success flag)
     """
-    if not OPENAI_CLIENT:
+    if not LLM_CLIENT.is_available():
         return None, False
     
     try:
@@ -643,18 +571,16 @@ def generate_improved_query_with_llm(question: str, entities: Dict[str, List[str
         generation_max_tokens = CONFIG["citation_extraction"]["generation_max_tokens"]
 
         # Generate the query
-        response = OPENAI_CLIENT.chat.completions.create(
+        response = LLM_CLIENT.generate_text(
+            system_prompt=system_prompt,
+            user_prompt=user_prompt,
             model=query_model,
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_prompt}
-            ],
             temperature=generation_temperature,
-            max_tokens=generation_max_tokens
+            max_tokens=generation_max_tokens,
         )
         
         # Get the optimized query and clean it up
-        optimized_query = response.choices[0].message.content.strip()
+        optimized_query = response.text.strip()
         # Remove any surrounding quotes or explanation that might have slipped through
         optimized_query = re.sub(r'^["\'](.*)["\']$', r'\1', optimized_query)
         optimized_query = re.sub(r'^```.*\n(.*)\n```$', r'\1', optimized_query, flags=re.DOTALL)
@@ -681,14 +607,14 @@ def optimize_query(query: str, entities: Optional[Dict[str, List[str]]] = None) 
     if entities is None:
         # Try LLM-based extraction if available and enabled in config
         use_llm = CONFIG.get("citation_extraction", {}).get("use_llm_extraction", False)
-        if OPENAI_CLIENT and use_llm:
+        if LLM_CLIENT.is_available() and use_llm:
             entities = extract_entities_with_llm(query)
         else:
             entities = extract_entities_from_text(query)
     
     # Step 2: Try to generate an optimized query using LLM if available and enabled
     use_llm_query = CONFIG.get("citation_extraction", {}).get("use_llm_query_generation", False)
-    if OPENAI_CLIENT and use_llm_query:
+    if LLM_CLIENT.is_available() and use_llm_query:
         llm_query, success = generate_improved_query_with_llm(query, entities)
         if success and llm_query:
             return llm_query
@@ -803,15 +729,16 @@ def fetch_pubmed_citations(query: str, max_citations: int = 5,
 
     # Check for required environment variables and API keys
     logger.info(f"Environment check - NCBI_API_KEY: {'Available' if NCBI_API_KEY else 'Not available'}")
-    logger.info(f"Environment check - OPENAI_CLIENT: {'Available' if OPENAI_CLIENT else 'Not available'}")
+    logger.info(f"Environment check - LLM_PROVIDER: {LLM_CLIENT.get_provider_label()}")
+    logger.info(f"Environment check - LLM_CLIENT: {'Available' if LLM_CLIENT.is_available() else 'Not available'}")
     
     # Extract entities using appropriate method based on config
     # Check if citation_extraction is in config, use defaults if not
     use_llm = CONFIG.get("citation_extraction", {}).get("use_llm_extraction", False)
-    logger.info(f"Entity extraction method: {'LLM-based' if OPENAI_CLIENT and use_llm else 'Regex-based'}")
+    logger.info(f"Entity extraction method: {'LLM-based' if LLM_CLIENT.is_available() and use_llm else 'Regex-based'}")
     
     try:
-        if OPENAI_CLIENT and use_llm:
+        if LLM_CLIENT.is_available() and use_llm:
             entities = extract_entities_with_llm(query)
         else:
             entities = extract_entities_from_text(query)
@@ -969,19 +896,20 @@ def main():
     args = parser.parse_args()
 
     # Use LLM if explicitly requested and available
-    if args.use_llm and not OPENAI_CLIENT:
-        logger.warning("LLM use requested but OpenAI client unavailable. Using regex-based extraction.")
+    if args.use_llm and not LLM_CLIENT.is_available():
+        logger.warning("LLM use requested but provider client unavailable. Using regex-based extraction.")
     
     # Create a temporary config override if --use-llm is specified
     original_config = None
-    if args.use_llm and OPENAI_CLIENT:
+    if args.use_llm and LLM_CLIENT.is_available():
         logger.info("Command line --use-llm flag detected, enabling LLM-based extraction and query generation")
+        default_model = LLM_CLIENT.get_default_model()
         
         # Ensure citation_extraction exists in CONFIG
         if "citation_extraction" not in CONFIG:
             CONFIG["citation_extraction"] = {
-                "entity_extraction_model": "gpt-4o",
-                "query_generation_model": "gpt-4o",
+                "entity_extraction_model": default_model,
+                "query_generation_model": default_model,
                 "extraction_temperature": 0.1,
                 "generation_temperature": 0.2,
                 "extraction_max_tokens": 500,
@@ -991,9 +919,9 @@ def main():
         # Ensure all necessary keys exist in citation_extraction
         citation_extraction = CONFIG["citation_extraction"]
         if "entity_extraction_model" not in citation_extraction:
-            citation_extraction["entity_extraction_model"] = "gpt-4o"
+            citation_extraction["entity_extraction_model"] = default_model
         if "query_generation_model" not in citation_extraction:
-            citation_extraction["query_generation_model"] = "gpt-4o"
+            citation_extraction["query_generation_model"] = default_model
         if "extraction_temperature" not in citation_extraction:
             citation_extraction["extraction_temperature"] = 0.1
         if "generation_temperature" not in citation_extraction:
@@ -1029,7 +957,7 @@ def main():
     if args.format == "json":
         # Prepare the entity extraction and query data
         # Get entities using LLM if available and requested
-        if OPENAI_CLIENT and args.use_llm:
+        if LLM_CLIENT.is_available() and args.use_llm:
             entities = extract_entities_with_llm(args.query)
         else:
             entities = extract_entities_from_text(args.query)
