@@ -13,6 +13,7 @@ chromadb>=0.4.0
 sentence-transformers>=2.0.0
 python-dotenv>=1.0.0
 openai>=1.0.0
+google-generativeai>=0.8.0
 requests>=2.31.0
 httpx>=0.27.0
 tqdm>=4.64.0

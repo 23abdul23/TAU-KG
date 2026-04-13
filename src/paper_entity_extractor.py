@@ -22,6 +22,7 @@ import re
 from typing import List, Dict, Any, Tuple, Optional
 from datetime import datetime
 import logging
+from src.llm_provider import LLMClient
 
 try:
     from dotenv import load_dotenv
@@ -29,13 +30,6 @@ except ImportError:
     load_dotenv = None
 
 logger = logging.getLogger(__name__)
-
-try:
-    import openai
-    OPENAI_AVAILABLE = True
-except ImportError:
-    OPENAI_AVAILABLE = False
-    logger.error("OpenAI library not installed. Install with: pip install openai")
 
 from src.pmc_service import normalize_section_type
 
@@ -63,16 +57,12 @@ EXTRACTION_SECTION_BUDGETS = {
 EXTRACTION_FALLBACK_BUCKETS = ["supplementary", "other"]
 
 
-def get_openai_client():
-    """Initialize and return OpenAI client."""
-    if not OPENAI_AVAILABLE:
-        raise ImportError("OpenAI not available. Install with: pip install openai")
-    
-    api_key = os.getenv("OPENAI_API_KEY")
-    if not api_key:
-        raise ValueError("OPENAI_API_KEY environment variable not set")
-    
-    return openai.OpenAI(api_key=api_key)
+def get_llm_client() -> LLMClient:
+    """Initialize and return the selected LLM client."""
+    client = LLMClient()
+    if not client.is_available():
+        raise ValueError(client.unavailable_reason or "LLM client unavailable")
+    return client
 
 
 def _get_max_extraction_chars() -> int:
@@ -339,9 +329,9 @@ def extract_entities_from_text(
         }
     
     try:
-        client = get_openai_client()
-    except (ImportError, ValueError) as e:
-        logger.error(f"Cannot initialize OpenAI client: {e}")
+        client = get_llm_client()
+    except ValueError as e:
+        logger.error(f"Cannot initialize LLM client: {e}")
         return {
             "genes": [],
             "proteins": [],
@@ -360,19 +350,18 @@ def extract_entities_from_text(
     )
     
     try:
-        logger.info("Calling GPT-4 for entity extraction...")
-        response = client.chat.completions.create(
-            model="gpt-4",
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_message}
-            ],
+        logger.info("Calling %s for entity extraction...", client.get_provider_label())
+        response = client.generate_text(
+            system_prompt=system_prompt,
+            user_prompt=user_message,
+            model=os.getenv("PAPER_EXTRACTION_MODEL", ""),
             max_tokens=2000,
-            temperature=0.1
+            temperature=0.1,
+            json_mode=True,
         )
-        
-        response_text = response.choices[0].message.content.strip()
-        logger.info("GPT-4 response received")
+
+        response_text = response.text.strip()
+        logger.info("LLM response received")
         
         # Try to extract JSON from response
         json_start = response_text.find('{')
@@ -440,9 +429,9 @@ def extract_relationships_from_text(
         return []
     
     try:
-        client = get_openai_client()
-    except (ImportError, ValueError) as e:
-        logger.error(f"Cannot initialize OpenAI: {e}")
+        client = get_llm_client()
+    except ValueError as e:
+        logger.error(f"Cannot initialize LLM client: {e}")
         return []
     
     prompt = f"""Given these extracted entities: {entities_str[:500]}
@@ -459,14 +448,16 @@ Format as JSON array:
 Return ONLY valid JSON, no other text."""
 
     try:
-        response = client.chat.completions.create(
-            model="gpt-4",
-            messages=[{"role": "user", "content": prompt}],
+        response = client.generate_text(
+            system_prompt="You are a biomedical relationship extraction assistant.",
+            user_prompt=prompt,
+            model=os.getenv("PAPER_EXTRACTION_MODEL", ""),
             max_tokens=1000,
-            temperature=0.1
+            temperature=0.1,
+            json_mode=True,
         )
-        
-        response_text = response.choices[0].message.content.strip()
+
+        response_text = response.text.strip()
         json_start = response_text.find('[')
         json_end = response_text.rfind(']') + 1
         

@@ -45,7 +45,8 @@ def test_vector_db():
         try:
             enhanced_result = db_manager.generate_enhanced_response("protein kinase", results, max_tokens=512)
             print(f"✅ Enhanced response test successful!")
-            print(f"  GPT-4 available: {enhanced_result['has_openai']}")
+            print(f"  LLM available: {enhanced_result.get('has_llm', enhanced_result.get('has_openai'))}")
+            print(f"  LLM provider: {enhanced_result.get('llm_provider', os.getenv('LLM_PROVIDER', 'openai'))}")
             print(f"  Citations available: {enhanced_result['has_citations']}")
             if enhanced_result['citations']:
                 print(f"  Found {len(enhanced_result['citations'])} citations")

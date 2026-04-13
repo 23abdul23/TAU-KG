@@ -1,11 +1,11 @@
 # 🧬 Gene/Protein Knowledge Chat Application
 
-A local vector database-powered chat application that allows you to query and interact with gene/protein data from your CSV files using natural language, enhanced with GPT-4 and PubMed citations.
+A local vector database-powered chat application that allows you to query and interact with gene/protein data from your CSV files using natural language, enhanced with OpenAI or Gemini LLM responses and PubMed citations.
 
 ## Features
 
 - **Local Vector Database**: Uses ChromaDB to store and search gene/protein information
-- **GPT-4 Enhanced Responses**: Intelligent, grounded responses using OpenAI's GPT-4
+- **Provider-Switchable LLM Responses**: Intelligent, grounded responses using OpenAI GPT or Google Gemini
 - **PubMed Citations**: Automatic literature search with 5 recent citations per query
 - **Semantic Search**: Powered by sentence transformers for intelligent similarity matching
 - **Interactive Chat Interface**: Streamlit-based web application with real-time responses
@@ -61,6 +61,34 @@ python vector_db_manager.py
 # Start the chat application
 streamlit run chat_app.py
 ```
+
+### LLM Provider Configuration
+
+Set the environment variables in your `.env` file to switch models:
+
+```bash
+# Required: choose one provider
+LLM_PROVIDER=openai  # or gemini
+
+# OpenAI settings
+OPENAI_API_KEY=your_openai_key
+OPENAI_MODEL=gpt-4o
+
+# Gemini settings
+GEMINI_API_KEY=your_gemini_key
+# Optional alias also supported:
+# GOOGLE_API_KEY=your_gemini_key
+GEMINI_MODEL=gemini-1.5-pro
+
+# Optional override for chat and paper extraction flows
+CHAT_LLM_MODEL=
+PAPER_EXTRACTION_MODEL=
+```
+
+Notes:
+- If `LLM_PROVIDER=openai`, the app uses `OPENAI_API_KEY`.
+- If `LLM_PROVIDER=gemini`, the app uses `GEMINI_API_KEY` (or `GOOGLE_API_KEY`).
+- `config.json` model names are auto-normalized when they do not match the selected provider.
 
 ## Usage
 
