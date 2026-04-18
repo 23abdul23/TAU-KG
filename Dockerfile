@@ -23,4 +23,4 @@ EXPOSE 8778
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=5 \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8778/_stcore/health', timeout=5)" || exit 1
 
-CMD ["streamlit", "run", "chat_app.py", "--server.address=0.0.0.0", "--server.port=8778", "--server.baseUrlPath=tau-kg"]
+CMD ["streamlit", "run", "chat_app.py", "--server.address=0.0.0.0", "--server.port=8778"]
