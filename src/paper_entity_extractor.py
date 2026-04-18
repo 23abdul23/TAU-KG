@@ -23,6 +23,12 @@ from typing import List, Dict, Any, Tuple, Optional
 from datetime import datetime
 import logging
 from src.llm_provider import LLMClient
+from src.paper_schema import (
+    canonicalize_edge_type,
+    normalize_entities_for_paper,
+    normalize_entity_type,
+    normalize_relationships_for_paper,
+)
 
 try:
     from dotenv import load_dotenv
@@ -229,16 +235,19 @@ For EACH extracted entity, provide:
 - name: exact entity name from text
 - context: 1-2 sentence snippet showing entity in context
 - confidence: 0.0-1.0 confidence score based on clarity and evidence in paper
+- chromosome: chromosome if explicitly stated for genes, otherwise ""
 
 Also extract KEY RELATIONSHIPS:
 - source entity -> relationship -> target entity
-- confidence: 0.0-1.0 score
+- source_type and target_type must be one of Gene, Protein, Disease, Pathway, Drug, Tissue, Entity
+- edge_type must be one of ENCODES, EXPRESSES, INTERACTS, TREATS, PARTICIPATES, ACTIVATES, INHIBITS, REGULATES, ASSOCIATES
+- edge_weight: 0.0-1.0 score
 - evidence: supporting sentence from paper
 
 OUTPUT FORMAT (JSON):
 {
     "genes": [
-        {"name": "MAPT", "context": "MAPT mutations cause...", "confidence": 0.95},
+        {"name": "MAPT", "context": "MAPT mutations cause...", "confidence": 0.95, "chromosome": "17"},
         ...
     ],
     "proteins": [
@@ -255,10 +264,12 @@ OUTPUT FORMAT (JSON):
     ],
     "relationships": [
         {
-            "source": "MAPT",
-            "target": "Tau Protein",
-            "relation": "encodes",
-            "confidence": 0.87,
+            "source_name": "MAPT",
+            "source_type": "Gene",
+            "target_name": "Tau Protein",
+            "target_type": "Protein",
+            "edge_type": "ENCODES",
+            "edge_weight": 0.87,
             "evidence": "The MAPT gene encodes the tau protein..."
         },
         ...
@@ -377,6 +388,7 @@ def extract_entities_from_text(
         extracted_data = _boost_confidence_for_known_entities(
             extracted_data, existing_entities
         )
+        extracted_data = _normalize_extracted_payload(extracted_data, title=title)
         
         logger.info(f"Extracted {_count_entities(extracted_data)} entities total")
         return extracted_data
@@ -441,7 +453,15 @@ From this paper text, extract ONLY direct biological relationships:
 
 Format as JSON array:
 [
-    {{"source": "GENE1", "target": "PROTEIN1", "relation": "encodes", "confidence": 0.9, "evidence": "..."}},
+    {{
+      "source_name": "GENE1",
+      "source_type": "Gene",
+      "target_name": "PROTEIN1",
+      "target_type": "Protein",
+      "edge_type": "ENCODES",
+      "edge_weight": 0.9,
+      "evidence": "..."
+    }},
     ...
 ]
 
@@ -463,7 +483,7 @@ Return ONLY valid JSON, no other text."""
         
         if json_start >= 0 and json_end > json_start:
             relationships = json.loads(response_text[json_start:json_end])
-            return relationships
+            return _normalize_extracted_payload({"relationships": relationships}).get("relationships", [])
         return []
     except Exception as e:
         logger.error(f"Error extracting relationships: {e}")
@@ -596,9 +616,9 @@ def validate_extracted_entities(
     # Validate relationships
     for rel in extracted_data.get("relationships", []):
         if isinstance(rel, dict):
-            confidence = rel.get("confidence", 0)
+            confidence = rel.get("edge_weight", rel.get("confidence", 0))
             if confidence >= min_confidence:
-                if all(k in rel for k in ["source", "target", "relation"]):
+                if all(k in rel for k in ["source_name", "target_name", "edge_type"]):
                     validated["relationships"].append(rel)
     
     return validated
@@ -618,37 +638,91 @@ def format_extraction_for_review(
     Returns:
         dict: Formatted data ready for review interface
     """
-    formatted = {}
-    
-    for entity_type in ["genes", "proteins", "diseases", "pathways"]:
-        formatted[entity_type] = []
-        
-        for i, entity in enumerate(extracted_data.get(entity_type, [])):
-            formatted_entity = {
-                "id": f"{paper_id}_{entity_type}_{i}",
-                "name": entity.get("name", ""),
-                "confidence": entity.get("confidence", 0.5),
-                "context": entity.get("context", ""),
-                "entity_type": entity_type,
-                "approved": False,
-                "mapped_to_existing": "",
-                "notes": ""
-            }
-            formatted[entity_type].append(formatted_entity)
-    
-    # Format relationships
-    formatted["relationships"] = []
-    for i, rel in enumerate(extracted_data.get("relationships", [])):
-        formatted_rel = {
-            "id": f"{paper_id}_rel_{i}",
-            "source": rel.get("source", ""),
-            "target": rel.get("target", ""),
-            "relation": rel.get("relation", ""),
-            "confidence": rel.get("confidence", 0.5),
-            "evidence": rel.get("evidence", ""),
-            "approved": False,
-            "notes": ""
-        }
-        formatted["relationships"].append(formatted_rel)
-    
+    normalized = _normalize_extracted_payload(extracted_data, paper_id=paper_id)
+    formatted = normalize_entities_for_paper(paper_id, normalized)
+    formatted["relationships"] = normalize_relationships_for_paper(
+        paper_id,
+        normalized.get("relationships", []),
+        formatted,
+    )
     return formatted
+
+
+def _normalize_extracted_payload(
+    extracted_data: Optional[Dict[str, Any]],
+    paper_id: str = "",
+    title: str = "",
+) -> Dict[str, Any]:
+    normalized: Dict[str, Any] = {
+        "genes": [],
+        "proteins": [],
+        "diseases": [],
+        "pathways": [],
+        "relationships": [],
+    }
+    payload = extracted_data or {}
+
+    for entity_type in ["genes", "proteins", "diseases", "pathways"]:
+        for entity in payload.get(entity_type, []):
+            if not isinstance(entity, dict):
+                continue
+            entity_record = {
+                "id": str(entity.get("id", "")).strip(),
+                "name": str(entity.get("name", "")).strip(),
+                "confidence": float(entity.get("confidence", 0.5) or 0.5),
+                "context": str(entity.get("context", "")).strip(),
+                "entity_type": normalize_entity_type(entity.get("entity_type", entity_type)),
+                "chromosome": str(entity.get("chromosome", "")).strip(),
+                "approved": bool(entity.get("approved", False)),
+                "mapped_to_existing": str(entity.get("mapped_to_existing", "")),
+                "notes": str(entity.get("notes", "")),
+            }
+            if entity_record["name"]:
+                if not entity_record["context"] and title:
+                    entity_record["context"] = f"Extracted from paper: {title}"
+                normalized[entity_type].append(entity_record)
+
+    temp_entities = normalize_entities_for_paper(paper_id or "paper", normalized)
+    lookup_by_name = {}
+    for entity_type in ["genes", "proteins", "diseases", "pathways"]:
+        for entity in temp_entities.get(entity_type, []):
+            lookup_by_name[str(entity.get("name", "")).strip().lower()] = entity
+
+    for index, rel in enumerate(payload.get("relationships", [])):
+        if not isinstance(rel, dict):
+            continue
+        source_name = str(rel.get("source_name", rel.get("source", ""))).strip()
+        target_name = str(rel.get("target_name", rel.get("target", ""))).strip()
+        if not source_name or not target_name:
+            continue
+
+        source_match = lookup_by_name.get(source_name.lower(), {})
+        target_match = lookup_by_name.get(target_name.lower(), {})
+        source_type = rel.get("source_type") or source_match.get("entity_type", "Entity")
+        target_type = rel.get("target_type") or target_match.get("entity_type", "Entity")
+        original_relation = str(rel.get("original_relation", rel.get("relation", rel.get("edge_type", "")))).strip()
+        edge_type = str(rel.get("edge_type", "")).strip() or canonicalize_edge_type(
+            original_relation,
+            source_type,
+            target_type,
+        )
+
+        normalized["relationships"].append({
+            "id": str(rel.get("id", "")).strip() or f"{paper_id}_rel_{index}",
+            "source_name": source_name,
+            "source_type": normalize_entity_type(source_type, title_case=True),
+            "source_id": str(rel.get("source_id", source_match.get("id", ""))).strip(),
+            "target_name": target_name,
+            "target_type": normalize_entity_type(target_type, title_case=True),
+            "target_id": str(rel.get("target_id", target_match.get("id", ""))).strip(),
+            "edge_type": edge_type,
+            "edge_weight": float(rel.get("edge_weight", rel.get("confidence", 0.5)) or 0.5),
+            "evidence": str(rel.get("evidence", "")).strip(),
+            "source_chromosome": str(rel.get("source_chromosome", source_match.get("chromosome", ""))).strip(),
+            "original_relation": original_relation,
+            "extraction_method": str(rel.get("extraction_method", "gpt4")),
+            "approved": bool(rel.get("approved", False)),
+            "notes": str(rel.get("notes", "")),
+        })
+
+    return normalized

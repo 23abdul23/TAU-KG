@@ -3,12 +3,14 @@ import chromadb
 from chromadb.config import Settings
 import os
 import hashlib
+import re
 from sentence_transformers import SentenceTransformer
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 import json
 from tqdm import tqdm
 import time
 from src.llm_provider import LLMClient
+from src.paper_schema import normalize_entities_for_paper, normalize_relationships_for_paper, slugify_identifier
 
 # Load environment variables
 from dotenv import load_dotenv
@@ -168,6 +170,32 @@ class VectorDBManager:
             parts.append(f"Paper abstract: {paper_abstract[:250]}")
 
         return " | ".join(part for part in parts if part)
+
+    def _build_paper_edge_document_text(self, edge: Dict[str, Any]) -> str:
+        """Build searchable relationship text for a paper-derived edge."""
+        paper_title = ""
+        paper_id = str(edge.get("paper_id", "")).strip()
+        if PAPERS_DB_AVAILABLE and paper_id:
+            paper_record = papers_db.get_paper_by_id(paper_id)
+            if paper_record:
+                paper_title = str(paper_record.get("title", "")).strip()
+
+        parts = [
+            f"Relationship: {edge.get('source_name', '')} [{edge.get('edge_type', 'ASSOCIATES')}] {edge.get('target_name', '')}",
+            f"Source type: {edge.get('source_type', 'Entity')}",
+            f"Target type: {edge.get('target_type', 'Entity')}",
+        ]
+        if edge.get("evidence"):
+            parts.append(f"Evidence: {str(edge.get('evidence', ''))[:400]}")
+        if paper_title:
+            parts.append(f"Paper: {paper_title}")
+        return " | ".join(part for part in parts if part)
+
+    @staticmethod
+    def _normalize_label_filter(values: Optional[List[str]]) -> Optional[set]:
+        if not values:
+            return None
+        return {str(value).strip().lower() for value in values if str(value).strip()}
     
     def load_csv_to_vectordb(self, csv_path: str, batch_size: int = 100):
         """
@@ -350,10 +378,17 @@ class VectorDBManager:
         except Exception:
             stats['paper_entities_documents'] = 0
 
+        try:
+            paper_edges_collection = self.client.get_collection(name="paper_edges")
+            stats['paper_edges_documents'] = paper_edges_collection.count()
+        except Exception:
+            stats['paper_edges_documents'] = 0
+
         stats['total_documents_all_collections'] = (
             stats['total_documents'] +
             stats['papers_documents'] +
-            stats['paper_entities_documents']
+            stats['paper_entities_documents'] +
+            stats['paper_edges_documents']
         )
 
         return stats
@@ -438,6 +473,87 @@ class VectorDBManager:
             "skipped": skipped,
             "added_by_type": added_by_type,
             "candidates_by_type": candidates_by_type,
+        }
+
+    def search_entities_by_type(
+        self,
+        query: str,
+        entity_types: Optional[List[str]] = None,
+        node_sources: Optional[List[str]] = None,
+        n_results: int = 15,
+    ) -> List[Dict[str, Any]]:
+        """Search the main entity collection and filter by type/source metadata."""
+        results = self.search_similar(query, n_results=max(n_results * 3, n_results))
+        type_filter = self._normalize_label_filter(entity_types)
+        source_filter = self._normalize_label_filter(node_sources)
+
+        filtered: List[Dict[str, Any]] = []
+        for result in results:
+            metadata = result.get("metadata", {})
+            node_type = str(metadata.get("node_type", "")).strip().lower()
+            node_source = str(metadata.get("node_source", "")).strip().lower()
+            if type_filter and node_type not in type_filter:
+                continue
+            if source_filter and node_source not in source_filter:
+                continue
+            filtered.append(result)
+            if len(filtered) >= n_results:
+                break
+        return filtered
+
+    def sync_paper_edges_to_vectordb(
+        self,
+        paper_edges: List[Dict[str, Any]],
+        only_approved: bool = True,
+        collection_name: str = "paper_edges",
+    ) -> Dict[str, int]:
+        """Upsert paper relationships into the searchable paper edge collection."""
+        collection = self._get_or_create_collection(collection_name)
+        self.paper_edges_collection = collection
+
+        grouped_edges: Dict[str, List[Dict[str, Any]]] = {}
+        grouped_entities: Dict[str, Dict[str, List[Dict[str, Any]]]] = {}
+        if PAPERS_DB_AVAILABLE:
+            grouped_entities = {
+                str(paper_id): normalize_entities_for_paper(str(paper_id), entities)
+                for paper_id, entities in getattr(papers_db, "paper_entities", {}).items()
+            }
+
+        for edge in paper_edges or []:
+            if not isinstance(edge, dict):
+                continue
+            paper_id = str(edge.get("paper_id", "")).strip()
+            grouped_edges.setdefault(paper_id, []).append(edge)
+
+        total_candidates = 0
+        total_upserted = 0
+        for paper_id, edges in grouped_edges.items():
+            normalized_edges = normalize_relationships_for_paper(
+                paper_id,
+                edges,
+                grouped_entities.get(paper_id, {}),
+            )
+            if only_approved:
+                normalized_edges = [edge for edge in normalized_edges if edge.get("approved", False)]
+
+            total_candidates += len(edges)
+            if not normalized_edges:
+                continue
+
+            try:
+                collection.delete(where={"paper_id": paper_id})
+            except Exception:
+                pass
+
+            documents = [self._build_paper_edge_document_text(edge) for edge in normalized_edges]
+            metadatas = normalized_edges
+            ids = [f"paper_edge_{paper_id}_{index}" for index, _ in enumerate(normalized_edges)]
+            collection.upsert(documents=documents, metadatas=metadatas, ids=ids)
+            total_upserted += len(ids)
+
+        return {
+            "total_candidates": total_candidates,
+            "upserted": total_upserted,
         }
     
     def _format_context_for_gpt(self, search_results: List[Dict[str, Any]]) -> str:
@@ -625,12 +741,49 @@ Citation {i}:
             self.papers_collection = self.client.create_collection(name=collection_name)
             print(f"Created new papers collection: {collection_name}")
 
+    def create_paper_edges_collection(self, collection_name: str = "paper_edges") -> None:
+        """Create a separate collection for paper-derived relationships if needed."""
+        try:
+            self.paper_edges_collection = self.client.get_collection(name=collection_name)
+            print(f"Loaded existing paper edges collection: {collection_name}")
+        except Exception:
+            self.paper_edges_collection = self.client.create_collection(name=collection_name)
+            print(f"Created new paper edges collection: {collection_name}")
+
     def _get_or_create_collection(self, collection_name: str):
         """Return a collection, creating it on demand."""
         try:
             return self.client.get_collection(name=collection_name)
         except Exception:
             return self.client.create_collection(name=collection_name)
+
+    def upsert_paper_edge_to_vectordb(
+        self,
+        edge: Dict[str, Any],
+        collection_name: str = "paper_edges",
+    ) -> Dict[str, int]:
+        """Upsert a single normalized paper relationship into the edge collection."""
+        if not edge:
+            return {"upserted": 0}
+
+        collection = self._get_or_create_collection(collection_name)
+        self.paper_edges_collection = collection
+        paper_id = str(edge.get("paper_id", "")).strip() or "paper"
+        normalized_edges = normalize_relationships_for_paper(
+            paper_id,
+            [edge],
+            normalize_entities_for_paper(paper_id, getattr(papers_db, "paper_entities", {}).get(paper_id, {})) if PAPERS_DB_AVAILABLE else {},
+        )
+        if not normalized_edges:
+            return {"upserted": 0}
+
+        normalized_edge = normalized_edges[0]
+        collection.upsert(
+            documents=[self._build_paper_edge_document_text(normalized_edge)],
+            metadatas=[normalized_edge],
+            ids=[f"paper_edge_{paper_id}_{slugify_identifier(normalized_edge.get('id', '0'))}"],
+        )
+        return {"upserted": 1}
 
     def upsert_paper_to_vectordb(self, paper: Dict[str, Any], collection_name: str = "papers") -> Dict[str, int]:
         """Upsert a single paper document into the papers collection."""
@@ -794,16 +947,20 @@ Citation {i}:
         metadatas = []
         ids = []
 
+        normalized_entities = normalize_entities_for_paper(normalized_paper_id, entities)
+
         for entity_type in ["genes", "proteins", "diseases", "pathways"]:
-            for entity_index, entity in enumerate(entities.get(entity_type, [])):
+            for entity_index, entity in enumerate(normalized_entities.get(entity_type, [])):
                 documents.append(self._build_paper_entity_document_text(normalized_paper_id, entity_type, entity, "PAPER_INGEST"))
                 metadatas.append({
                     "paper_id": normalized_paper_id,
+                    "entity_id": str(entity.get("id", "")),
                     "entity_name": str(entity.get("name", "")),
-                    "entity_type": entity_type,
+                    "entity_type": str(entity.get("entity_type", entity_type)),
                     "confidence": float(entity.get("confidence", 0.0)),
                     "approved": bool(entity.get("approved", False)),
                     "mapped_to_existing": str(entity.get("mapped_to_existing", "")),
+                    "chromosome": str(entity.get("chromosome", "")),
                 })
                 ids.append(f"entity_{normalized_paper_id}_{entity_type}_{entity_index}")
 
@@ -841,17 +998,20 @@ Citation {i}:
         
         with tqdm(total=total_entities, desc="Loading entities", unit="entities") as pbar:
             for paper_id, entities in paper_entities.items():
+                normalized_entities = normalize_entities_for_paper(str(paper_id), entities)
                 for entity_type in ['genes', 'proteins', 'diseases', 'pathways']:
-                    for entity_index, entity in enumerate(entities.get(entity_type, [])):
+                    for entity_index, entity in enumerate(normalized_entities.get(entity_type, [])):
                         doc_text = self._build_paper_entity_document_text(str(paper_id), entity_type, entity, "PAPER_INGEST")
                         
                         metadata = {
                             "paper_id": str(paper_id),
+                            "entity_id": str(entity.get('id', '')),
                             "entity_name": str(entity.get('name', '')),
-                            "entity_type": entity_type,
+                            "entity_type": str(entity.get('entity_type', entity_type)),
                             "confidence": float(entity.get('confidence', 0.0)),
                             "approved": bool(entity.get('approved', False)),
-                            "mapped_to_existing": str(entity.get('mapped_to_existing', ''))
+                            "mapped_to_existing": str(entity.get('mapped_to_existing', '')),
+                            "chromosome": str(entity.get('chromosome', '')),
                         }
                         
                         documents.append(doc_text)
@@ -886,6 +1046,86 @@ Citation {i}:
                 print(f"Error loading final entity batch: {e}")
         
         print(f"Successfully loaded {processed_count} entities into the vector database.")
+
+    def load_paper_edges_to_vectordb(
+        self,
+        paper_edges: List[Dict[str, Any]],
+        collection_name: str = "paper_edges",
+        only_approved: bool = True,
+    ) -> None:
+        """Load paper-derived relationships into the edge collection."""
+        self.create_paper_edges_collection(collection_name)
+        result = self.sync_paper_edges_to_vectordb(
+            paper_edges=paper_edges,
+            only_approved=only_approved,
+            collection_name=collection_name,
+        )
+        print(f"Successfully loaded {result.get('upserted', 0)} paper relationships into the vector database.")
+
+    def search_relationships(
+        self,
+        query: str,
+        n_results: int = 10,
+        edge_types: Optional[List[str]] = None,
+        source_types: Optional[List[str]] = None,
+        target_types: Optional[List[str]] = None,
+        approved_only: bool = True,
+    ) -> List[Dict[str, Any]]:
+        """Search indexed paper-derived relationships with optional metadata filters."""
+        if not hasattr(self, "paper_edges_collection"):
+            try:
+                self.paper_edges_collection = self.client.get_collection(name="paper_edges")
+            except Exception:
+                return []
+
+        try:
+            results = self.paper_edges_collection.query(
+                query_texts=[query],
+                n_results=max(n_results * 3, n_results),
+            )
+        except Exception as e:
+            print(f"Error searching paper relationships: {e}")
+            return []
+
+        edge_type_filter = self._normalize_label_filter(edge_types)
+        source_type_filter = self._normalize_label_filter(source_types)
+        target_type_filter = self._normalize_label_filter(target_types)
+
+        formatted_results: List[Dict[str, Any]] = []
+        if results.get("documents") and results["documents"][0]:
+            for index in range(len(results["documents"][0])):
+                metadata = dict(results["metadatas"][0][index])
+                if approved_only and not bool(metadata.get("approved", False)):
+                    continue
+
+                edge_type = str(metadata.get("edge_type", "")).strip().lower()
+                source_type = str(metadata.get("source_type", "")).strip().lower()
+                target_type = str(metadata.get("target_type", "")).strip().lower()
+                if edge_type_filter and edge_type not in edge_type_filter:
+                    continue
+                if source_type_filter and source_type not in source_type_filter:
+                    continue
+                if target_type_filter and target_type not in target_type_filter:
+                    continue
+
+                distance = results["distances"][0][index] if results.get("distances") else None
+                formatted_results.append({
+                    "document": results["documents"][0][index],
+                    "metadata": metadata,
+                    "distance": distance,
+                    "similarity_score": self._distance_to_similarity(distance),
+                    "source_name": metadata.get("source_name", ""),
+                    "source_type": metadata.get("source_type", ""),
+                    "target_name": metadata.get("target_name", ""),
+                    "target_type": metadata.get("target_type", ""),
+                    "edge_type": metadata.get("edge_type", ""),
+                    "edge_weight": metadata.get("edge_weight", 0.0),
+                    "evidence": metadata.get("evidence", ""),
+                    "paper_id": metadata.get("paper_id", ""),
+                })
+                if len(formatted_results) >= n_results:
+                    break
+        return formatted_results
 
 # Example usage
 if __name__ == "__main__":

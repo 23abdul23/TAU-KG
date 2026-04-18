@@ -271,10 +271,13 @@ def render_paper_detail(paper: Dict[str, Any]):
             if relationships:
                 df_rels = pd.DataFrame([
                     {
-                        "Source": r.get("source", ""),
-                        "Relation": r.get("relation", ""),
-                        "Target": r.get("target", ""),
-                        "Confidence": f"{r.get('confidence', 0):.2f}",
+                        "Source": r.get("source_name", r.get("source", "")),
+                        "Source Type": r.get("source_type", "Entity"),
+                        "Edge Type": r.get("edge_type", r.get("relation", "")),
+                        "Target": r.get("target_name", r.get("target", "")),
+                        "Target Type": r.get("target_type", "Entity"),
+                        "Weight": f"{float(r.get('edge_weight', r.get('confidence', 0.0))):.2f}",
+                        "Evidence": str(r.get("evidence", ""))[:180],
                         "Status": "✅" if r.get("approved") else "⏳"
                     }
                     for r in relationships

@@ -331,9 +331,267 @@ Create separate collection for paper-entity metadata:
 
 ---
 
+## 🆕 Schema Alignment Analysis
+
+### Your Target Schema (CSV Format)
+```csv
+source_id,target_id,edge_type,source_type,target_type,source_name,target_name,edge_weight,source_chromosome
+mapk_protein,breast,INTERACTS,Protein,Tissue,mapk_protein,Breast,0.81,
+vemurafenib,sunitinib,EXPRESSES,Drug,Drug,vemurafenib,Sunitinib,0.82,
+colon_cancer,PI3K_AKT_pathway,TREATS,Disease,Pathway,colon_cancer,Pi3K Akt Pathway,0.95,
+lung_cancer,TP53,INTERACTS,Disease,Gene,lung_cancer,Tp53,0.81,
+pi3k_protein,EGFR,EXPRESSES,Protein,Gene,pi3k_protein,Egfr,0.96,
+BRCA2,pancreas,ACTIVATES,Gene,Tissue,BRCA2,Pancreas,0.75,18
+PIK3CA,lung_cancer,PARTICIPATES,Gene,Disease,PIK3CA,Lung Cancer,0.79,14
+sorafenib,imatinib,PARTICIPATES,Drug,Drug,sorafenib,Imatinib,0.73,
+```
+
+### Current Extracted Edge Format (from GPT-4 extraction)
+```json
+{
+  "source": "MAPT",
+  "target": "Tau Protein",
+  "relation": "encodes",
+  "confidence": 0.87,
+  "evidence": "...",
+  "paper_id": "paper_123",
+  "source_type": "paper",
+  "extraction_method": "gpt4",
+  "approved": false,
+  "extracted_date": "2024-01-15"
+}
+```
+
+---
+
+## 🔄 Gap Analysis: Current vs Target Schema
+
+### ✅ Fields That Match or Are Close:
+| Target Schema | Current Schema | Status | Gap |
+|---|---|---|---|
+| `source_name` | `source` | ✅ Match | None |
+| `target_name` | `target` | ✅ Match | None |
+| `edge_weight` | `confidence` | ✅ Match | None - both 0-1 scores |
+| `source_type` | `source_type` | ⚠️ Partial | Currently: "paper", need entity type |
+| Evidence in docs | `evidence` | ✅ Match | None |
+
+### ❌ Fields That Are Missing or Different:
+
+| Target Schema | Current Status | Impact | Solution |
+|---|---|---|---|
+| `source_id` | ❌ Missing | Need unique identifiers | Generate from normalized names |
+| `target_id` | ❌ Missing | Need unique identifiers | Generate from normalized names |
+| `edge_type` | ❌ Different naming | "relation" vs "edge_type" | Standardize relationship types |
+| `target_type` | ❌ Missing | No target entity type | Extract from entity lookup |
+| `source_chromosome` | ❌ Missing | Optional but useful | Extract if available (genes only) |
+
+---
+
+## 🎯 How to Align Current → Target Schema
+
+### Step 1: Update Extraction Prompt
+Update `src/paper_entity_extractor.py` to capture types:
+
+**CURRENT:**
+```json
+{
+  "source": "MAPT",
+  "target": "Tau Protein",
+  "relation": "encodes",
+  "confidence": 0.87
+}
+```
+
+**TARGET:**
+```json
+{
+  "source_id": "MAPT",
+  "source_name": "MAPT",
+  "source_type": "Gene",
+  "target_id": "tau_protein",
+  "target_name": "Tau Protein",
+  "target_type": "Protein",
+  "edge_type": "encodes",
+  "edge_weight": 0.87,
+  "evidence": "...",
+  "source_chromosome": "17"
+}
+```
+
+### Step 2: Standardize Edge Types
+Replace "relation" with "edge_type" using standardized values:
+
+**Current (unclear):**
+- encodes, regulates, involved_in, phosphorylates, inhibits, etc.
+
+**Target (standardized):**
+- ✅ EXPRESSES (gene/protein → protein)
+- ✅ ENCODES (gene → protein)
+- ✅ INTERACTS (any ↔ any)
+- ✅ TREATS (drug → disease)
+- ✅ PARTICIPATES (any → pathway)
+- ✅ ACTIVATES (any → any)
+- ✅ INHIBITS (any → any)
+- ✅ REGULATES (any → any)
+- ✅ ASSOCIATES (any ↔ any)
+
+### Step 3: Add Entity Type Information
+
+**Current Process:**
+- Store only entity names
+- Lose type information
+
+**Target Process:**
+- Extract source_type from entity extraction (gene/protein/disease/pathway)
+- Extract target_type from entity extraction
+- Map to extended types: Gene, Protein, Disease, Pathway, Drug, Tissue, etc.
+
+### Step 4: Create Unique IDs
+
+**Option A: Hash-based (Deterministic)**
+```python
+def generate_entity_id(name: str, entity_type: str) -> str:
+    normalized = f"{entity_type.lower()}_{name.lower().replace(' ', '_')}"
+    return hashlib.md5(normalized.encode()).hexdigest()[:8]
+```
+
+**Option B: Slug-based (Human-readable)**
+```python
+def generate_entity_id(name: str, entity_type: str) -> str:
+    normalized = re.sub(r'[^a-z0-9]+', '_', name.lower()).strip('_')
+    return f"{entity_type.lower()}_{normalized}"
+```
+
+### Step 5: Add Chromosome Information (Optional for Genes)
+
+For genes extracted from papers, try to add chromosome info:
+
+```python
+# In paper entity extraction, add chromosome if mentioned
+# Examples: "MAPT is located on chromosome 17"
+{
+  "source_id": "gene_mapt",
+  "source_name": "MAPT",
+  "source_type": "Gene",
+  "source_chromosome": "17",  # ← NEW
+  "target_id": "protein_tau",
+  "target_name": "Tau Protein",
+  "target_type": "Protein",
+  "edge_type": "ENCODES",
+  "edge_weight": 0.87
+}
+```
+
+---
+
+## 📊 Implementation Roadmap
+
+### Phase 1: Update Extraction (HIGH PRIORITY)
+**Goal:** Add missing fields to extraction prompt
+
+1. **Update `src/paper_entity_extractor.py`**
+   - Add entity_type to each extracted entity
+   - Add `source_id` and `target_id` generation
+   - Standardize edge_type values
+   - Rename "relation" → "edge_type"
+   - Rename "confidence" → "edge_weight"
+
+2. **Update JSON schema in extraction prompt:**
+   ```python
+   {
+     "genes": [
+       {
+         "id": "gene_mapt",
+         "name": "MAPT",
+         "context": "...",
+         "confidence": 0.95,
+         "chromosome": "17"  # NEW - if mentioned
+       }
+     ],
+     "relationships": [
+       {
+         "source_id": "gene_mapt",
+         "source_name": "MAPT",
+         "source_type": "Gene",
+         "target_id": "protein_tau",
+         "target_name": "Tau Protein",
+         "target_type": "Protein",
+         "edge_type": "ENCODES",
+         "edge_weight": 0.87,
+         "evidence": "..."
+       }
+     ]
+   }
+   ```
+
+### Phase 2: Store in Vector DB (HIGH PRIORITY)
+**Goal:** Make edges searchable
+
+1. **Create `paper_edges` Chroma collection**
+2. **Vectorize each edge as searchable document:**
+   ```
+   document: "Relationship: MAPT [ENCODES] Tau Protein (confidence: 0.87)"
+   metadata: {
+     "source_id": "gene_mapt",
+     "source_name": "MAPT",
+     "source_type": "Gene",
+     "target_id": "protein_tau",
+     "target_name": "Tau Protein",
+     "target_type": "Protein",
+     "edge_type": "ENCODES",
+     "edge_weight": 0.87,
+     "evidence": "...",
+     "paper_id": "paper_123",
+     "source_chromosome": "17"
+   }
+   ```
+
+### Phase 3: Enhance VectorDBManager (MEDIUM PRIORITY)
+**Goal:** Support querying edges
+
+1. Add `search_relationships()` method
+2. Add `search_entities_by_type()` method
+3. Add relationship filtering capabilities
+
+### Phase 4: Update UI & Queries (MEDIUM PRIORITY)
+**Goal:** Display enriched relationship data
+
+1. Update `chat_app.py` to show edge types
+2. Display entity types in network visualization
+3. Filter/search by edge_type and entity types
+
+---
+
+## 🔗 Data Model Comparison Table
+
+```
+┌──────────────────────────┬──────────────────────┬──────────────────────┐
+│ Your Target Schema       │ Current Schema       │ Recommendation       │
+├──────────────────────────┼──────────────────────┼──────────────────────┤
+│ source_id                │ (missing)            │ Add to extraction    │
+│ target_id                │ (missing)            │ Add to extraction    │
+│ source_name              │ source               │ Rename to source_name│
+│ target_name              │ target               │ Rename to target_name│
+│ source_type              │ source_type: "paper" │ Use entity type      │
+│ target_type              │ (missing)            │ Add to extraction    │
+│ edge_type                │ relation             │ Standardize types    │
+│ edge_weight              │ confidence           │ Rename (0-1 scale)   │
+│ source_chromosome        │ (missing)            │ Optional, add if LLM │
+│ evidence                 │ evidence             │ Keep (vectorize in  │
+│                          │                      │ document text)       │
+│ paper_id                 │ paper_id             │ Keep (metadata)      │
+│ extraction_method        │ extraction_method    │ Keep (track source)  │
+│ approved                 │ approved             │ Keep (QA flag)       │
+└──────────────────────────┴──────────────────────┴──────────────────────┘
+```
+
+---
+
 ## Next Steps
 
-1. ✅ **Call sync function** to vectorize paper entities ← START HERE
-2. ⚠️ **Create paper_edges collection** to vectorize relationships
-3. 🔗 **Update search functions** to query paper edges
-4. 🎯 **Update UI** to display paper-extracted relationships
+1. ✅ **Phase 1:** Update extraction to add `source_id`, `target_id`, `source_type`, `target_type`
+2. ✅ **Phase 1:** Standardize edge_type names (ENCODES, INTERACTS, TREATS, PARTICIPATES, ACTIVATES, INHIBITS, REGULATES, ASSOCIATES)
+3. ⚠️ **Phase 2:** Create `paper_edges` vector collection
+4. ⚠️ **Phase 2:** Implement `sync_paper_edges_to_vectordb()` function
+5. 🔗 **Phase 3:** Add entity type filtering to search functions
+6. 🎯 **Phase 4:** Update UI to display standardized schema data

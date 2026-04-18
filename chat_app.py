@@ -57,6 +57,7 @@ SESSION_STATE_DEFAULTS = {
     "chat_history": [],
     "chat_citations": {},
     "chat_papers": {},
+    "chat_relationships": {},
     "db_loaded": False,
     "db_error": "",
     "gene_network": defaultdict(set),
@@ -122,7 +123,7 @@ def _serialize_chat_state() -> Dict[str, Any]:
     search_results = {
         key: value
         for key, value in st.session_state.items()
-        if key.startswith("search_results_")
+        if key.startswith("search_results_") or key.startswith("relationship_results_")
     }
 
     serialized_citations = {
@@ -134,6 +135,7 @@ def _serialize_chat_state() -> Dict[str, Any]:
         "chat_history": list(st.session_state.chat_history),
         "chat_citations": serialized_citations,
         "chat_papers": dict(st.session_state.chat_papers),
+        "chat_relationships": dict(st.session_state.chat_relationships),
         "query_genes": list(st.session_state.query_genes),
         "search_result_limit": int(st.session_state.search_result_limit),
         "selected_chat_turn_index": int(st.session_state.selected_chat_turn_index),
@@ -164,12 +166,17 @@ def load_persisted_chat_state() -> None:
     except Exception:
         return
 
-    for key in [item for item in list(st.session_state.keys()) if item.startswith("search_results_")]:
+    for key in [
+        item
+        for item in list(st.session_state.keys())
+        if item.startswith("search_results_") or item.startswith("relationship_results_")
+    ]:
         del st.session_state[key]
 
     st.session_state.chat_history = payload.get("chat_history", [])
     st.session_state.chat_citations = payload.get("chat_citations", {})
     st.session_state.chat_papers = payload.get("chat_papers", {})
+    st.session_state.chat_relationships = payload.get("chat_relationships", {})
     st.session_state.query_genes = payload.get("query_genes", [])
     st.session_state.search_result_limit = int(payload.get("search_result_limit", 15))
     st.session_state.selected_chat_turn_index = int(payload.get("selected_chat_turn_index", 0))
@@ -199,6 +206,11 @@ def ensure_database_ready(show_spinner: bool = False) -> bool:
                 db_manager.create_papers_collection()
                 if db_manager.papers_collection.count() == 0:
                     db_manager.load_papers_to_vectordb(papers_db.papers_data)
+                db_manager.create_paper_edges_collection()
+                db_manager.load_paper_edges_to_vectordb(
+                    getattr(papers_db, "paper_edges", []),
+                    only_approved=True,
+                )
 
             st.session_state.db_manager = db_manager
             st.session_state.db_loaded = True
@@ -260,7 +272,11 @@ def schedule_next_query_input_clear() -> None:
 
 def clear_stored_search_results() -> None:
     """Remove persisted per-turn search payloads from session state."""
-    for key in [item for item in list(st.session_state.keys()) if item.startswith("search_results_")]:
+    for key in [
+        item
+        for item in list(st.session_state.keys())
+        if item.startswith("search_results_") or item.startswith("relationship_results_")
+    ]:
         del st.session_state[key]
 
 
@@ -269,6 +285,7 @@ def reset_chat_state() -> None:
     st.session_state.chat_history = []
     st.session_state.chat_citations = {}
     st.session_state.chat_papers = {}
+    st.session_state.chat_relationships = {}
     st.session_state.query_genes = []
     st.session_state.selected_chat_turn_index = 0
     st.session_state.next_query_input = ""
@@ -519,16 +536,18 @@ def build_graph_adjacency() -> Dict[str, List[Dict[str, Any]]]:
 
     if PAPERS_AVAILABLE:
         for edge in getattr(papers_db, "paper_edges", []):
-            source = str(edge.get("source", "")).strip()
-            target = str(edge.get("target", "")).strip()
+            if not edge.get("approved", False):
+                continue
+            source = str(edge.get("source_name", edge.get("source", ""))).strip()
+            target = str(edge.get("target_name", edge.get("target", ""))).strip()
             if not source or not target:
                 continue
 
             edge_record = {
                 "source_name": source,
                 "target_name": target,
-                "relation": str(edge.get("relation", "related")),
-                "score": safe_float(edge.get("confidence", edge.get("score", 0.5)), 0.5),
+                "relation": str(edge.get("edge_type", edge.get("relation", "related"))),
+                "score": safe_float(edge.get("edge_weight", edge.get("confidence", edge.get("score", 0.5))), 0.5),
                 "provenance": "PAPER_INGEST",
                 "paper_id": str(edge.get("paper_id", "")),
             }
@@ -991,7 +1010,17 @@ def process_single_query(prompt: str) -> bool:
                 "query_variants": query_variants,
             })
 
-        result = generate_enhanced_response(prompt, search_results, st.session_state.db_manager)
+        relationship_results = st.session_state.db_manager.search_relationships(
+            prompt,
+            n_results=min(8, st.session_state.search_result_limit),
+            approved_only=True,
+        )
+        result = generate_enhanced_response(
+            prompt,
+            search_results,
+            st.session_state.db_manager,
+            relationship_results=relationship_results,
+        )
         st.session_state.chat_history.append(("assistant", result["response"]))
 
         assistant_index = len(st.session_state.chat_history) - 1
@@ -1000,6 +1029,9 @@ def process_single_query(prompt: str) -> bool:
             st.session_state.chat_citations[message_key] = result["citations"]
         if result.get("papers"):
             st.session_state.chat_papers[message_key] = result["papers"]
+        if relationship_results:
+            st.session_state.chat_relationships[message_key] = relationship_results
+            st.session_state[f"relationship_results_{assistant_index + 1}"] = relationship_results
         if search_results:
             st.session_state[f"search_results_{assistant_index + 1}"] = search_results
 
@@ -1009,9 +1041,30 @@ def process_single_query(prompt: str) -> bool:
         st.session_state.chat_history.append(("assistant", error_msg))
         return False
 
-def generate_enhanced_response(query: str, search_results: List[Dict[str, Any]], db_manager: VectorDBManager) -> Dict[str, Any]:
+def _format_relationship_summary(relationship_results: List[Dict[str, Any]]) -> str:
+    if not relationship_results:
+        return ""
+
+    lines = ["", "**Paper-derived relationships**:"]
+    for result in relationship_results[:5]:
+        lines.append(
+            f"- {result.get('source_name', '')} ({result.get('source_type', 'Entity')}) "
+            f"[{result.get('edge_type', 'ASSOCIATES')}] "
+            f"{result.get('target_name', '')} ({result.get('target_type', 'Entity')}) "
+            f"(weight {float(result.get('edge_weight', 0.0)):.2f})"
+        )
+    return "\n".join(lines)
+
+
+def generate_enhanced_response(
+    query: str,
+    search_results: List[Dict[str, Any]],
+    db_manager: VectorDBManager,
+    relationship_results: Optional[List[Dict[str, Any]]] = None,
+) -> Dict[str, Any]:
     """Generate enhanced response using GPT-4 and PubMed citations"""
-    if not search_results:
+    relationship_results = relationship_results or []
+    if not search_results and not relationship_results:
         return {
             'response': "I couldn't find any relevant information in the gene/protein database for your query.",
             'citations': [],
@@ -1027,22 +1080,28 @@ def generate_enhanced_response(query: str, search_results: List[Dict[str, Any]],
         papers = search_papers_for_query(query, n_results=3)
         
         return {
-            'response': enhanced_result['gpt_response'],
+            'response': enhanced_result['gpt_response'] + _format_relationship_summary(relationship_results),
             'citations': enhanced_result['citations'],
             'papers': papers,
             'has_enhanced': enhanced_result['has_openai'],
             'has_citations': enhanced_result['has_citations'],
-            'search_results': search_results
+            'search_results': search_results,
+            'relationship_results': relationship_results,
         }
     except Exception as e:
         # Fallback to basic response if enhanced fails
         st.error(f"Enhanced response failed, using basic mode: {str(e)}")
         print(f"DEBUG: Exception in generate_enhanced_response: {str(e)}")
-        return generate_basic_response(query, search_results)
+        return generate_basic_response(query, search_results, relationship_results)
 
-def generate_basic_response(query: str, search_results: List[Dict[str, Any]]) -> Dict[str, Any]:
+def generate_basic_response(
+    query: str,
+    search_results: List[Dict[str, Any]],
+    relationship_results: Optional[List[Dict[str, Any]]] = None,
+) -> Dict[str, Any]:
     """Generate basic response (fallback when GPT-4 is not available)"""
-    if not search_results:
+    relationship_results = relationship_results or []
+    if not search_results and not relationship_results:
         return {
             'response': "I couldn't find any relevant information in the gene/protein database for your query.",
             'citations': [],
@@ -1051,17 +1110,30 @@ def generate_basic_response(query: str, search_results: List[Dict[str, Any]]) ->
         }
     
     # Create a comprehensive response
-    response = f"Based on your query about '{query}', I found the following relevant gene/protein information:\n\n"
-    
+    response = f"Based on your query about '{query}', I found the following relevant information:\n\n"
+
     for i, result in enumerate(search_results, 1):
         metadata = result['metadata']
         similarity = result.get('similarity_score', distance_to_similarity_percent(result.get('distance')))
-        
+
         response += f"**{i}. {metadata['node_name']}**\n"
         response += f"   - **Gene/Protein ID**: {metadata['node_id']}\n"
         response += f"   - **Type**: {metadata['node_type']}\n"
         response += f"   - **Source**: {metadata['node_source']}\n"
         response += f"   - **Similarity Score**: {similarity:.1f}%\n\n"
+
+    if relationship_results:
+        response += "**Paper-derived relationships**\n"
+        for i, relationship in enumerate(relationship_results[:5], 1):
+            response += (
+                f"   - {i}. {relationship.get('source_name', '')} "
+                f"({relationship.get('source_type', 'Entity')}) "
+                f"[{relationship.get('edge_type', 'ASSOCIATES')}] "
+                f"{relationship.get('target_name', '')} "
+                f"({relationship.get('target_type', 'Entity')}) "
+                f"(weight {float(relationship.get('edge_weight', 0.0)):.2f})\n"
+            )
+        response += "\n"
     
     # Add contextual information
     if len(search_results) > 1:
@@ -1069,7 +1141,8 @@ def generate_basic_response(query: str, search_results: List[Dict[str, Any]]) ->
     
     # Add suggestions for further queries
     gene_names = [result['metadata']['node_name'] for result in search_results]
-    response += f"\n**Related genes/proteins you might want to ask about**: {', '.join(gene_names[:3])}"
+    if gene_names:
+        response += f"\n**Related genes/proteins you might want to ask about**: {', '.join(gene_names[:3])}"
     
     # Search for related papers
     papers = search_papers_for_query(query, n_results=3)
@@ -1080,7 +1153,8 @@ def generate_basic_response(query: str, search_results: List[Dict[str, Any]]) ->
         'papers': papers,
         'has_enhanced': False,
         'has_citations': False,
-        'search_results': search_results
+        'search_results': search_results,
+        'relationship_results': relationship_results,
     }
 
 def display_citations(citations):
@@ -1983,6 +2057,8 @@ def render_assistant_message_content(assistant_message: str, assistant_index: Op
         display_citations(st.session_state.chat_citations[message_key])
     if message_key in st.session_state.chat_papers:
         display_papers(st.session_state.chat_papers[message_key])
+    if message_key in st.session_state.chat_relationships:
+        render_stored_relationship_results(assistant_index)
     render_stored_search_results(assistant_index)
 
 
@@ -2065,6 +2141,44 @@ def render_stored_search_results(assistant_index: Optional[int]) -> None:
             st.write(f"Document: {result_item['document']}")
             st.write(f"Similarity Score: {result_item.get('similarity_score', distance_to_similarity_percent(result_item.get('distance'))):.2f}%")
             st.json(result_item['metadata'])
+            st.markdown("---")
+
+
+def render_stored_relationship_results(assistant_index: Optional[int]) -> None:
+    """Render stored paper-derived relationship results for an answered query."""
+    if assistant_index is None:
+        return
+
+    current_query_key = f"relationship_results_{assistant_index + 1}"
+    stored_results = st.session_state.get(current_query_key, [])
+    if not stored_results:
+        return
+
+    with st.expander("Paper-derived Relationships", expanded=False):
+        rows = []
+        for result_item in stored_results:
+            rows.append({
+                "Source": result_item.get("source_name", ""),
+                "Source Type": result_item.get("source_type", ""),
+                "Edge Type": result_item.get("edge_type", ""),
+                "Target": result_item.get("target_name", ""),
+                "Target Type": result_item.get("target_type", ""),
+                "Weight": f"{float(result_item.get('edge_weight', 0.0)):.2f}",
+                "Similarity %": f"{result_item.get('similarity_score', 0.0):.1f}",
+                "Evidence": str(result_item.get("evidence", ""))[:220],
+            })
+        if rows:
+            st.dataframe(pd.DataFrame(rows), width="stretch", hide_index=True)
+
+    with st.expander("Raw Relationship Results (Technical)", expanded=False):
+        for i, result_item in enumerate(stored_results, 1):
+            st.write(
+                f"**Result {i}:** {result_item.get('source_name', '')} "
+                f"[{result_item.get('edge_type', 'ASSOCIATES')}] "
+                f"{result_item.get('target_name', '')}"
+            )
+            st.write(f"Evidence: {result_item.get('evidence', '')}")
+            st.json(result_item.get("metadata", {}))
             st.markdown("---")
 
 def main():

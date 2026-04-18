@@ -268,10 +268,10 @@ def merge_paper_entities_to_graph(
     
     for edge in all_edges:
         if edge.get("approved", False):
-            source = edge.get("source", "")
-            target = edge.get("target", "")
-            relation = edge.get("relation", "")
-            confidence = edge.get("confidence", 0.80)
+            source = edge.get("source_name", edge.get("source", ""))
+            target = edge.get("target_name", edge.get("target", ""))
+            relation = edge.get("edge_type", edge.get("relation", ""))
+            confidence = edge.get("edge_weight", edge.get("confidence", 0.80))
             evidence = edge.get("evidence", "")
             
             if source and target and relation:

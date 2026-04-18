@@ -22,8 +22,14 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import deb_data_papers as papers_db
 import deb_data
 from logger_config import setup_logger
+from vector_db_manager import VectorDBManager
 
 logger = setup_logger(__name__)
+
+
+@st.cache_resource(show_spinner=False)
+def _get_vector_db_manager():
+    return VectorDBManager()
 
 
 def initialize_session_state():
@@ -150,6 +156,21 @@ def render_entity_table(
     return updated_entities
 
 
+def _refresh_vector_indexes_for_review(paper_id: str) -> None:
+    """Refresh searchable entity and relationship indexes after review changes."""
+    manager = _get_vector_db_manager()
+    manager.upsert_paper_entities_to_vectordb(
+        paper_id,
+        papers_db.get_paper_entities(paper_id) or {},
+    )
+    manager.load_paper_edges_to_vectordb(papers_db.paper_edges, only_approved=True)
+    manager.sync_paper_entities_to_main_collection(
+        papers_db.paper_entities,
+        source_name="PAPER_INGEST",
+        only_approved=True,
+    )
+
+
 def render_paper_header(paper: Dict[str, Any]):
     """Render paper information header."""
     st.subheader(f"📑 {paper['title']}")
@@ -266,12 +287,21 @@ def main():
         else:
             rel_data = []
             for idx, rel in enumerate(relationships):
+                source_label = rel.get("source_name", rel.get("source", ""))
+                target_label = rel.get("target_name", rel.get("target", ""))
+                edge_label = rel.get("edge_type", rel.get("relation", "ASSOCIATES"))
                 rel_approved = st.checkbox(
-                    f"Approve: {rel.get('source')} → {rel.get('target')}",
+                    f"Approve: {source_label} [{edge_label}] {target_label}",
                     value=rel.get("approved", False),
                     key=f"rel_app_{idx}"
                 )
                 rel["approved"] = rel_approved
+                st.caption(
+                    f"{rel.get('source_type', 'Entity')} -> {rel.get('target_type', 'Entity')} | "
+                    f"weight {float(rel.get('edge_weight', rel.get('confidence', 0.0))):.2f}"
+                )
+                if rel.get("evidence"):
+                    st.write(rel.get("evidence", ""))
                 rel_data.append(rel)
             
             updated_all_entities["relationships"] = rel_data
@@ -296,6 +326,7 @@ def main():
                     current_paper["paper_id"],
                     updated_all_entities.get("relationships", relationships)
                 )
+                _refresh_vector_indexes_for_review(current_paper["paper_id"])
                 
                 st.success("✅ All visible entities marked for approval")
             except Exception as e:
@@ -310,6 +341,7 @@ def main():
                     current_paper["paper_id"],
                     updated_all_entities.get("relationships", relationships)
                 )
+                _refresh_vector_indexes_for_review(current_paper["paper_id"])
                 
                 st.success("✅ Changes saved!")
                 logger.info(f"Paper {current_paper['paper_id']} entities updated")

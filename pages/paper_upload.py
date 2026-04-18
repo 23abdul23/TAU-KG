@@ -38,6 +38,7 @@ from src.pmc_service import (
     process_pmc_url_html_fallback,
 )
 from src.paper_entity_extractor import extract_entities_from_text, format_extraction_for_review
+from src.paper_schema import normalize_entities_for_paper, normalize_relationships_for_paper
 from vector_db_manager import VectorDBManager
 import deb_data_papers as papers_db
 from logger_config import setup_logger
@@ -142,11 +143,13 @@ def _sync_paper_nodes_to_vector_db():
         manager.load_papers_to_vectordb(papers_db.papers_data)
     if papers_db.paper_entities:
         manager.load_paper_entities_to_vectordb(papers_db.paper_entities)
+    if papers_db.paper_edges:
+        manager.load_paper_edges_to_vectordb(papers_db.paper_edges, only_approved=False)
 
     sync_stats = manager.sync_paper_entities_to_main_collection(
         papers_db.paper_entities,
         source_name="PAPER_INGEST",
-        only_approved=False,
+        only_approved=True,
     )
     db_stats = manager.get_database_stats()
     return sync_stats, db_stats
@@ -197,30 +200,16 @@ def _build_stable_paper_id(
 
 def _prepare_entities_for_storage(extracted_entities: Dict[str, Any]) -> Dict[str, Any]:
     """Normalize extracted entity payloads before storing them."""
-    prepared = {}
-    for entity_type in ["genes", "proteins", "diseases", "pathways"]:
-        prepared_entities = []
-        for entity in extracted_entities.get(entity_type, []):
-            if not isinstance(entity, dict):
-                continue
-            prepared_entity = dict(entity)
-            prepared_entity["approved"] = False
-            prepared_entity["mapped_to_existing"] = ""
-            prepared_entities.append(prepared_entity)
-        prepared[entity_type] = prepared_entities
-    return prepared
+    return normalize_entities_for_paper("paper", extracted_entities)
 
 
 def _prepare_relationships_for_storage(extracted_entities: Dict[str, Any]) -> List[Dict[str, Any]]:
     """Normalize extracted relationship payloads before storing them."""
-    relationships = []
-    for relationship in extracted_entities.get("relationships", []):
-        if not isinstance(relationship, dict):
-            continue
-        prepared_relationship = dict(relationship)
-        prepared_relationship["approved"] = False
-        relationships.append(prepared_relationship)
-    return relationships
+    return normalize_relationships_for_paper(
+        "paper",
+        extracted_entities.get("relationships", []),
+        extracted_entities,
+    )
 
 
 def _build_autosave_toast_message(
@@ -260,8 +249,6 @@ def _auto_save_paper_and_index(
         return autosaved_papers[source_key]
 
     extracted_entities = st.session_state[extraction_state_key]["extracted_entities"]
-    prepared_entities = _prepare_entities_for_storage(extracted_entities)
-    relationships = _prepare_relationships_for_storage(extracted_entities)
     paper_id = _build_stable_paper_id(
         source_key=source_key,
         pmid=pmid_input,
@@ -269,6 +256,12 @@ def _auto_save_paper_and_index(
         title=title,
         file_path=file_path,
         source_url=source_url,
+    )
+    prepared_entities = normalize_entities_for_paper(paper_id, extracted_entities)
+    relationships = normalize_relationships_for_paper(
+        paper_id,
+        extracted_entities.get("relationships", []),
+        prepared_entities,
     )
 
     stored_paper = papers_db.upsert_extracted_paper(
@@ -291,10 +284,11 @@ def _auto_save_paper_and_index(
     manager = _get_vector_db_manager()
     manager.upsert_paper_to_vectordb(stored_paper)
     manager.upsert_paper_entities_to_vectordb(paper_id, prepared_entities)
+    manager.load_paper_edges_to_vectordb(relationships, only_approved=False)
     sync_stats = manager.sync_paper_entities_to_main_collection(
         {paper_id: prepared_entities},
         source_name="PAPER_INGEST",
-        only_approved=False,
+        only_approved=True,
     )
 
     save_result = {
@@ -758,10 +752,12 @@ def process_extracted_paper(metadata, clean_text: str, source_label: str, file_p
             with st.expander(f"🔗 Relationships ({len(extracted['relationships'])} found)"):
                 for i, rel in enumerate(extracted["relationships"][:5]):
                     st.write(
-                        f"**{rel.get('source', 'N/A')}** "
-                        f"→ *{rel.get('relation', 'relates to')}* → "
-                        f"**{rel.get('target', 'N/A')}** "
-                        f"(confidence: {rel.get('confidence', 0):.2f})"
+                        f"**{rel.get('source_name', rel.get('source', 'N/A'))}** "
+                        f"({rel.get('source_type', 'Entity')}) "
+                        f"→ *{rel.get('edge_type', rel.get('relation', 'ASSOCIATES'))}* → "
+                        f"**{rel.get('target_name', rel.get('target', 'N/A'))}** "
+                        f"({rel.get('target_type', 'Entity')}) "
+                        f"(weight: {float(rel.get('edge_weight', rel.get('confidence', 0.0))):.2f})"
                     )
 
     save_state = st.session_state.paper_save_status.get(source_key, {})

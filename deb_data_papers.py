@@ -20,11 +20,13 @@ import threading
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
+from src.paper_schema import normalize_entities_for_paper, normalize_relationships_for_paper
+
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "data")
 STORE_PATH = os.path.join(DATA_DIR, "paper_store.json")
-STORE_VERSION = 1
+STORE_VERSION = 2
 
 ENTITY_TYPES = ("genes", "proteins", "diseases", "pathways")
 
@@ -74,18 +76,42 @@ def _normalize_entity_bucket(raw_bucket: Optional[Dict[str, Any]]) -> Dict[str, 
 
     for entity_type in ENTITY_TYPES:
         values = raw_bucket.get(entity_type, [])
-        bucket[entity_type] = copy.deepcopy(values) if isinstance(values, list) else []
+        if isinstance(values, list):
+            bucket[entity_type] = normalize_entities_for_paper("paper", {entity_type: values}).get(entity_type, [])
+        else:
+            bucket[entity_type] = []
     return bucket
 
 
-def _normalize_edge(edge: Dict[str, Any], paper_id: Optional[str] = None) -> Dict[str, Any]:
-    normalized = copy.deepcopy(edge)
-    if paper_id is not None:
-        normalized["paper_id"] = paper_id
-    normalized.setdefault("source_type", "paper")
-    normalized.setdefault("extraction_method", "gpt4")
-    normalized.setdefault("approved", False)
-    return normalized
+def _normalize_edge(
+    edge: Dict[str, Any],
+    paper_id: Optional[str] = None,
+    entities_by_type: Optional[Dict[str, List[Dict[str, Any]]]] = None,
+) -> Dict[str, Any]:
+    normalized_paper_id = str(paper_id if paper_id is not None else edge.get("paper_id", "")).strip() or "paper"
+    normalized_edges = normalize_relationships_for_paper(
+        normalized_paper_id,
+        [copy.deepcopy(edge)],
+        entities_by_type=entities_by_type or {},
+    )
+    return normalized_edges[0] if normalized_edges else {
+        "id": f"{normalized_paper_id}_rel_0",
+        "paper_id": normalized_paper_id,
+        "source_id": "",
+        "source_name": "",
+        "source_type": "Entity",
+        "target_id": "",
+        "target_name": "",
+        "target_type": "Entity",
+        "edge_type": "ASSOCIATES",
+        "edge_weight": 0.5,
+        "evidence": "",
+        "source_chromosome": "",
+        "original_relation": "",
+        "extraction_method": "gpt4",
+        "approved": False,
+        "notes": "",
+    }
 
 
 def _recompute_metadata(existing_metadata: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
@@ -174,13 +200,25 @@ def load_store() -> Dict[str, Any]:
         paper_entities = {}
         if isinstance(entities_raw, dict):
             for paper_id, bucket in entities_raw.items():
-                paper_entities[str(paper_id)] = _normalize_entity_bucket(bucket)
+                normalized_paper_id = str(paper_id)
+                normalized_bucket = _normalize_entity_bucket(bucket)
+                paper_entities[normalized_paper_id] = normalize_entities_for_paper(
+                    normalized_paper_id,
+                    normalized_bucket,
+                )
 
         paper_edges = []
         if isinstance(edges_raw, list):
             for edge in edges_raw:
                 if isinstance(edge, dict):
-                    paper_edges.append(_normalize_edge(edge))
+                    normalized_paper_id = str(edge.get("paper_id", "")).strip() or "paper"
+                    paper_edges.append(
+                        _normalize_edge(
+                            edge,
+                            paper_id=normalized_paper_id,
+                            entities_by_type=paper_entities.get(normalized_paper_id, {}),
+                        )
+                    )
 
         paper_metadata = _recompute_metadata(metadata_raw)
         _STORE_LOADED = True
@@ -299,7 +337,11 @@ def add_entities(paper_id, entity_type, entities):
         if paper_id not in paper_entities:
             paper_entities[paper_id] = _empty_entity_bucket()
 
-        paper_entities[paper_id][entity_type] = copy.deepcopy(entities) if isinstance(entities, list) else []
+        normalized_bucket = normalize_entities_for_paper(
+            paper_id,
+            {entity_type: copy.deepcopy(entities) if isinstance(entities, list) else []},
+        )
+        paper_entities[paper_id][entity_type] = normalized_bucket.get(entity_type, [])
         paper_metadata["last_extraction_date"] = datetime.now().isoformat()
         _save_store_locked()
 
@@ -308,12 +350,16 @@ def set_paper_entities(paper_id: str, entities_by_type: Dict[str, List[Dict[str,
     """Replace all entity buckets for a paper and persist them."""
     with _STORE_LOCK:
         ensure_loaded()
-        current = _normalize_entity_bucket(paper_entities.get(paper_id))
+        current = normalize_entities_for_paper(paper_id, _normalize_entity_bucket(paper_entities.get(paper_id)))
 
         for entity_type in ENTITY_TYPES:
             if entity_type in entities_by_type:
                 values = entities_by_type.get(entity_type, [])
-                current[entity_type] = copy.deepcopy(values) if isinstance(values, list) else []
+                normalized_bucket = normalize_entities_for_paper(
+                    paper_id,
+                    {entity_type: copy.deepcopy(values) if isinstance(values, list) else []},
+                )
+                current[entity_type] = normalized_bucket.get(entity_type, [])
 
         paper_entities[paper_id] = current
         paper_metadata["last_review_date"] = datetime.now().isoformat()
@@ -336,7 +382,7 @@ def add_edges(paper_id, edges):
 
         for edge in edges:
             if isinstance(edge, dict):
-                paper_edges.append(_normalize_edge(edge, paper_id=paper_id))
+                paper_edges.append(_normalize_edge(edge, paper_id=paper_id, entities_by_type=paper_entities.get(paper_id, {})))
 
         paper_metadata["last_extraction_date"] = datetime.now().isoformat()
         _save_store_locked()
@@ -352,7 +398,13 @@ def set_paper_relationships(paper_id: str, relationships: List[Dict[str, Any]]) 
         if isinstance(relationships, list):
             for relationship in relationships:
                 if isinstance(relationship, dict):
-                    normalized_relationships.append(_normalize_edge(relationship, paper_id=paper_id))
+                    normalized_relationships.append(
+                        _normalize_edge(
+                            relationship,
+                            paper_id=paper_id,
+                            entities_by_type=paper_entities.get(paper_id, {}),
+                        )
+                    )
 
         paper_edges[:] = retained_edges + normalized_relationships
         paper_metadata["last_review_date"] = datetime.now().isoformat()
@@ -442,10 +494,10 @@ def upsert_extracted_paper(
             }
             papers_data.append(paper)
 
-        bucket = _empty_entity_bucket()
-        for entity_type in ENTITY_TYPES:
-            values = entities_by_type.get(entity_type, []) if isinstance(entities_by_type, dict) else []
-            bucket[entity_type] = copy.deepcopy(values) if isinstance(values, list) else []
+        bucket = normalize_entities_for_paper(
+            paper_id,
+            entities_by_type if isinstance(entities_by_type, dict) else {},
+        )
         paper_entities[paper_id] = bucket
 
         retained_edges = [edge for edge in paper_edges if edge.get("paper_id") != paper_id]
@@ -453,7 +505,13 @@ def upsert_extracted_paper(
         if isinstance(relationships, list):
             for relationship in relationships:
                 if isinstance(relationship, dict):
-                    normalized_relationships.append(_normalize_edge(relationship, paper_id=paper_id))
+                    normalized_relationships.append(
+                        _normalize_edge(
+                            relationship,
+                            paper_id=paper_id,
+                            entities_by_type=paper_entities.get(paper_id, {}),
+                        )
+                    )
         paper_edges[:] = retained_edges + normalized_relationships
 
         now_iso = datetime.now().isoformat()
