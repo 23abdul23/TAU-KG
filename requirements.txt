@@ -11,6 +11,7 @@ scikit-learn
 gensim==4.3.3
 chromadb>=0.4.0
 sentence-transformers>=2.0.0
+torchvision
 python-dotenv>=1.0.0
 openai>=1.0.0
 google-generativeai>=0.8.0
