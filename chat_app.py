@@ -1,16 +1,22 @@
-import streamlit as st
-import pandas as pd
-from vector_db_manager import VectorDBManager
-from typing import List, Dict, Any, Optional, Set, Tuple
-import time
+import json
 import os
-import networkx as nx
-from pyvis.network import Network
-import streamlit.components.v1 as components
-from collections import defaultdict
 import random
 import re
-import os
+import time
+from collections import defaultdict
+from copy import deepcopy
+from contextlib import nullcontext
+from pathlib import Path
+from uuid import uuid4
+
+import networkx as nx
+import pandas as pd
+import streamlit as st
+import streamlit.components.v1 as components
+from pyvis.network import Network
+from typing import List, Dict, Any, Optional, Set, Tuple
+
+from vector_db_manager import VectorDBManager
 
 # Paper integration imports
 try:
@@ -42,29 +48,172 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Initialize session state
-if 'db_manager' not in st.session_state:
-    st.session_state.db_manager = None
-if 'chat_history' not in st.session_state:
-    st.session_state.chat_history = []
-if 'chat_citations' not in st.session_state:
-    st.session_state.chat_citations = {}  # Store citations for each message
-if 'chat_papers' not in st.session_state:
-    st.session_state.chat_papers = {}  # Store paper results for each message
-if 'db_loaded' not in st.session_state:
-    st.session_state.db_loaded = False
-if 'gene_network' not in st.session_state:
-    st.session_state.gene_network = defaultdict(set)
-if 'query_genes' not in st.session_state:
-    st.session_state.query_genes = []
-if 'search_result_limit' not in st.session_state:
-    st.session_state.search_result_limit = 15
-if 'selected_chat_turn_index' not in st.session_state:
-    st.session_state.selected_chat_turn_index = 0
-if 'next_query_input' not in st.session_state:
-    st.session_state.next_query_input = ""
-if 'clear_next_query_input_pending' not in st.session_state:
-    st.session_state.clear_next_query_input_pending = False
+DATA_DIR = Path("data")
+CHAT_STATE_DIR = DATA_DIR / "chat_sessions"
+CHAT_STATE_DIR.mkdir(parents=True, exist_ok=True)
+
+SESSION_STATE_DEFAULTS = {
+    "db_manager": None,
+    "chat_history": [],
+    "chat_citations": {},
+    "chat_papers": {},
+    "db_loaded": False,
+    "db_error": "",
+    "gene_network": defaultdict(set),
+    "query_genes": [],
+    "search_result_limit": 15,
+    "selected_chat_turn_index": 0,
+    "next_query_input": "",
+    "clear_next_query_input_pending": False,
+    "persisted_state_loaded": False,
+}
+
+for session_key, default_value in SESSION_STATE_DEFAULTS.items():
+    if session_key not in st.session_state:
+        st.session_state[session_key] = deepcopy(default_value)
+
+
+def get_or_create_browser_session_id() -> str:
+    """Persist a lightweight browser session id in the URL so refresh keeps the same chat state."""
+    session_id = st.session_state.get("browser_session_id", "")
+    if session_id:
+        return session_id
+
+    raw_value = st.query_params.get("session_id", "")
+    if isinstance(raw_value, list):
+        raw_value = raw_value[0] if raw_value else ""
+
+    session_id = re.sub(r"[^a-zA-Z0-9_-]", "", str(raw_value or "").strip())
+    if not session_id:
+        session_id = uuid4().hex
+        st.query_params["session_id"] = session_id
+
+    st.session_state.browser_session_id = session_id
+    return session_id
+
+
+def get_chat_state_path(session_id: Optional[str] = None) -> Path:
+    active_session_id = session_id or get_or_create_browser_session_id()
+    return CHAT_STATE_DIR / f"{active_session_id}.json"
+
+
+def _serialize_citation(citation: Any) -> Dict[str, Any]:
+    if hasattr(citation, "to_dict"):
+        try:
+            return dict(citation.to_dict())
+        except Exception:
+            pass
+
+    if isinstance(citation, dict):
+        return dict(citation)
+
+    return {
+        "title": str(getattr(citation, "title", "")),
+        "authors": str(getattr(citation, "authors", "")),
+        "journal": str(getattr(citation, "journal", "")),
+        "year": str(getattr(citation, "year", "")),
+        "pmid": str(getattr(citation, "pmid", "")),
+        "doi": str(getattr(citation, "doi", "")),
+        "is_review": bool(getattr(citation, "is_review", False)),
+    }
+
+
+def _serialize_chat_state() -> Dict[str, Any]:
+    search_results = {
+        key: value
+        for key, value in st.session_state.items()
+        if key.startswith("search_results_")
+    }
+
+    serialized_citations = {
+        key: [_serialize_citation(item) for item in value]
+        for key, value in st.session_state.chat_citations.items()
+    }
+
+    return {
+        "chat_history": list(st.session_state.chat_history),
+        "chat_citations": serialized_citations,
+        "chat_papers": dict(st.session_state.chat_papers),
+        "query_genes": list(st.session_state.query_genes),
+        "search_result_limit": int(st.session_state.search_result_limit),
+        "selected_chat_turn_index": int(st.session_state.selected_chat_turn_index),
+        "next_query_input": str(st.session_state.next_query_input),
+        "stored_search_results": search_results,
+    }
+
+
+def persist_chat_state() -> None:
+    """Write the current browser session's chat state to disk."""
+    session_path = get_chat_state_path()
+    payload = _serialize_chat_state()
+    session_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+
+def load_persisted_chat_state() -> None:
+    """Restore persisted chat state exactly once per Streamlit server session."""
+    if st.session_state.persisted_state_loaded:
+        return
+
+    st.session_state.persisted_state_loaded = True
+    session_path = get_chat_state_path()
+    if not session_path.exists():
+        return
+
+    try:
+        payload = json.loads(session_path.read_text(encoding="utf-8"))
+    except Exception:
+        return
+
+    for key in [item for item in list(st.session_state.keys()) if item.startswith("search_results_")]:
+        del st.session_state[key]
+
+    st.session_state.chat_history = payload.get("chat_history", [])
+    st.session_state.chat_citations = payload.get("chat_citations", {})
+    st.session_state.chat_papers = payload.get("chat_papers", {})
+    st.session_state.query_genes = payload.get("query_genes", [])
+    st.session_state.search_result_limit = int(payload.get("search_result_limit", 15))
+    st.session_state.selected_chat_turn_index = int(payload.get("selected_chat_turn_index", 0))
+    st.session_state.next_query_input = str(payload.get("next_query_input", ""))
+
+    for key, value in payload.get("stored_search_results", {}).items():
+        st.session_state[key] = value
+
+
+@st.cache_resource(show_spinner=False)
+def get_cached_db_manager() -> VectorDBManager:
+    return VectorDBManager()
+
+
+def ensure_database_ready(show_spinner: bool = False) -> bool:
+    """Automatically bootstrap the persisted Chroma database and optional paper collection."""
+    if st.session_state.db_loaded and st.session_state.db_manager is not None:
+        return True
+
+    try:
+        spinner_context = st.spinner("Loading vector database...") if show_spinner else nullcontext()
+        with spinner_context:
+            db_manager = get_cached_db_manager()
+            db_manager.load_csv_to_vectordb("nodes_main.csv")
+
+            if PAPERS_AVAILABLE and getattr(papers_db, "papers_data", None):
+                db_manager.create_papers_collection()
+                if db_manager.papers_collection.count() == 0:
+                    db_manager.load_papers_to_vectordb(papers_db.papers_data)
+
+            st.session_state.db_manager = db_manager
+            st.session_state.db_loaded = True
+            st.session_state.db_error = ""
+        return True
+    except Exception as exc:
+        st.session_state.db_manager = None
+        st.session_state.db_loaded = False
+        st.session_state.db_error = str(exc)
+        return False
+
+
+get_or_create_browser_session_id()
+load_persisted_chat_state()
+
 if st.session_state.clear_next_query_input_pending:
     st.session_state.next_query_input = ""
     st.session_state.clear_next_query_input_pending = False
@@ -107,6 +256,25 @@ NODE_TYPE_SHAPES = {
 def schedule_next_query_input_clear() -> None:
     """Clear the query box on the next rerun before the widget is recreated."""
     st.session_state.clear_next_query_input_pending = True
+
+
+def clear_stored_search_results() -> None:
+    """Remove persisted per-turn search payloads from session state."""
+    for key in [item for item in list(st.session_state.keys()) if item.startswith("search_results_")]:
+        del st.session_state[key]
+
+
+def reset_chat_state() -> None:
+    """Clear all persisted chat artifacts for the current browser session."""
+    st.session_state.chat_history = []
+    st.session_state.chat_citations = {}
+    st.session_state.chat_papers = {}
+    st.session_state.query_genes = []
+    st.session_state.selected_chat_turn_index = 0
+    st.session_state.next_query_input = ""
+    clear_stored_search_results()
+    schedule_next_query_input_clear()
+    persist_chat_state()
 
 
 def normalize_node_type(node_type: Optional[str], default: str = "entity") -> str:
@@ -780,24 +948,65 @@ def get_query_network_settings() -> Dict[str, Any]:
 
 def initialize_database():
     """Initialize the vector database"""
-    try:
-        with st.spinner("Initializing vector database..."):
-            st.session_state.db_manager = VectorDBManager()
-            st.session_state.db_manager.load_csv_to_vectordb("nodes_main.csv")
-            
-            # Load papers if available
-            if PAPERS_AVAILABLE and papers_db.papers_data:
-                try:
-                    st.session_state.db_manager.create_papers_collection()
-                    st.session_state.db_manager.load_papers_to_vectordb(papers_db.papers_data)
-                except Exception as e:
-                    st.warning(f"Could not load papers: {str(e)}")
-            
-            st.session_state.db_loaded = True
-        st.success("Vector database initialized successfully!")
+    if ensure_database_ready(show_spinner=True):
+        st.success("Vector database ready.")
         return True
-    except Exception as e:
-        st.error(f"Error initializing database: {str(e)}")
+
+    st.error(f"Error initializing database: {st.session_state.db_error}")
+    return False
+
+
+def split_batch_queries(raw_text: str) -> List[str]:
+    """Support one query per line or one query per paragraph when users paste batches."""
+    normalized = raw_text.replace("\r\n", "\n").strip()
+    if not normalized:
+        return []
+
+    paragraph_queries = [chunk.strip() for chunk in re.split(r"\n\s*\n+", normalized) if chunk.strip()]
+    if len(paragraph_queries) > 1:
+        return paragraph_queries
+
+    line_queries = [line.strip() for line in normalized.split("\n") if line.strip()]
+    if len(line_queries) > 1 and all(line.endswith(("?", ".", ":")) for line in line_queries):
+        return line_queries
+
+    return [normalized]
+
+
+def process_single_query(prompt: str) -> bool:
+    """Run retrieval and answer generation for a single query turn."""
+    st.session_state.chat_history.append(("user", prompt))
+
+    try:
+        search_results, query_variants = _search_query_seed_nodes(
+            st.session_state.db_manager,
+            prompt,
+            st.session_state.search_result_limit,
+        )
+
+        if search_results:
+            st.session_state.query_genes.append({
+                "query": prompt,
+                "genes": search_results,
+                "query_variants": query_variants,
+            })
+
+        result = generate_enhanced_response(prompt, search_results, st.session_state.db_manager)
+        st.session_state.chat_history.append(("assistant", result["response"]))
+
+        assistant_index = len(st.session_state.chat_history) - 1
+        message_key = f"message_{assistant_index}"
+        if result.get("citations"):
+            st.session_state.chat_citations[message_key] = result["citations"]
+        if result.get("papers"):
+            st.session_state.chat_papers[message_key] = result["papers"]
+        if search_results:
+            st.session_state[f"search_results_{assistant_index + 1}"] = search_results
+
+        return True
+    except Exception as exc:
+        error_msg = f"Sorry, I encountered an error while searching: {str(exc)}"
+        st.session_state.chat_history.append(("assistant", error_msg))
         return False
 
 def generate_enhanced_response(query: str, search_results: List[Dict[str, Any]], db_manager: VectorDBManager) -> Dict[str, Any]:
@@ -875,38 +1084,43 @@ def generate_basic_response(query: str, search_results: List[Dict[str, Any]]) ->
     }
 
 def display_citations(citations):
-    """Display PubMed citations in a formatted way"""
+    """Display PubMed citations in a formatted way."""
     if not citations:
         return
-    
-    st.markdown("### 📚 Supporting Literature")
-    
+
+    st.markdown("### Supporting Literature")
+
     for i, citation in enumerate(citations, 1):
+        title = citation.get("title", "") if isinstance(citation, dict) else getattr(citation, "title", "")
+        pmid = citation.get("pmid", "") if isinstance(citation, dict) else getattr(citation, "pmid", "")
+        authors = citation.get("authors", "") if isinstance(citation, dict) else getattr(citation, "authors", "")
+        journal = citation.get("journal", "") if isinstance(citation, dict) else getattr(citation, "journal", "")
+        year = citation.get("year", "") if isinstance(citation, dict) else getattr(citation, "year", "")
+        is_review = citation.get("is_review", False) if isinstance(citation, dict) else getattr(citation, "is_review", False)
+
         with st.container():
-            # Title with PMID link
-            if citation.pmid:
-                pmid_link = f"https://pubmed.ncbi.nlm.nih.gov/{citation.pmid}/"
-                st.markdown(f"**{i}. [{citation.title}]({pmid_link})**")
+            if pmid:
+                pmid_link = f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/"
+                st.markdown(f"**{i}. [{title}]({pmid_link})**")
             else:
-                st.markdown(f"**{i}. {citation.title}**")
-            
-            # Authors and journal info
-            if citation.authors:
-                st.write(f"👥 **Authors:** {citation.authors}")
-            
-            if citation.journal and citation.year:
-                st.write(f"📖 **Journal:** {citation.journal} ({citation.year})")
-            elif citation.journal:
-                st.write(f"📖 **Journal:** {citation.journal}")
-            elif citation.year:
-                st.write(f"📅 **Year:** {citation.year}")
-            
-            if citation.pmid:
-                st.write(f"🔗 **PMID:** {citation.pmid}")
-            
-            if citation.is_review:
-                st.markdown("🔬 **Review Article**")
-            
+                st.markdown(f"**{i}. {title}**")
+
+            if authors:
+                st.write(f"**Authors:** {authors}")
+
+            if journal and year:
+                st.write(f"**Journal:** {journal} ({year})")
+            elif journal:
+                st.write(f"**Journal:** {journal}")
+            elif year:
+                st.write(f"**Year:** {year}")
+
+            if pmid:
+                st.write(f"**PMID:** {pmid}")
+
+            if is_review:
+                st.markdown("**Review Article**")
+
 def create_gene_network_graph(genes_data: List[Dict], query: str = ""):
     """Create an interactive network graph of related genes using pyvis"""
     if not genes_data:
@@ -1782,6 +1996,12 @@ def render_chat_turn(turn: Dict[str, Any]) -> None:
             render_assistant_message_content(assistant_message, turn.get("assistant_index"))
 
 
+def render_chat_turns(turns: List[Dict[str, Any]]) -> None:
+    """Render several chat turns in order."""
+    for turn in turns:
+        render_chat_turn(turn)
+
+
 def format_chat_turn_label(turn: Dict[str, Any], turn_number: int) -> str:
     """Create a compact label for the query selector."""
     query = str(turn.get("user_message", "")).strip() or f"Query {turn_number}"
@@ -1809,7 +2029,8 @@ def render_stored_search_results(assistant_index: Optional[int]) -> None:
             node_options.append(option_text)
 
         if node_options:
-            selector_key = f"node_selector_{current_query_key}"
+            session_id = st.session_state.get("browser_session_id", "default")
+            selector_key = f"node_selector_{session_id}_{assistant_index}"
             selected_node = st.selectbox(
                 "Select a gene/protein to view details:",
                 options=["Select a gene/protein..."] + node_options,
@@ -1847,21 +2068,25 @@ def render_stored_search_results(assistant_index: Optional[int]) -> None:
             st.markdown("---")
 
 def main():
-    st.title("🧬 Gene/Protein Knowledge Chat")
+    ensure_database_ready()
+
+    st.title("Gene/Protein Knowledge Chat")
     st.markdown("Ask questions about genes and proteins from your dataset!")
     
     # Create tabs
-    tab1, tab2 = st.tabs(["💬 Chat", "🕸️ Gene Network"])
+    tab1, tab2 = st.tabs(["Chat", "Gene Network"])
     
     # Sidebar
     with st.sidebar:
         st.header("Database Information")
         
         if not st.session_state.db_loaded:
-            if st.button("Initialize Database", type="primary"):
+            if st.session_state.db_error:
+                st.error(f"Database load failed: {st.session_state.db_error}")
+            if st.button("Retry Database Load", type="primary"):
                 initialize_database()
         else:
-            st.success("✅ Database Ready")
+            st.success("Database Ready")
             
             st.subheader("Search Settings")
             st.session_state.search_result_limit = st.slider(
@@ -1871,6 +2096,7 @@ def main():
                 value=st.session_state.search_result_limit,
                 help="Controls how many vector-search matches are retrieved for chat responses and network seeds.",
             )
+            persist_chat_state()
 
             # Show database statistics
             if st.session_state.db_manager:
@@ -1901,19 +2127,14 @@ def main():
         """)
         
         if st.button("Clear Chat History"):
-            st.session_state.chat_history = []
-            st.session_state.chat_citations = {}  # Clear citations
-            st.session_state.chat_papers = {}  # Clear related papers
-            st.session_state.query_genes = []  # Also clear network data
-            st.session_state.selected_chat_turn_index = 0
-            schedule_next_query_input_clear()
+            reset_chat_state()
             st.rerun()
     
     # Tab 1: Chat Interface
     with tab1:
         # Main chat interface
         if not st.session_state.db_loaded:
-            st.info("👈 Please initialize the database using the sidebar to start chatting!")
+            st.info("The database is loading. If it failed, use the sidebar retry button.")
         else:
             chat_turns = get_chat_turns()
             if chat_turns:
@@ -1936,6 +2157,7 @@ def main():
                         index=min(st.session_state.selected_chat_turn_index, len(turn_options) - 1),
                         format_func=lambda idx: format_chat_turn_label(chat_turns[idx], idx + 1),
                         key="active_chat_turn_selector",
+                        on_change=persist_chat_state,
                     )
                 elif len(chat_turns) == 1:
                     st.caption("Viewing the current answered query")
@@ -1946,20 +2168,57 @@ def main():
                 st.text_area(
                     "Ask next query",
                     key="next_query_input",
-                    height=80,
-                    placeholder="Ask about genes, proteins, or any related information...",
+                    height=120,
+                    placeholder="Ask about genes, proteins, or related information. Use one line per query or separate longer queries with a blank line.",
                     label_visibility="collapsed",
+                    on_change=persist_chat_state,
                 )
 
             with control_col3:
                 st.caption(" ")
                 ask_clicked = st.button("Ask", key="ask_next_query_button")
 
+            batch_status_placeholder = st.empty()
+            batch_results_placeholder = st.empty()
+
             if ask_clicked:
                 prompt = st.session_state.next_query_input.strip()
                 if not prompt:
                     st.warning("Enter a query before asking.")
                 else:
+                    prompts = split_batch_queries(prompt)
+                    initial_turn_count = len(get_chat_turns())
+
+                    for query_index, current_prompt in enumerate(prompts, start=1):
+                        if len(prompts) > 1:
+                            batch_status_placeholder.info(
+                                f"Processing query {query_index} of {len(prompts)}..."
+                            )
+                        else:
+                            batch_status_placeholder.info("Generating response...")
+
+                        process_single_query(current_prompt)
+                        st.session_state.selected_chat_turn_index = max(0, len(get_chat_turns()) - 1)
+                        persist_chat_state()
+
+                        completed_turns = get_chat_turns()[initial_turn_count:]
+                        with batch_results_placeholder.container():
+                            if len(prompts) > 1:
+                                st.caption(
+                                    f"Completed {query_index} of {len(prompts)} queries. New answers appear below as they finish."
+                                )
+                            render_chat_turns(completed_turns)
+
+                    if len(prompts) > 1:
+                        batch_status_placeholder.success(f"Completed {len(prompts)} queries.")
+                    else:
+                        batch_status_placeholder.empty()
+
+                    st.session_state.selected_chat_turn_index = max(0, len(get_chat_turns()) - 1)
+                    schedule_next_query_input_clear()
+                    persist_chat_state()
+                    st.rerun()
+
                     st.session_state.chat_history.append(("user", prompt))
 
                     with st.spinner("Searching database and generating enhanced response..."):

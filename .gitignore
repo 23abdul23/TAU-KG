@@ -39,6 +39,7 @@ chroma_db
 
 uploaded_papers/
 data/paper_store.json
+data/chat_sessions/
 data/*.tmp
 
 # PyInstaller
