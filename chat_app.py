@@ -2267,7 +2267,9 @@ def main():
                             col1, col2, col3 = st.columns(3)
                             with col1:
                                 provider = str(result.get('llm_provider', os.getenv('LLM_PROVIDER', 'openai'))).upper()
+                                provider = str(result.get('llm_provider', os.getenv('LLM_PROVIDER', 'openai'))).upper()
                                 if result.get('has_enhanced'):
+                                    st.success(f"🤖 {provider} Enhanced")
                                     st.success(f"🤖 {provider} Enhanced")
                                 else:
                                     st.info("📝 Basic Mode")
@@ -2289,7 +2291,15 @@ def main():
                                 else:
                                     llm_key = "✅" if os.getenv("OPENAI_API_KEY") else "❌"
                                     llm_label = "OpenAI"
+                                llm_provider = os.getenv("LLM_PROVIDER", "openai").strip().lower()
+                                if llm_provider == "gemini":
+                                    llm_key = "✅" if (os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")) else "❌"
+                                    llm_label = "Gemini"
+                                else:
+                                    llm_key = "✅" if os.getenv("OPENAI_API_KEY") else "❌"
+                                    llm_label = "OpenAI"
                                 ncbi_key = "✅" if os.getenv("NCBI_API_KEY") else "❌"
+                                st.info(f"🔑 {llm_label}: {llm_key} NCBI: {ncbi_key}")
                                 st.info(f"🔑 {llm_label}: {llm_key} NCBI: {ncbi_key}")
                             
                             # Add to chat history (just the main response for cleaner history)
