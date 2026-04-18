@@ -815,14 +815,14 @@ def process_extracted_paper(metadata, clean_text: str, source_label: str, file_p
                     if entity_type in st.session_state[extraction_state_key]["extracted_entities"]:
                         entities = st.session_state[extraction_state_key]["extracted_entities"][entity_type]
                         for entity in entities:
-                            entity["approved"] = False
+                            entity["approved"] = True
                             entity["mapped_to_existing"] = ""
                         papers_db.add_entities(paper_id, entity_type, entities)
 
                 relationships = st.session_state[extraction_state_key]["extracted_entities"].get("relationships", [])
                 if relationships:
                     for rel in relationships:
-                        rel["approved"] = False
+                        rel["approved"] = True
                     papers_db.add_edges(paper_id, relationships)
 
                 papers_db.update_paper_status(paper_id, "extracted")

@@ -1578,15 +1578,15 @@ def build_pyvis_network_graph(network_payload: Dict[str, Any], query_order: List
 
         similarity = node.get("similarity_score", 0.0)
         size = max(16, min(40, 10 + (similarity / 6)))
-        tooltip = (
-            f"Name: {metadata.get('node_name')}<br>"
-            f"ID: {metadata.get('node_id')}<br>"
-            f"Type: {node_type}<br>"
-            f"Source: {metadata.get('node_source')}<br>"
-            f"Similarity: {similarity:.1f}%<br>"
-            f"Role: {'Seed match' if node.get('is_seed') else 'Expanded neighbor'}<br>"
-            f"Queries: {', '.join(query_membership) if query_membership else 'N/A'}"
-        )
+        tooltip = "\n".join([
+            f"Name: {metadata.get('node_name')}",
+            f"ID: {metadata.get('node_id')}",
+            f"Type: {node_type}",
+            f"Source: {metadata.get('node_source')}",
+            f"Similarity: {similarity:.1f}%",
+            f"Role: {'Seed match' if node.get('is_seed') else 'Expanded neighbor'}",
+            f"Queries: {', '.join(query_membership) if query_membership else 'N/A'}",
+        ])
 
         net.add_node(
             node["key"],
@@ -1621,13 +1621,13 @@ def build_pyvis_network_graph(network_payload: Dict[str, Any], query_order: List
             color = "#666666"
 
         provenance = ", ".join(sorted(edge.get("provenance", set())))
-        tooltip = (
-            f"{source['metadata']['node_name']} -> {target['metadata']['node_name']}<br>"
-            f"Relation: {edge.get('relation', 'related')}<br>"
-            f"Confidence/Score: {edge.get('score', 0.0):.2f}<br>"
-            f"Source: {provenance}<br>"
-            f"Queries: {', '.join(query_membership) if query_membership else 'N/A'}"
-        )
+        tooltip = "\n".join([
+            f"{source['metadata']['node_name']} -> {target['metadata']['node_name']}",
+            f"Relation: {edge.get('relation', 'related')}",
+            f"Confidence/Score: {edge.get('score', 0.0):.2f}",
+            f"Source: {provenance}",
+            f"Queries: {', '.join(query_membership) if query_membership else 'N/A'}",
+        ])
 
         net.add_edge(
             edge["source_key"],
@@ -1961,7 +1961,7 @@ def display_stored_knowledge_graph_tab() -> None:
 
     graph = build_pyvis_network_graph(payload, [], height_px=760)
     if graph:
-        render_pyvis_network(graph, height=760)
+        render_network_with_legend(graph, height=760)
 
     metric_col1, metric_col2, metric_col3, metric_col4 = st.columns(4)
     metric_col1.metric("Displayed Nodes", len(payload.get("nodes", [])))

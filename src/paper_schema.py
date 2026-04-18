@@ -187,7 +187,7 @@ def normalize_paper_entity(
         "context": str(entity.get("context", "")).strip(),
         "entity_type": canonical_type,
         "chromosome": chromosome,
-        "approved": bool(entity.get("approved", False)),
+        "approved": bool(entity.get("approved", True)),
         "mapped_to_existing": str(entity.get("mapped_to_existing", "")),
         "notes": str(entity.get("notes", "")),
         "paper_id": str(entity.get("paper_id", "")).strip() or paper_id,
@@ -259,7 +259,7 @@ def normalize_paper_relationship(
         "source_chromosome": source_chromosome,
         "original_relation": original_relation,
         "extraction_method": str(relationship.get("extraction_method", "gpt4")),
-        "approved": bool(relationship.get("approved", False)),
+        "approved": bool(relationship.get("approved", True)),
         "notes": str(relationship.get("notes", "")),
     }
 
