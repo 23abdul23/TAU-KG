@@ -136,23 +136,11 @@ def _render_live_entity_summary_panel():
 
 
 def _sync_paper_nodes_to_vector_db():
-    """Index paper data and merge unique paper-derived nodes into main vector collection."""
+    """Rebuild the unified knowledge index from canonical paper storage."""
     manager = _get_vector_db_manager()
-
-    if papers_db.papers_data:
-        manager.load_papers_to_vectordb(papers_db.papers_data)
-    if papers_db.paper_entities:
-        manager.load_paper_entities_to_vectordb(papers_db.paper_entities)
-    if papers_db.paper_edges:
-        manager.load_paper_edges_to_vectordb(papers_db.paper_edges, only_approved=False)
-
-    sync_stats = manager.sync_paper_entities_to_main_collection(
-        papers_db.paper_entities,
-        source_name="PAPER_INGEST",
-        only_approved=True,
-    )
+    rebuild_stats = manager.rebuild_knowledge_index_from_store(include_curated=True)
     db_stats = manager.get_database_stats()
-    return sync_stats, db_stats
+    return rebuild_stats, db_stats
 
 
 @st.cache_resource(show_spinner=False)
@@ -219,14 +207,13 @@ def _build_autosave_toast_message(
     sync_stats: Dict[str, Any],
 ) -> str:
     """Build the user-facing autosave notification."""
-    added_by_type = sync_stats.get("added_by_type", {})
+    indexed_entities = int(sync_stats.get("entities", 0))
+    indexed_relationships = int(sync_stats.get("relationships", 0))
     return (
-        f"Saved '{paper_title[:60] or 'Untitled paper'}' to the vector DB. "
-        f"Genes {len(prepared_entities.get('genes', []))} (+{added_by_type.get('genes', 0)} new), "
-        f"Proteins {len(prepared_entities.get('proteins', []))} (+{added_by_type.get('proteins', 0)} new), "
-        f"Diseases {len(prepared_entities.get('diseases', []))} (+{added_by_type.get('diseases', 0)} new), "
-        f"Pathways {len(prepared_entities.get('pathways', []))} (+{added_by_type.get('pathways', 0)} new), "
-        f"Relationships {len(relationships)}."
+        f"Saved '{paper_title[:60] or 'Untitled paper'}' to the knowledge index. "
+        f"Entities extracted: {sum(len(values) for values in prepared_entities.values())}. "
+        f"Relationships extracted: {len(relationships)}. "
+        f"Approved records indexed now: {indexed_entities} entities, {indexed_relationships} relationships."
     )
 
 
@@ -282,14 +269,7 @@ def _auto_save_paper_and_index(
     )
 
     manager = _get_vector_db_manager()
-    manager.upsert_paper_to_vectordb(stored_paper)
-    manager.upsert_paper_entities_to_vectordb(paper_id, prepared_entities)
-    manager.load_paper_edges_to_vectordb(relationships, only_approved=False)
-    sync_stats = manager.sync_paper_entities_to_main_collection(
-        {paper_id: prepared_entities},
-        source_name="PAPER_INGEST",
-        only_approved=True,
-    )
+    sync_stats = manager.upsert_paper_records_to_knowledge(paper_id, include_pending=False)
 
     save_result = {
         "paper_id": paper_id,
@@ -789,9 +769,10 @@ def process_extracted_paper(metadata, clean_text: str, source_label: str, file_p
         entity_counts = details.get("entity_counts", {})
         sync_stats = details.get("sync_stats", {})
         st.success(
-            "Auto-saved to paper store and vector DB. "
+            "Auto-saved to paper store and unified knowledge index. "
             f"Paper ID: `{details.get('paper_id', '')}` | "
-            f"New nodes added: {sync_stats.get('added', 0)}"
+            f"Indexed approved entities: {sync_stats.get('entities', 0)} | "
+            f"Indexed approved relationships: {sync_stats.get('relationships', 0)}"
         )
         st.caption(
             "Entities indexed: "
@@ -907,20 +888,22 @@ def main():
 
     if st.button("🧠 Sync New Nodes To Vector DB", key="sync_nodes_vector_db"):
         try:
-            with st.spinner("Syncing paper nodes and updating vector collections..."):
+            with st.spinner("Rebuilding unified knowledge index..."):
                 sync_stats, db_stats = _sync_paper_nodes_to_vector_db()
             st.success(
-                "✅ Vector DB sync complete: "
-                f"added {sync_stats['added']} new nodes, "
-                f"skipped {sync_stats['skipped']} existing nodes, "
-                f"from {sync_stats['total_candidates']} candidates."
+                "✅ Knowledge index rebuild complete: "
+                f"curated entities {sync_stats.get('curated_entities', 0)}, "
+                f"papers {sync_stats.get('papers', 0)}, "
+                f"paper entities {sync_stats.get('entities', 0)}, "
+                f"relationships {sync_stats.get('relationships', 0)}."
             )
             st.info(
-                "Vector DB documents - "
-                f"main: {db_stats.get('total_documents', 0)}, "
+                "Knowledge index documents - "
+                f"total: {db_stats.get('total_documents', 0)}, "
                 f"papers: {db_stats.get('papers_documents', 0)}, "
                 f"paper_entities: {db_stats.get('paper_entities_documents', 0)}, "
-                f"all_collections_total: {db_stats.get('total_documents_all_collections', 0)}"
+                f"relationships: {db_stats.get('paper_edges_documents', 0)}, "
+                f"curated_entities: {db_stats.get('curated_entities_documents', 0)}"
             )
         except Exception as e:
             st.error(f"❌ Vector DB sync failed: {e}")

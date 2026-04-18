@@ -157,18 +157,9 @@ def render_entity_table(
 
 
 def _refresh_vector_indexes_for_review(paper_id: str) -> None:
-    """Refresh searchable entity and relationship indexes after review changes."""
+    """Refresh unified knowledge records after review changes."""
     manager = _get_vector_db_manager()
-    manager.upsert_paper_entities_to_vectordb(
-        paper_id,
-        papers_db.get_paper_entities(paper_id) or {},
-    )
-    manager.load_paper_edges_to_vectordb(papers_db.paper_edges, only_approved=True)
-    manager.sync_paper_entities_to_main_collection(
-        papers_db.paper_entities,
-        source_name="PAPER_INGEST",
-        only_approved=True,
-    )
+    manager.upsert_paper_records_to_knowledge(paper_id, include_pending=False)
 
 
 def render_paper_header(paper: Dict[str, Any]):

@@ -33,8 +33,10 @@ except ImportError:
 
 try:
     from citations import extract_entities_with_llm as extract_query_entities
+    from citations import set_runtime_llm_provider as set_citations_llm_provider
 except Exception:
     extract_query_entities = None
+    set_citations_llm_provider = None
 
 # Load environment variables
 from dotenv import load_dotenv
@@ -57,7 +59,7 @@ SESSION_STATE_DEFAULTS = {
     "chat_history": [],
     "chat_citations": {},
     "chat_papers": {},
-    "chat_relationships": {},
+    "chat_knowledge_results": {},
     "db_loaded": False,
     "db_error": "",
     "gene_network": defaultdict(set),
@@ -67,11 +69,55 @@ SESSION_STATE_DEFAULTS = {
     "next_query_input": "",
     "clear_next_query_input_pending": False,
     "persisted_state_loaded": False,
+    "active_llm_provider": "nvidia_nim",
 }
 
 for session_key, default_value in SESSION_STATE_DEFAULTS.items():
     if session_key not in st.session_state:
         st.session_state[session_key] = deepcopy(default_value)
+
+
+def normalize_llm_provider(value: Optional[str]) -> str:
+    raw = str(value or "").strip().lower()
+    if raw in {"nvidia", "nim", "nvidia_nim", "nvidia nim"}:
+        return "nvidia_nim"
+    if raw in {"openai", "gpt", "gpt_openai", "gpt-openai", "gpt openai"}:
+        return "openai"
+    return "nvidia_nim"
+
+
+def apply_runtime_llm_provider(provider: Optional[str] = None, force: bool = False) -> str:
+    selected_label_value = st.session_state.get("global_llm_provider_selector")
+    requested_provider = normalize_llm_provider(
+        provider
+        or selected_label_value
+        or st.session_state.get("active_llm_provider")
+        or os.getenv("LLM_PROVIDER", "nvidia_nim")
+    )
+    previous_provider = normalize_llm_provider(st.session_state.get("active_llm_provider", ""))
+    env_provider = normalize_llm_provider(os.getenv("LLM_PROVIDER", ""))
+
+    st.session_state.active_llm_provider = requested_provider
+    os.environ["LLM_PROVIDER"] = requested_provider
+
+    provider_changed = force or (requested_provider != previous_provider) or (requested_provider != env_provider)
+    if not provider_changed:
+        return requested_provider
+
+    if set_citations_llm_provider is not None:
+        try:
+            set_citations_llm_provider(requested_provider)
+        except Exception:
+            pass
+
+    db_manager = st.session_state.get("db_manager")
+    if db_manager is not None and hasattr(db_manager, "refresh_llm_client"):
+        try:
+            db_manager.refresh_llm_client(requested_provider)
+        except Exception as exc:
+            st.session_state.db_error = str(exc)
+
+    return requested_provider
 
 
 def get_or_create_browser_session_id() -> str:
@@ -123,7 +169,7 @@ def _serialize_chat_state() -> Dict[str, Any]:
     search_results = {
         key: value
         for key, value in st.session_state.items()
-        if key.startswith("search_results_") or key.startswith("relationship_results_")
+        if key.startswith("knowledge_results_")
     }
 
     serialized_citations = {
@@ -135,7 +181,7 @@ def _serialize_chat_state() -> Dict[str, Any]:
         "chat_history": list(st.session_state.chat_history),
         "chat_citations": serialized_citations,
         "chat_papers": dict(st.session_state.chat_papers),
-        "chat_relationships": dict(st.session_state.chat_relationships),
+        "chat_knowledge_results": dict(st.session_state.chat_knowledge_results),
         "query_genes": list(st.session_state.query_genes),
         "search_result_limit": int(st.session_state.search_result_limit),
         "selected_chat_turn_index": int(st.session_state.selected_chat_turn_index),
@@ -169,14 +215,19 @@ def load_persisted_chat_state() -> None:
     for key in [
         item
         for item in list(st.session_state.keys())
-        if item.startswith("search_results_") or item.startswith("relationship_results_")
+        if item.startswith("knowledge_results_")
+        or item.startswith("search_results_")
+        or item.startswith("relationship_results_")
     ]:
         del st.session_state[key]
 
     st.session_state.chat_history = payload.get("chat_history", [])
     st.session_state.chat_citations = payload.get("chat_citations", {})
     st.session_state.chat_papers = payload.get("chat_papers", {})
-    st.session_state.chat_relationships = payload.get("chat_relationships", {})
+    st.session_state.chat_knowledge_results = payload.get(
+        "chat_knowledge_results",
+        {},
+    )
     st.session_state.query_genes = payload.get("query_genes", [])
     st.session_state.search_result_limit = int(payload.get("search_result_limit", 15))
     st.session_state.selected_chat_turn_index = int(payload.get("selected_chat_turn_index", 0))
@@ -192,7 +243,7 @@ def get_cached_db_manager() -> VectorDBManager:
 
 
 def ensure_database_ready(show_spinner: bool = False) -> bool:
-    """Automatically bootstrap the persisted Chroma database and optional paper collection."""
+    """Automatically bootstrap the unified knowledge collection."""
     if st.session_state.db_loaded and st.session_state.db_manager is not None:
         return True
 
@@ -200,17 +251,9 @@ def ensure_database_ready(show_spinner: bool = False) -> bool:
         spinner_context = st.spinner("Loading vector database...") if show_spinner else nullcontext()
         with spinner_context:
             db_manager = get_cached_db_manager()
-            db_manager.load_csv_to_vectordb("nodes_main.csv")
-
-            if PAPERS_AVAILABLE and getattr(papers_db, "papers_data", None):
-                db_manager.create_papers_collection()
-                if db_manager.papers_collection.count() == 0:
-                    db_manager.load_papers_to_vectordb(papers_db.papers_data)
-                db_manager.create_paper_edges_collection()
-                db_manager.load_paper_edges_to_vectordb(
-                    getattr(papers_db, "paper_edges", []),
-                    only_approved=True,
-                )
+            db_manager.create_knowledge_collection()
+            if db_manager.collection.count() == 0:
+                db_manager.rebuild_knowledge_index_from_store(include_curated=True)
 
             st.session_state.db_manager = db_manager
             st.session_state.db_loaded = True
@@ -275,7 +318,9 @@ def clear_stored_search_results() -> None:
     for key in [
         item
         for item in list(st.session_state.keys())
-        if item.startswith("search_results_") or item.startswith("relationship_results_")
+        if item.startswith("knowledge_results_")
+        or item.startswith("search_results_")
+        or item.startswith("relationship_results_")
     ]:
         del st.session_state[key]
 
@@ -285,7 +330,7 @@ def reset_chat_state() -> None:
     st.session_state.chat_history = []
     st.session_state.chat_citations = {}
     st.session_state.chat_papers = {}
-    st.session_state.chat_relationships = {}
+    st.session_state.chat_knowledge_results = {}
     st.session_state.query_genes = []
     st.session_state.selected_chat_turn_index = 0
     st.session_state.next_query_input = ""
@@ -389,7 +434,7 @@ def _build_query_variants(query: str) -> List[str]:
 
 
 def _search_query_seed_nodes(db_manager: VectorDBManager, query: str, limit: int) -> Tuple[List[Dict[str, Any]], List[str]]:
-    """Run several focused searches so one prompt can seed a denser graph."""
+    """Run focused entity-only retrieval from the unified knowledge collection for graph seeding."""
     query_variants = _build_query_variants(query)
     if not query_variants:
         return [], []
@@ -400,11 +445,39 @@ def _search_query_seed_nodes(db_manager: VectorDBManager, query: str, limit: int
     for index, variant in enumerate(query_variants):
         try:
             variant_limit = limit if index == 0 else per_query_limit
-            collected.extend(db_manager.search_similar(variant, n_results=variant_limit))
+            collected.extend(
+                db_manager.search_knowledge(
+                    variant,
+                    n_results=variant_limit,
+                    record_kinds=["entity"],
+                    approved_only=True,
+                )
+            )
         except Exception:
             continue
 
     return _merge_search_results(collected, limit), query_variants
+
+
+def split_knowledge_results(results: List[Dict[str, Any]]) -> Dict[str, List[Dict[str, Any]]]:
+    grouped = {"papers": [], "entities": [], "relationships": []}
+    for result in results:
+        metadata = result.get("metadata", {}) if isinstance(result, dict) else {}
+        record_kind = str(metadata.get("record_kind", "")).strip().lower()
+        if record_kind == "paper":
+            grouped["papers"].append(result)
+        elif record_kind == "relationship":
+            grouped["relationships"].append(result)
+        else:
+            grouped["entities"].append(result)
+    return grouped
+
+
+def flatten_knowledge_results(grouped_results: Dict[str, List[Dict[str, Any]]]) -> List[Dict[str, Any]]:
+    ordered: List[Dict[str, Any]] = []
+    for key in ("entities", "relationships", "papers"):
+        ordered.extend(grouped_results.get(key, []))
+    return ordered
 
 
 def render_pyvis_network(net: Network, height: int) -> None:
@@ -511,7 +584,7 @@ def build_graph_node_lookup() -> Dict[str, Dict[str, Any]]:
     return node_lookup
 
 
-def build_graph_adjacency() -> Dict[str, List[Dict[str, Any]]]:
+def build_graph_adjacency(approved_only: bool = True) -> Dict[str, List[Dict[str, Any]]]:
     """Create adjacency lists from curated graph edges and paper-derived edges."""
     adjacency: Dict[str, List[Dict[str, Any]]] = defaultdict(list)
 
@@ -536,7 +609,7 @@ def build_graph_adjacency() -> Dict[str, List[Dict[str, Any]]]:
 
     if PAPERS_AVAILABLE:
         for edge in getattr(papers_db, "paper_edges", []):
-            if not edge.get("approved", False):
+            if approved_only and not edge.get("approved", False):
                 continue
             source = str(edge.get("source_name", edge.get("source", ""))).strip()
             target = str(edge.get("target_name", edge.get("target", ""))).strip()
@@ -993,33 +1066,35 @@ def split_batch_queries(raw_text: str) -> List[str]:
 
 
 def process_single_query(prompt: str) -> bool:
-    """Run retrieval and answer generation for a single query turn."""
+    """Run unified knowledge retrieval and answer generation for a single query turn."""
     st.session_state.chat_history.append(("user", prompt))
 
     try:
-        search_results, query_variants = _search_query_seed_nodes(
-            st.session_state.db_manager,
+        knowledge_hits = st.session_state.db_manager.search_knowledge(
             prompt,
+            n_results=max(st.session_state.search_result_limit * 2, st.session_state.search_result_limit),
+            approved_only=True,
+        )
+        knowledge_results = split_knowledge_results(knowledge_hits)
+        entity_results = _merge_search_results(
+            knowledge_results.get("entities", []),
             st.session_state.search_result_limit,
         )
+        knowledge_results["entities"] = entity_results
 
-        if search_results:
+        query_variants = _build_query_variants(prompt)
+
+        if entity_results:
             st.session_state.query_genes.append({
                 "query": prompt,
-                "genes": search_results,
+                "genes": entity_results,
                 "query_variants": query_variants,
             })
 
-        relationship_results = st.session_state.db_manager.search_relationships(
-            prompt,
-            n_results=min(8, st.session_state.search_result_limit),
-            approved_only=True,
-        )
         result = generate_enhanced_response(
             prompt,
-            search_results,
+            knowledge_results,
             st.session_state.db_manager,
-            relationship_results=relationship_results,
         )
         st.session_state.chat_history.append(("assistant", result["response"]))
 
@@ -1029,11 +1104,9 @@ def process_single_query(prompt: str) -> bool:
             st.session_state.chat_citations[message_key] = result["citations"]
         if result.get("papers"):
             st.session_state.chat_papers[message_key] = result["papers"]
-        if relationship_results:
-            st.session_state.chat_relationships[message_key] = relationship_results
-            st.session_state[f"relationship_results_{assistant_index + 1}"] = relationship_results
-        if search_results:
-            st.session_state[f"search_results_{assistant_index + 1}"] = search_results
+        if any(knowledge_results.values()):
+            st.session_state.chat_knowledge_results[message_key] = knowledge_results
+            st.session_state[f"knowledge_results_{assistant_index + 1}"] = knowledge_results
 
         return True
     except Exception as exc:
@@ -1058,26 +1131,27 @@ def _format_relationship_summary(relationship_results: List[Dict[str, Any]]) -> 
 
 def generate_enhanced_response(
     query: str,
-    search_results: List[Dict[str, Any]],
+    knowledge_results: Dict[str, List[Dict[str, Any]]],
     db_manager: VectorDBManager,
-    relationship_results: Optional[List[Dict[str, Any]]] = None,
 ) -> Dict[str, Any]:
     """Generate enhanced response using GPT-4 and PubMed citations"""
-    relationship_results = relationship_results or []
-    if not search_results and not relationship_results:
+    entity_results = knowledge_results.get("entities", [])
+    relationship_results = knowledge_results.get("relationships", [])
+    paper_results = knowledge_results.get("papers", [])
+    combined_results = flatten_knowledge_results(knowledge_results)
+    if not combined_results:
         return {
-            'response': "I couldn't find any relevant information in the gene/protein database for your query.",
+            'response': "I couldn't find any relevant information in the knowledge database for your query.",
             'citations': [],
             'papers': [],
-            'has_enhanced': False
+            'has_enhanced': False,
+            'knowledge_results': knowledge_results,
         }
     
     # Try to get enhanced response with GPT-4 and citations
     try:
-        enhanced_result = db_manager.generate_enhanced_response(query, search_results, max_tokens=1024)
-        
-        # Search for related papers
-        papers = search_papers_for_query(query, n_results=3)
+        enhanced_result = db_manager.generate_enhanced_response(query, combined_results, max_tokens=1024)
+        papers = paper_results[:3] or search_papers_for_query(query, n_results=3)
         
         return {
             'response': enhanced_result['gpt_response'] + _format_relationship_summary(relationship_results),
@@ -1085,41 +1159,44 @@ def generate_enhanced_response(
             'papers': papers,
             'has_enhanced': enhanced_result['has_openai'],
             'has_citations': enhanced_result['has_citations'],
-            'search_results': search_results,
+            'knowledge_results': knowledge_results,
+            'search_results': entity_results,
             'relationship_results': relationship_results,
         }
     except Exception as e:
         # Fallback to basic response if enhanced fails
         st.error(f"Enhanced response failed, using basic mode: {str(e)}")
         print(f"DEBUG: Exception in generate_enhanced_response: {str(e)}")
-        return generate_basic_response(query, search_results, relationship_results)
+        return generate_basic_response(query, knowledge_results)
 
 def generate_basic_response(
     query: str,
-    search_results: List[Dict[str, Any]],
-    relationship_results: Optional[List[Dict[str, Any]]] = None,
+    knowledge_results: Dict[str, List[Dict[str, Any]]],
 ) -> Dict[str, Any]:
     """Generate basic response (fallback when GPT-4 is not available)"""
-    relationship_results = relationship_results or []
-    if not search_results and not relationship_results:
+    entity_results = knowledge_results.get("entities", [])
+    relationship_results = knowledge_results.get("relationships", [])
+    paper_results = knowledge_results.get("papers", [])
+    if not entity_results and not relationship_results and not paper_results:
         return {
-            'response': "I couldn't find any relevant information in the gene/protein database for your query.",
+            'response': "I couldn't find any relevant information in the knowledge database for your query.",
             'citations': [],
             'papers': [],
-            'has_enhanced': False
+            'has_enhanced': False,
+            'knowledge_results': knowledge_results,
         }
     
     # Create a comprehensive response
     response = f"Based on your query about '{query}', I found the following relevant information:\n\n"
 
-    for i, result in enumerate(search_results, 1):
+    for i, result in enumerate(entity_results, 1):
         metadata = result['metadata']
         similarity = result.get('similarity_score', distance_to_similarity_percent(result.get('distance')))
 
-        response += f"**{i}. {metadata['node_name']}**\n"
-        response += f"   - **Gene/Protein ID**: {metadata['node_id']}\n"
-        response += f"   - **Type**: {metadata['node_type']}\n"
-        response += f"   - **Source**: {metadata['node_source']}\n"
+        response += f"**{i}. {metadata.get('node_name', metadata.get('entity_name', 'Unknown'))}**\n"
+        response += f"   - **Record ID**: {metadata.get('node_id', metadata.get('entity_id', ''))}\n"
+        response += f"   - **Type**: {metadata.get('node_type', metadata.get('entity_type', 'entity'))}\n"
+        response += f"   - **Source**: {metadata.get('node_source', metadata.get('source_system', 'UNKNOWN'))}\n"
         response += f"   - **Similarity Score**: {similarity:.1f}%\n\n"
 
     if relationship_results:
@@ -1136,24 +1213,37 @@ def generate_basic_response(
         response += "\n"
     
     # Add contextual information
-    if len(search_results) > 1:
-        response += f"I found {len(search_results)} relevant matches. "
+    if paper_results:
+        response += "**Supporting papers**\n"
+        for paper in paper_results[:3]:
+            metadata = paper.get("metadata", {})
+            response += (
+                f"   - {metadata.get('title', 'Untitled')} "
+                f"(PMID: {metadata.get('pmid', 'N/A')}, "
+                f"{metadata.get('publication_date', 'N/A')[:10]})\n"
+            )
+        response += "\n"
+
+    if len(entity_results) > 1:
+        response += f"I found {len(entity_results)} relevant entity matches. "
     
     # Add suggestions for further queries
-    gene_names = [result['metadata']['node_name'] for result in search_results]
+    gene_names = [
+        result.get('metadata', {}).get('node_name')
+        or result.get('metadata', {}).get('entity_name', '')
+        for result in entity_results
+    ]
     if gene_names:
-        response += f"\n**Related genes/proteins you might want to ask about**: {', '.join(gene_names[:3])}"
-    
-    # Search for related papers
-    papers = search_papers_for_query(query, n_results=3)
+        response += f"\n**Related entities you might want to ask about**: {', '.join(gene_names[:3])}"
     
     return {
         'response': response,
         'citations': [],
-        'papers': papers,
+        'papers': paper_results[:3],
         'has_enhanced': False,
         'has_citations': False,
-        'search_results': search_results,
+        'knowledge_results': knowledge_results,
+        'search_results': entity_results,
         'relationship_results': relationship_results,
     }
 
@@ -1646,6 +1736,265 @@ def build_compound_query_network_graph(selected_queries: List[str], query_genes_
     graph = build_pyvis_network_graph(payload, selected_queries, height_px=700)
     return graph, payload
 
+
+def build_stored_graph_payload(
+    scope: str,
+    allowed_types: Set[str],
+    allowed_sources: Set[str],
+    max_nodes: int,
+    max_edges: int,
+    min_edge_score: float,
+    approved_only: bool,
+) -> Dict[str, Any]:
+    """Build a graph payload from the stored graph state."""
+    node_lookup = build_graph_node_lookup()
+    adjacency = build_graph_adjacency(approved_only=approved_only)
+
+    scope = str(scope or "paper_store").strip().lower()
+    paper_only = scope != "all"
+
+    edge_registry: Dict[Tuple[str, str, str, str], Dict[str, Any]] = {}
+    candidate_node_keys: Set[str] = set()
+
+    for source_key, edges in adjacency.items():
+        source_node = node_lookup.get(source_key)
+        if not source_node:
+            continue
+
+        source_type = normalize_node_type(source_node.get("type", "entity"))
+        source_origin = normalize_source_name(source_node.get("source"), "UNKNOWN")
+        if paper_only and source_origin != "PAPER_INGEST":
+            continue
+        if allowed_types and source_type not in allowed_types:
+            continue
+        if allowed_sources and source_origin not in allowed_sources:
+            continue
+
+        for edge in edges:
+            score = safe_float(edge.get("score", 0.0), 0.0)
+            if score < min_edge_score:
+                continue
+
+            target_key = edge.get("neighbor_key", "")
+            target_node = node_lookup.get(target_key)
+            if not target_key or not target_node:
+                continue
+
+            target_type = normalize_node_type(target_node.get("type", "entity"))
+            target_origin = normalize_source_name(target_node.get("source"), edge.get("provenance", "UNKNOWN"))
+            if paper_only and target_origin != "PAPER_INGEST":
+                continue
+            if allowed_types and target_type not in allowed_types:
+                continue
+            if allowed_sources and target_origin not in allowed_sources:
+                continue
+
+            edge_source = source_key
+            edge_target = target_key
+            if edge_source > edge_target:
+                edge_source, edge_target = edge_target, edge_source
+
+            edge_key = (
+                edge_source,
+                edge_target,
+                str(edge.get("relation", "related")),
+                str(edge.get("paper_id", "")),
+            )
+            current = edge_registry.get(edge_key)
+            if current:
+                current["score"] = max(current["score"], score)
+                current["provenance"].add(str(edge.get("provenance", "UNKNOWN")))
+            else:
+                edge_registry[edge_key] = {
+                    "source_key": source_key,
+                    "target_key": target_key,
+                    "score": score,
+                    "relation": str(edge.get("relation", "related")),
+                    "provenance": {str(edge.get("provenance", "UNKNOWN"))},
+                    "queries": set(),
+                    "paper_id": str(edge.get("paper_id", "")),
+                }
+
+            candidate_node_keys.add(source_key)
+            candidate_node_keys.add(target_key)
+
+    node_scores: Dict[str, float] = {key: 0.0 for key in candidate_node_keys}
+    for edge in edge_registry.values():
+        node_scores[edge["source_key"]] = node_scores.get(edge["source_key"], 0.0) + edge["score"]
+        node_scores[edge["target_key"]] = node_scores.get(edge["target_key"], 0.0) + edge["score"]
+
+    ranked_node_keys = sorted(
+        candidate_node_keys,
+        key=lambda key: (
+            len(adjacency.get(key, [])),
+            node_scores.get(key, 0.0),
+            node_lookup.get(key, {}).get("name", ""),
+        ),
+        reverse=True,
+    )[:max_nodes]
+    allowed_node_keys = set(ranked_node_keys)
+
+    edges = [
+        edge
+        for edge in edge_registry.values()
+        if edge["source_key"] in allowed_node_keys and edge["target_key"] in allowed_node_keys
+    ]
+    edges.sort(key=lambda item: item["score"], reverse=True)
+    edges = edges[:max_edges]
+
+    connected_node_keys = {edge["source_key"] for edge in edges} | {edge["target_key"] for edge in edges}
+    nodes = []
+    source_counts: Dict[str, int] = {}
+    type_counts: Dict[str, int] = {}
+
+    for key in ranked_node_keys:
+        if key not in connected_node_keys:
+            continue
+        lookup = node_lookup.get(key)
+        if not lookup:
+            continue
+
+        node_type = normalize_node_type(lookup.get("type", "entity"))
+        node_source = normalize_source_name(lookup.get("source"), "UNKNOWN")
+        source_counts[node_source] = source_counts.get(node_source, 0) + 1
+        type_counts[node_type] = type_counts.get(node_type, 0) + 1
+        nodes.append(
+            {
+                "key": key,
+                "name": lookup.get("name", ""),
+                "metadata": {
+                    "node_name": lookup.get("name", ""),
+                    "node_id": lookup.get("name", ""),
+                    "node_type": node_type,
+                    "node_source": node_source,
+                },
+                "similarity_score": min(100.0, node_scores.get(key, 0.0) * 100.0),
+                "queries": set(),
+                "is_seed": False,
+            }
+        )
+
+    return {
+        "nodes": nodes,
+        "edges": edges,
+        "source_counts": source_counts,
+        "type_counts": type_counts,
+        "scope": scope,
+    }
+
+
+def display_stored_knowledge_graph_tab() -> None:
+    """Display a graph of the whole current paper store or all stored graph data."""
+    st.header("Stored Knowledge Graph")
+
+    scope_label = st.radio(
+        "Graph Scope",
+        options=["Paper Store Only", "All Stored Data"],
+        index=1,
+        horizontal=True,
+        key="stored_kg_scope",
+        help="Paper Store Only limits the graph to paper-derived records. All Stored Data adds curated graph nodes and edges.",
+    )
+    scope = "all" if scope_label == "All Stored Data" else "paper_store"
+
+    include_pending = st.toggle(
+        "Include Pending Paper Records",
+        value=True,
+        key="stored_kg_include_pending",
+        help="When enabled, paper-derived relationships are included even if they have not been approved yet.",
+    )
+
+    node_lookup = build_graph_node_lookup()
+    type_options = sorted(
+        {
+            normalize_node_type(node.get("type", "entity"))
+            for node in node_lookup.values()
+            if scope == "all" or normalize_source_name(node.get("source"), "UNKNOWN") == "PAPER_INGEST"
+        }
+    )
+    source_options = sorted(
+        {
+            normalize_source_name(node.get("source"), "UNKNOWN")
+            for node in node_lookup.values()
+            if scope == "all" or normalize_source_name(node.get("source"), "UNKNOWN") == "PAPER_INGEST"
+        }
+    )
+
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        max_nodes = st.slider("Max Nodes", min_value=20, max_value=300, value=120, step=10, key="stored_kg_max_nodes")
+    with col2:
+        max_edges = st.slider("Max Edges", min_value=20, max_value=600, value=220, step=20, key="stored_kg_max_edges")
+    with col3:
+        min_edge_score = st.slider("Min Edge Score", min_value=0.0, max_value=1.0, value=0.2, step=0.05, key="stored_kg_min_edge_score")
+
+    allowed_types = set(
+        st.multiselect(
+            "Node Types",
+            options=type_options,
+            default=type_options,
+            key="stored_kg_type_filter",
+        )
+    )
+    allowed_sources = set(
+        st.multiselect(
+            "Node Sources",
+            options=source_options,
+            default=source_options,
+            key="stored_kg_source_filter",
+        )
+    )
+
+    payload = build_stored_graph_payload(
+        scope=scope,
+        allowed_types=allowed_types,
+        allowed_sources=allowed_sources,
+        max_nodes=max_nodes,
+        max_edges=max_edges,
+        min_edge_score=min_edge_score,
+        approved_only=not include_pending,
+    )
+
+    if not payload.get("nodes"):
+        st.info("No graph could be built with the current scope and filters.")
+        return
+
+    graph = build_pyvis_network_graph(payload, [], height_px=760)
+    if graph:
+        render_pyvis_network(graph, height=760)
+
+    metric_col1, metric_col2, metric_col3, metric_col4 = st.columns(4)
+    metric_col1.metric("Displayed Nodes", len(payload.get("nodes", [])))
+    metric_col2.metric("Displayed Edges", len(payload.get("edges", [])))
+    metric_col3.metric("Node Types", len(payload.get("type_counts", {})))
+    metric_col4.metric("Node Sources", len(payload.get("source_counts", {})))
+
+    with st.expander("Graph Breakdown", expanded=False):
+        stat_col1, stat_col2 = st.columns(2)
+        with stat_col1:
+            st.markdown("**Node Types**")
+            for node_type, count in payload.get("type_counts", {}).items():
+                st.write(f"- {node_type}: {count}")
+        with stat_col2:
+            st.markdown("**Node Sources**")
+            for source_name, count in payload.get("source_counts", {}).items():
+                st.write(f"- {source_name}: {count}")
+
+    with st.expander("Nodes in Graph", expanded=False):
+        rows = []
+        for node in payload.get("nodes", []):
+            metadata = node.get("metadata", {})
+            rows.append(
+                {
+                    "Name": metadata.get("node_name", ""),
+                    "Type": metadata.get("node_type", ""),
+                    "Source": metadata.get("node_source", ""),
+                    "Connectivity Score": f"{node.get('similarity_score', 0.0):.1f}",
+                }
+            )
+        if rows:
+            st.dataframe(pd.DataFrame(rows), width="stretch", hide_index=True)
+
 def display_gene_network_tab():
     """Display the gene network visualization tab with compound network option"""
     st.header("🕸️ Gene Network Visualization")
@@ -2055,11 +2404,13 @@ def render_assistant_message_content(assistant_message: str, assistant_index: Op
     message_key = f"message_{assistant_index}"
     if message_key in st.session_state.chat_citations:
         display_citations(st.session_state.chat_citations[message_key])
-    if message_key in st.session_state.chat_papers:
+    if (
+        message_key in st.session_state.chat_papers
+        and message_key not in st.session_state.chat_knowledge_results
+    ):
         display_papers(st.session_state.chat_papers[message_key])
-    if message_key in st.session_state.chat_relationships:
-        render_stored_relationship_results(assistant_index)
-    render_stored_search_results(assistant_index)
+    if message_key in st.session_state.chat_knowledge_results:
+        render_stored_knowledge_results(assistant_index)
 
 
 def render_chat_turn(turn: Dict[str, Any]) -> None:
@@ -2086,112 +2437,156 @@ def format_chat_turn_label(turn: Dict[str, Any], turn_number: int) -> str:
     return f"{turn_number}. {query}"
 
 
-def render_stored_search_results(assistant_index: Optional[int]) -> None:
-    """Render stored vector-search details for a previously answered query."""
+def render_stored_knowledge_results(assistant_index: Optional[int]) -> None:
+    """Render stored unified retrieval details for a previously answered query."""
     if assistant_index is None:
         return
 
-    current_query_key = f"search_results_{assistant_index + 1}"
-    stored_results = st.session_state.get(current_query_key, [])
+    current_query_key = f"knowledge_results_{assistant_index + 1}"
+    stored_results = st.session_state.get(current_query_key, {})
     if not stored_results:
         return
 
-    with st.expander("Retrieved Genes/Proteins from Database", expanded=False):
-        node_options = []
-        for result_item in stored_results:
-            metadata = result_item['metadata']
-            relevance = result_item.get('similarity_score', distance_to_similarity_percent(result_item.get('distance')))
-            option_text = f"{metadata['node_name']} (ID: {metadata['node_id']}) - {relevance:.1f}% relevance"
-            node_options.append(option_text)
+    selector_render_key = f"{current_query_key}_selector_render_count"
+    selector_render_count = int(st.session_state.get(selector_render_key, 0))
+    st.session_state[selector_render_key] = selector_render_count + 1
 
-        if node_options:
-            session_id = st.session_state.get("browser_session_id", "default")
-            selector_key = f"node_selector_{session_id}_{assistant_index}"
-            selected_node = st.selectbox(
-                "Select a gene/protein to view details:",
-                options=["Select a gene/protein..."] + node_options,
-                key=selector_key
-            )
+    entity_results = stored_results.get("entities", [])
+    relationship_results = stored_results.get("relationships", [])
+    paper_results = stored_results.get("papers", [])
 
-            if selected_node != "Select a gene/protein...":
-                selected_index = node_options.index(selected_node)
-                selected_result = stored_results[selected_index]
-                metadata = selected_result['metadata']
+    if entity_results:
+        with st.expander("Retrieved Entities", expanded=False):
+            node_options = []
+            for result_item in entity_results:
+                metadata = result_item["metadata"]
+                relevance = result_item.get("similarity_score", distance_to_similarity_percent(result_item.get("distance")))
+                option_text = (
+                    f"{metadata.get('node_name', metadata.get('entity_name', ''))} "
+                    f"(ID: {metadata.get('node_id', metadata.get('entity_id', ''))}) "
+                    f"- {relevance:.1f}% relevance"
+                )
+                node_options.append(option_text)
 
-                with st.container():
-                    st.markdown("### Gene/Protein Details")
-                    col1, col2 = st.columns(2)
+            if node_options:
+                session_id = st.session_state.get("browser_session_id", "default")
+                selector_key = f"node_selector_{session_id}_{assistant_index}_{selector_render_count}"
+                selected_node = st.selectbox(
+                    "Select an entity to view details:",
+                    options=["Select an entity..."] + node_options,
+                    key=selector_key,
+                )
 
-                    with col1:
-                        st.write(f"**Name:** {metadata['node_name']}")
-                        st.write(f"**Node ID:** {metadata['node_id']}")
-                        st.write(f"**Type:** {metadata['node_type']}")
+                if selected_node != "Select an entity...":
+                    selected_index = node_options.index(selected_node)
+                    selected_result = entity_results[selected_index]
+                    metadata = selected_result["metadata"]
 
-                    with col2:
-                        st.write(f"**Source:** {metadata['node_source']}")
-                        relevance = selected_result.get('similarity_score', distance_to_similarity_percent(selected_result.get('distance')))
-                        st.write(f"**Relevance:** {relevance:.1f}%")
+                    with st.container():
+                        st.markdown("### Entity Details")
+                        col1, col2 = st.columns(2)
 
-                    st.write(f"**Full Document:** {selected_result['document']}")
-                    st.info("This information is retrieved from your local gene/protein database.")
+                        with col1:
+                            st.write(f"**Name:** {metadata.get('node_name', metadata.get('entity_name', ''))}")
+                            st.write(f"**Record ID:** {metadata.get('node_id', metadata.get('entity_id', ''))}")
+                            st.write(f"**Type:** {metadata.get('node_type', metadata.get('entity_type', 'entity'))}")
 
-    with st.expander("Raw Search Results (Technical)", expanded=False):
-        for i, result_item in enumerate(stored_results, 1):
-            st.write(f"**Result {i}:**")
-            st.write(f"Document: {result_item['document']}")
-            st.write(f"Similarity Score: {result_item.get('similarity_score', distance_to_similarity_percent(result_item.get('distance'))):.2f}%")
-            st.json(result_item['metadata'])
-            st.markdown("---")
+                        with col2:
+                            st.write(f"**Source:** {metadata.get('node_source', metadata.get('source_system', 'UNKNOWN'))}")
+                            relevance = selected_result.get(
+                                "similarity_score",
+                                distance_to_similarity_percent(selected_result.get("distance")),
+                            )
+                            st.write(f"**Relevance:** {relevance:.1f}%")
+
+                        st.write(f"**Full Document:** {selected_result['document']}")
+
+    if relationship_results:
+        with st.expander("Paper-derived Relationships", expanded=False):
+            rows = []
+            for result_item in relationship_results:
+                metadata = result_item.get("metadata", {})
+                rows.append({
+                    "Source": metadata.get("source_name", ""),
+                    "Source Type": metadata.get("source_type", ""),
+                    "Edge Type": metadata.get("edge_type", ""),
+                    "Target": metadata.get("target_name", ""),
+                    "Target Type": metadata.get("target_type", ""),
+                    "Weight": f"{float(metadata.get('edge_weight', 0.0)):.2f}",
+                    "Similarity %": f"{result_item.get('similarity_score', 0.0):.1f}",
+                    "Evidence": str(metadata.get("evidence", ""))[:220],
+                })
+            if rows:
+                st.dataframe(pd.DataFrame(rows), width="stretch", hide_index=True)
+
+    if paper_results:
+        with st.expander("Retrieved Papers", expanded=False):
+            display_papers(paper_results[:5])
+
+    with st.expander("Raw Knowledge Results (Technical)", expanded=False):
+        for result_bucket, items in (
+            ("Entities", entity_results),
+            ("Relationships", relationship_results),
+            ("Papers", paper_results),
+        ):
+            if not items:
+                continue
+            st.write(f"**{result_bucket}:**")
+            for i, result_item in enumerate(items, 1):
+                st.write(f"Result {i}: {result_item['document']}")
+                st.write(
+                    "Similarity Score: "
+                    f"{result_item.get('similarity_score', distance_to_similarity_percent(result_item.get('distance'))):.2f}%"
+                )
+                st.json(result_item["metadata"])
+                st.markdown("---")
+
+
+def render_stored_search_results(assistant_index: Optional[int]) -> None:
+    """Backward-compatible wrapper for legacy callers."""
+    render_stored_knowledge_results(assistant_index)
 
 
 def render_stored_relationship_results(assistant_index: Optional[int]) -> None:
-    """Render stored paper-derived relationship results for an answered query."""
-    if assistant_index is None:
-        return
-
-    current_query_key = f"relationship_results_{assistant_index + 1}"
-    stored_results = st.session_state.get(current_query_key, [])
-    if not stored_results:
-        return
-
-    with st.expander("Paper-derived Relationships", expanded=False):
-        rows = []
-        for result_item in stored_results:
-            rows.append({
-                "Source": result_item.get("source_name", ""),
-                "Source Type": result_item.get("source_type", ""),
-                "Edge Type": result_item.get("edge_type", ""),
-                "Target": result_item.get("target_name", ""),
-                "Target Type": result_item.get("target_type", ""),
-                "Weight": f"{float(result_item.get('edge_weight', 0.0)):.2f}",
-                "Similarity %": f"{result_item.get('similarity_score', 0.0):.1f}",
-                "Evidence": str(result_item.get("evidence", ""))[:220],
-            })
-        if rows:
-            st.dataframe(pd.DataFrame(rows), width="stretch", hide_index=True)
-
-    with st.expander("Raw Relationship Results (Technical)", expanded=False):
-        for i, result_item in enumerate(stored_results, 1):
-            st.write(
-                f"**Result {i}:** {result_item.get('source_name', '')} "
-                f"[{result_item.get('edge_type', 'ASSOCIATES')}] "
-                f"{result_item.get('target_name', '')}"
-            )
-            st.write(f"Evidence: {result_item.get('evidence', '')}")
-            st.json(result_item.get("metadata", {}))
-            st.markdown("---")
+    """Backward-compatible wrapper for legacy callers."""
+    render_stored_knowledge_results(assistant_index)
 
 def main():
+    apply_runtime_llm_provider()
     ensure_database_ready()
 
     st.title("Gene/Protein Knowledge Chat")
     st.markdown("Ask questions about genes and proteins from your dataset!")
     
     # Create tabs
-    tab1, tab2 = st.tabs(["Chat", "Gene Network"])
+    tab1, tab2, tab3 = st.tabs(["Chat", "Gene Network", "Stored KG"])
     
     # Sidebar
     with st.sidebar:
+        provider_options = {
+            "NVIDIA NIM": "nvidia_nim",
+            "GPT OpenAI": "openai",
+        }
+        current_provider = normalize_llm_provider(st.session_state.get("active_llm_provider", "nvidia_nim"))
+        provider_labels = list(provider_options.keys())
+        current_label = next(
+            (label for label, value in provider_options.items() if value == current_provider),
+            "NVIDIA NIM",
+        )
+
+        st.subheader("LLM Provider")
+        selected_label = st.selectbox(
+            "Global LLM Backend",
+            options=provider_labels,
+            index=provider_labels.index(current_label),
+            key="global_llm_provider_selector",
+            help="Switches all LLM calls in chat, response generation, and entity extraction.",
+        )
+        selected_provider = provider_options[selected_label]
+        if selected_provider != current_provider:
+            apply_runtime_llm_provider(selected_provider, force=True)
+            st.rerun()
+
         st.header("Database Information")
         
         if not st.session_state.db_loaded:
@@ -2545,6 +2940,10 @@ def main():
     # Tab 2: Gene Network Visualization
     with tab2:
         display_gene_network_tab_v2()
+
+    # Tab 3: Whole stored graph visualization
+    with tab3:
+        display_stored_knowledge_graph_tab()
 
 if __name__ == "__main__":
     main()

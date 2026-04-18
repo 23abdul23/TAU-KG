@@ -21,8 +21,14 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import deb_data_papers as papers_db
 import deb_data
 from logger_config import setup_logger
+from vector_db_manager import VectorDBManager
 
 logger = setup_logger(__name__)
+
+
+@st.cache_resource(show_spinner=False)
+def get_db_manager():
+    return VectorDBManager()
 
 
 def initialize_session_state():
@@ -45,14 +51,37 @@ def search_papers(query: str, search_type: str = "all") -> List[Dict[str, Any]]:
         list: Matching papers
     """
     query_lower = query.lower()
-    results = []
-    
-    for paper in papers_db.papers_data:
+    manager = get_db_manager()
+    vector_results = manager.search_knowledge(
+        query,
+        n_results=25,
+        record_kinds=["paper"],
+        approved_only=False,
+    )
+
+    hydrated_papers: List[Dict[str, Any]] = []
+    seen_paper_ids = set()
+    for result in vector_results:
+        metadata = result.get("metadata", {})
+        paper_id = str(metadata.get("paper_id", "")).strip()
+        if not paper_id or paper_id in seen_paper_ids:
+            continue
+        paper = papers_db.get_paper_by_id(paper_id)
+        if not paper:
+            continue
+        seen_paper_ids.add(paper_id)
+        hydrated_papers.append(paper)
+
+    if not hydrated_papers:
+        hydrated_papers = list(papers_db.papers_data)
+
+    filtered_results = []
+    for paper in hydrated_papers:
         if search_type == "all":
             match = (
-                query_lower in paper.get("title", "").lower() or
-                any(query_lower in author.lower() for author in paper.get("authors", [])) or
-                query_lower in str(paper.get("pmid", ""))
+                query_lower in paper.get("title", "").lower()
+                or any(query_lower in author.lower() for author in paper.get("authors", []))
+                or query_lower in str(paper.get("pmid", ""))
             )
         elif search_type == "title":
             match = query_lower in paper.get("title", "").lower()
@@ -62,11 +91,11 @@ def search_papers(query: str, search_type: str = "all") -> List[Dict[str, Any]]:
             match = query_lower in str(paper.get("pmid", ""))
         else:
             match = False
-        
+
         if match:
-            results.append(paper)
-    
-    return results
+            filtered_results.append(paper)
+
+    return filtered_results
 
 
 def get_papers_with_entity(entity_name: str, entity_type: Optional[str] = None) -> List[Dict[str, Any]]:
@@ -80,29 +109,29 @@ def get_papers_with_entity(entity_name: str, entity_type: Optional[str] = None) 
     Returns:
         list: Papers containing entity
     """
+    manager = get_db_manager()
+    entity_filters = [entity_type] if entity_type else None
+    results = manager.search_knowledge(
+        entity_name,
+        n_results=40,
+        record_kinds=["entity"],
+        approved_only=True,
+        entity_types=entity_filters,
+        source_systems=["PAPER_INGEST"],
+    )
+
     papers_with_entity = []
-    
-    for paper_id, entities in papers_db.paper_entities.items():
-        found = False
-        
-        if entity_type:
-            types_to_search = [entity_type]
-        else:
-            types_to_search = ["genes", "proteins", "diseases", "pathways"]
-        
-        for etype in types_to_search:
-            for entity in entities.get(etype, []):
-                if entity.get("name", "").lower() == entity_name.lower():
-                    found = True
-                    break
-            if found:
-                break
-        
-        if found:
-            paper = papers_db.get_paper_by_id(paper_id)
-            if paper:
-                papers_with_entity.append(paper)
-    
+    seen_paper_ids = set()
+    for result in results:
+        metadata = result.get("metadata", {})
+        paper_id = str(metadata.get("paper_id", "")).strip()
+        if not paper_id or paper_id in seen_paper_ids:
+            continue
+        paper = papers_db.get_paper_by_id(paper_id)
+        if paper:
+            papers_with_entity.append(paper)
+            seen_paper_ids.add(paper_id)
+
     return papers_with_entity
 
 

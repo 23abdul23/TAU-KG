@@ -43,6 +43,25 @@ if LLM_CLIENT.is_available():
 else:
     logger.warning("LLM client unavailable: %s", LLM_CLIENT.unavailable_reason)
 
+
+def set_runtime_llm_provider(provider: str) -> None:
+    """Switch the citations module LLM backend at runtime."""
+    global LLM_CLIENT
+
+    requested = str(provider or "").strip().lower()
+    if requested in {"nvidia", "nim"}:
+        requested = "nvidia_nim"
+    if requested not in {"openai", "gemini", "nvidia_nim"}:
+        requested = "nvidia_nim"
+
+    os.environ["LLM_PROVIDER"] = requested
+    LLM_CLIENT = LLMClient()
+
+    if LLM_CLIENT.is_available():
+        logger.info("Switched LLM provider to: %s", LLM_CLIENT.get_provider_label())
+    else:
+        logger.warning("Requested provider unavailable (%s): %s", requested, LLM_CLIENT.unavailable_reason)
+
 # Get configurable parameters from config.json
 MAX_RETRIES = CONFIG["pubmed"]["max_retries"]
 # Check if specific timeout values exist, otherwise fall back to generic timeout
