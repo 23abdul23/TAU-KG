@@ -389,10 +389,8 @@ def _merge_search_results(results: List[Dict[str, Any]], limit: int) -> List[Dic
     return ranked[:limit]
 
 
-def _build_query_variants(query: str) -> List[str]:
+def _extract_query_entities(query: str) -> Dict[str, List[str]]:
     base_query = re.sub(r"\s+", " ", str(query or "")).strip()
-    variants = [base_query] if base_query else []
-
     extracted_entities: Dict[str, List[str]] = {}
     if extract_query_entities and base_query:
         try:
@@ -405,18 +403,26 @@ def _build_query_variants(query: str) -> List[str]:
                 }
         except Exception:
             extracted_entities = {}
+    return extracted_entities
+
+
+def _build_query_variants(query: str, extracted_entities: Optional[Dict[str, List[str]]] = None) -> List[str]:
+    base_query = re.sub(r"\s+", " ", str(query or "")).strip()
+    variants = [base_query] if base_query else []
+    extracted_entities = extracted_entities or _extract_query_entities(base_query)
 
     ordered_terms: List[str] = []
-    for entity_type in ("genes", "proteins", "diseases", "pathways", "keywords"):
+    for entity_type in ("genes", "proteins", "diseases", "pathways", "relationships", "keywords"):
         ordered_terms.extend(extracted_entities.get(entity_type, []))
 
     if ordered_terms:
-        variants.append(" ".join(ordered_terms[:8]))
+        variants.append(" ".join(ordered_terms[:10]))
 
     genes = extracted_entities.get("genes", [])
     proteins = extracted_entities.get("proteins", [])
     diseases = extracted_entities.get("diseases", [])
     pathways = extracted_entities.get("pathways", [])
+    relationships = extracted_entities.get("relationships", [])
 
     anchor_terms = genes[:3] + proteins[:2] + diseases[:2] + pathways[:2]
     for term in anchor_terms:
@@ -428,16 +434,27 @@ def _build_query_variants(query: str) -> List[str]:
         variants.append(f"{' '.join(genes[:2])} {' '.join(pathways[:2])} regulation network")
     if proteins and diseases:
         variants.append(f"{' '.join(proteins[:2])} {' '.join(diseases[:2])} disease mechanism")
+    if relationships and genes:
+        variants.append(f"{' '.join(genes[:2])} {' '.join(relationships[:2])} biological relationship")
+    if relationships and diseases:
+        variants.append(f"{' '.join(diseases[:2])} {' '.join(relationships[:2])} disease pathway mechanism")
+    if relationships and pathways:
+        variants.append(f"{' '.join(pathways[:2])} {' '.join(relationships[:2])} signaling network")
 
     deduped_variants = list(dict.fromkeys(variant for variant in variants if variant))
     return deduped_variants[:8]
 
 
-def _search_query_seed_nodes(db_manager: VectorDBManager, query: str, limit: int) -> Tuple[List[Dict[str, Any]], List[str]]:
+def _search_query_seed_nodes(
+    db_manager: VectorDBManager,
+    query: str,
+    limit: int,
+) -> Tuple[List[Dict[str, Any]], List[str], Dict[str, List[str]]]:
     """Run focused entity-only retrieval from the unified knowledge collection for graph seeding."""
-    query_variants = _build_query_variants(query)
+    extracted_entities = _extract_query_entities(query)
+    query_variants = _build_query_variants(query, extracted_entities=extracted_entities)
     if not query_variants:
-        return [], []
+        return [], [], extracted_entities
 
     per_query_limit = max(5, min(limit, 10))
     collected: List[Dict[str, Any]] = []
@@ -456,7 +473,7 @@ def _search_query_seed_nodes(db_manager: VectorDBManager, query: str, limit: int
         except Exception:
             continue
 
-    return _merge_search_results(collected, limit), query_variants
+    return _merge_search_results(collected, limit), query_variants, extracted_entities
 
 
 def split_knowledge_results(results: List[Dict[str, Any]]) -> Dict[str, List[Dict[str, Any]]]:
@@ -716,6 +733,7 @@ def build_node_payload(
     metadata_override: Optional[Dict[str, Any]] = None,
     similarity_score: float = 0.0,
     is_seed: bool = False,
+    hop_distance: int = 0,
 ) -> Dict[str, Any]:
     """Create a consistent node payload used by both single and compound graphs."""
     lookup = node_lookup.get(key, {})
@@ -739,16 +757,68 @@ def build_node_payload(
         "similarity_score": similarity_score,
         "queries": {query},
         "is_seed": is_seed,
+        "hop_distance": max(0, int(hop_distance)),
     }
 
 
 def build_network_payload(query_entries: List[Dict[str, Any]], settings: Dict[str, Any]) -> Dict[str, Any]:
-    """Build a real graph network from retrieved seeds plus graph-neighbor expansion."""
+    """Build a real graph network from retrieved seeds plus 2-hop graph expansion."""
     node_lookup = build_graph_node_lookup()
     adjacency = build_graph_adjacency()
     node_registry: Dict[str, Dict[str, Any]] = {}
     edge_registry: Dict[Tuple[str, str, str], Dict[str, Any]] = {}
     seed_counts: Dict[str, int] = {}
+    max_hop_distance = 2
+
+    def _upsert_node(
+        *,
+        name: str,
+        key: str,
+        query: str,
+        similarity_score: float,
+        metadata_override: Optional[Dict[str, Any]] = None,
+        is_seed: bool = False,
+        hop_distance: int = 0,
+    ) -> None:
+        existing = node_registry.get(key)
+        if existing:
+            existing["queries"].add(query)
+            existing["similarity_score"] = max(existing.get("similarity_score", 0.0), similarity_score)
+            existing["is_seed"] = existing.get("is_seed", False) or is_seed
+            existing["hop_distance"] = min(existing.get("hop_distance", hop_distance), hop_distance)
+            return
+
+        node_registry[key] = build_node_payload(
+            name=name,
+            key=key,
+            query=query,
+            node_lookup=node_lookup,
+            metadata_override=metadata_override,
+            similarity_score=similarity_score,
+            is_seed=is_seed,
+            hop_distance=hop_distance,
+        )
+
+    def _upsert_edge(source_key: str, target_key: str, edge: Dict[str, Any], query: str) -> bool:
+        edge_key = tuple(sorted([source_key, target_key])) + (str(edge.get("relation", "related")),)
+        existing_edge = edge_registry.get(edge_key)
+        edge_payload = {
+            "source_key": source_key,
+            "target_key": target_key,
+            "score": safe_float(edge.get("score", 0.5), 0.5),
+            "relation": str(edge.get("relation", "related")),
+            "provenance": {str(edge.get("provenance", "CURATED_GRAPH"))},
+            "queries": {query},
+        }
+
+        if existing_edge:
+            existing_edge["score"] = max(existing_edge["score"], edge_payload["score"])
+            existing_edge["queries"].update(edge_payload["queries"])
+            existing_edge["provenance"].update(edge_payload["provenance"])
+            return False
+
+        edge_registry[edge_key] = edge_payload
+        return True
 
     for entry in query_entries:
         query = entry.get("query", "")
@@ -767,88 +837,72 @@ def build_network_payload(query_entries: List[Dict[str, Any]], settings: Dict[st
                 break
 
             similarity = seed.get("similarity_score", 0.0)
-            seed_payload = build_node_payload(
+            _upsert_node(
                 name=seed_name,
                 key=seed_key,
                 query=query,
-                node_lookup=node_lookup,
                 metadata_override=metadata,
                 similarity_score=similarity,
                 is_seed=True,
+                hop_distance=0,
             )
 
-            existing_seed = node_registry.get(seed_key)
-            if existing_seed:
-                existing_seed["queries"].add(query)
-                existing_seed["similarity_score"] = max(existing_seed["similarity_score"], similarity)
-                existing_seed["is_seed"] = True
-            else:
-                node_registry[seed_key] = seed_payload
+            frontier: List[Tuple[str, float, int]] = [(seed_key, similarity, 0)]
+            visited_from_seed: Set[str] = {seed_key}
+            neighbors_added_by_depth = defaultdict(int)
 
-            neighbors_added = 0
-            neighbor_candidates = sorted(
-                adjacency.get(seed_key, []),
-                key=lambda item: item.get("score", 0.0),
-                reverse=True,
-            )
-
-            for edge in neighbor_candidates:
-                if neighbors_added >= settings["neighbors_per_seed"]:
-                    break
-                if len(edge_registry) >= settings["max_edges"]:
-                    break
-
-                neighbor_key = edge.get("neighbor_key", "")
-                neighbor_name = edge.get("neighbor_name", "")
-                if not neighbor_key or not neighbor_name:
+            while frontier:
+                current_key, current_similarity, current_hop = frontier.pop(0)
+                if current_hop >= max_hop_distance:
                     continue
 
-                neighbor_lookup = node_lookup.get(neighbor_key, {})
-                neighbor_type = normalize_node_type(neighbor_lookup.get("type", "entity"))
-                neighbor_source = normalize_source_name(neighbor_lookup.get("source"), edge.get("provenance", "CURATED_GRAPH"))
+                neighbor_candidates = sorted(
+                    adjacency.get(current_key, []),
+                    key=lambda item: item.get("score", 0.0),
+                    reverse=True,
+                )
 
-                if settings["allowed_types"] and neighbor_type not in settings["allowed_types"]:
-                    continue
-                if settings["allowed_sources"] and neighbor_source not in settings["allowed_sources"]:
-                    continue
+                for edge in neighbor_candidates:
+                    next_hop = current_hop + 1
+                    if neighbors_added_by_depth[next_hop] >= settings["neighbors_per_seed"]:
+                        break
+                    if len(edge_registry) >= settings["max_edges"]:
+                        break
 
-                if neighbor_key not in node_registry and len(node_registry) >= settings["max_nodes"]:
-                    continue
+                    neighbor_key = edge.get("neighbor_key", "")
+                    neighbor_name = edge.get("neighbor_name", "")
+                    if not neighbor_key or not neighbor_name or neighbor_key in visited_from_seed:
+                        continue
 
-                neighbor_similarity = max(edge.get("score", 0.0) * 100.0, similarity * 0.7)
-                if neighbor_key in node_registry:
-                    node_registry[neighbor_key]["queries"].add(query)
-                    node_registry[neighbor_key]["similarity_score"] = max(
-                        node_registry[neighbor_key]["similarity_score"],
-                        neighbor_similarity,
+                    neighbor_lookup = node_lookup.get(neighbor_key, {})
+                    neighbor_type = normalize_node_type(neighbor_lookup.get("type", "entity"))
+                    neighbor_source = normalize_source_name(
+                        neighbor_lookup.get("source"),
+                        edge.get("provenance", "CURATED_GRAPH"),
                     )
-                else:
-                    node_registry[neighbor_key] = build_node_payload(
+
+                    if settings["allowed_types"] and neighbor_type not in settings["allowed_types"]:
+                        continue
+                    if settings["allowed_sources"] and neighbor_source not in settings["allowed_sources"]:
+                        continue
+                    if neighbor_key not in node_registry and len(node_registry) >= settings["max_nodes"]:
+                        continue
+
+                    neighbor_similarity = max(edge.get("score", 0.0) * 100.0, current_similarity * 0.7)
+                    _upsert_node(
                         name=neighbor_name,
                         key=neighbor_key,
                         query=query,
-                        node_lookup=node_lookup,
                         similarity_score=neighbor_similarity,
+                        hop_distance=next_hop,
                     )
+                    _upsert_edge(current_key, neighbor_key, edge, query)
 
-                edge_key = tuple(sorted([seed_key, neighbor_key])) + (str(edge.get("relation", "related")),)
-                existing_edge = edge_registry.get(edge_key)
-                edge_payload = {
-                    "source_key": seed_key,
-                    "target_key": neighbor_key,
-                    "score": safe_float(edge.get("score", 0.5), 0.5),
-                    "relation": str(edge.get("relation", "related")),
-                    "provenance": {str(edge.get("provenance", "CURATED_GRAPH"))},
-                    "queries": {query},
-                }
+                    visited_from_seed.add(neighbor_key)
+                    neighbors_added_by_depth[next_hop] += 1
 
-                if existing_edge:
-                    existing_edge["score"] = max(existing_edge["score"], edge_payload["score"])
-                    existing_edge["queries"].update(edge_payload["queries"])
-                    existing_edge["provenance"].update(edge_payload["provenance"])
-                else:
-                    edge_registry[edge_key] = edge_payload
-                    neighbors_added += 1
+                    if next_hop < max_hop_distance:
+                        frontier.append((neighbor_key, neighbor_similarity, next_hop))
 
     edges = sorted(edge_registry.values(), key=lambda item: item["score"], reverse=True)[: settings["max_edges"]]
     kept_node_keys = {edge["source_key"] for edge in edges} | {edge["target_key"] for edge in edges}
@@ -857,7 +911,15 @@ def build_network_payload(query_entries: List[Dict[str, Any]], settings: Dict[st
             kept_node_keys.add(key)
 
     nodes = [node_registry[key] for key in kept_node_keys if key in node_registry]
-    nodes.sort(key=lambda item: (len(item["queries"]), item["similarity_score"]), reverse=True)
+    nodes.sort(
+        key=lambda item: (
+            len(item["queries"]),
+            1 if item.get("is_seed") else 0,
+            -item.get("hop_distance", 0),
+            item["similarity_score"],
+        ),
+        reverse=True,
+    )
     nodes = nodes[: settings["max_nodes"]]
     allowed_node_keys = {node["key"] for node in nodes}
     edges = [
@@ -867,6 +929,8 @@ def build_network_payload(query_entries: List[Dict[str, Any]], settings: Dict[st
 
     seed_total = sum(1 for node in nodes if node.get("is_seed"))
     multi_query_nodes = sum(1 for node in nodes if len(node.get("queries", set())) > 1)
+    first_order_nodes = sum(1 for node in nodes if node.get("hop_distance", 0) == 1)
+    second_order_nodes = sum(1 for node in nodes if node.get("hop_distance", 0) >= 2)
 
     return {
         "nodes": nodes,
@@ -875,6 +939,10 @@ def build_network_payload(query_entries: List[Dict[str, Any]], settings: Dict[st
         "total_queries": len(query_entries),
         "multi_query_nodes": multi_query_nodes,
         "seed_total": seed_total,
+        "first_order_nodes": first_order_nodes,
+        "second_order_nodes": second_order_nodes,
+        "max_graph_degree": max_hop_distance,
+        "graph_note": "This graph includes a 2nd-order expansion: seed A -> neighbor B -> neighbor C.",
     }
 
 
@@ -915,6 +983,7 @@ def merge_network_payloads(payloads: List[Dict[str, Any]], max_nodes: int, max_e
                 current["queries"].update(node.get("queries", set()))
                 current["similarity_score"] = max(current.get("similarity_score", 0.0), node.get("similarity_score", 0.0))
                 current["is_seed"] = current.get("is_seed", False) or node.get("is_seed", False)
+                current["hop_distance"] = min(current.get("hop_distance", 99), node.get("hop_distance", 99))
                 current["metadata"] = _merge_node_metadata(current.get("metadata", {}), node.get("metadata", {}))
             else:
                 node_registry[key] = {
@@ -924,6 +993,7 @@ def merge_network_payloads(payloads: List[Dict[str, Any]], max_nodes: int, max_e
                     "similarity_score": node.get("similarity_score", 0.0),
                     "queries": set(node.get("queries", set())),
                     "is_seed": bool(node.get("is_seed", False)),
+                    "hop_distance": node.get("hop_distance", 0),
                 }
 
         for edge in payload.get("edges", []):
@@ -972,6 +1042,7 @@ def merge_network_payloads(payloads: List[Dict[str, Any]], max_nodes: int, max_e
             len(item.get("queries", set())),
             node_edge_counts.get(item["key"], 0),
             1 if item.get("is_seed") else 0,
+            -item.get("hop_distance", 0),
             item.get("similarity_score", 0.0),
         ),
         reverse=True,
@@ -985,6 +1056,8 @@ def merge_network_payloads(payloads: List[Dict[str, Any]], max_nodes: int, max_e
 
     multi_query_nodes = sum(1 for node in nodes if len(node.get("queries", set())) > 1)
     seed_total = sum(1 for node in nodes if node.get("is_seed"))
+    first_order_nodes = sum(1 for node in nodes if node.get("hop_distance", 0) == 1)
+    second_order_nodes = sum(1 for node in nodes if node.get("hop_distance", 0) >= 2)
 
     return {
         "nodes": nodes,
@@ -993,6 +1066,10 @@ def merge_network_payloads(payloads: List[Dict[str, Any]], max_nodes: int, max_e
         "total_queries": len(payloads),
         "multi_query_nodes": multi_query_nodes,
         "seed_total": seed_total,
+        "first_order_nodes": first_order_nodes,
+        "second_order_nodes": second_order_nodes,
+        "max_graph_degree": max((node.get("hop_distance", 0) for node in nodes), default=0),
+        "graph_note": "This graph includes a 2nd-order expansion: seed A -> neighbor B -> neighbor C.",
     }
 
 
@@ -1005,7 +1082,7 @@ def get_query_network_settings() -> Dict[str, Any]:
     with col1:
         seed_limit = st.slider("Seed Nodes", min_value=3, max_value=25, value=10, help="Top retrieved nodes used as graph seeds.")
     with col2:
-        neighbors_per_seed = st.slider("Neighbors / Seed", min_value=1, max_value=10, value=3, help="Real graph neighbors added per seed.")
+        neighbors_per_seed = st.slider("Neighbors / Seed", min_value=1, max_value=10, value=3, help="Real graph neighbors added per seed at each hop of the 2nd-order expansion.")
     with col3:
         min_similarity = st.slider("Min Similarity %", min_value=0, max_value=100, value=20, help="Hide weak vector hits before graph expansion.")
 
@@ -1070,6 +1147,11 @@ def process_single_query(prompt: str) -> bool:
     st.session_state.chat_history.append(("user", prompt))
 
     try:
+        search_results, query_variants, extracted_query_entities = _search_query_seed_nodes(
+            st.session_state.db_manager,
+            prompt,
+            st.session_state.search_result_limit,
+        )
         knowledge_hits = st.session_state.db_manager.search_knowledge(
             prompt,
             n_results=max(st.session_state.search_result_limit * 2, st.session_state.search_result_limit),
@@ -1082,13 +1164,12 @@ def process_single_query(prompt: str) -> bool:
         )
         knowledge_results["entities"] = entity_results
 
-        query_variants = _build_query_variants(prompt)
-
-        if entity_results:
+        if search_results:
             st.session_state.query_genes.append({
                 "query": prompt,
-                "genes": entity_results,
+                "genes": search_results,
                 "query_variants": query_variants,
+                "extracted_entities": extracted_query_entities,
             })
 
         result = generate_enhanced_response(
@@ -1568,6 +1649,16 @@ def build_pyvis_network_graph(network_payload: Dict[str, Any], query_order: List
         node_type = normalize_node_type(metadata.get("node_type", "entity"))
         base_color = NODE_TYPE_COLORS.get(node_type, NODE_TYPE_COLORS["entity"])
         node_shape = NODE_TYPE_SHAPES.get(node_type, NODE_TYPE_SHAPES["entity"])
+        hop_distance = int(node.get("hop_distance", 0))
+
+        if node.get("is_seed"):
+            node_role = "Seed match"
+        elif hop_distance == 1:
+            node_role = "1-hop neighbor"
+        elif hop_distance >= 2:
+            node_role = "2-hop neighbor"
+        else:
+            node_role = "Expanded neighbor"
 
         if len(query_membership) > 1:
             border_color = "#FFD700"
@@ -1584,7 +1675,7 @@ def build_pyvis_network_graph(network_payload: Dict[str, Any], query_order: List
             f"Type: {node_type}",
             f"Source: {metadata.get('node_source')}",
             f"Similarity: {similarity:.1f}%",
-            f"Role: {'Seed match' if node.get('is_seed') else 'Expanded neighbor'}",
+            f"Role: {node_role}",
             f"Queries: {', '.join(query_membership) if query_membership else 'N/A'}",
         ])
 
@@ -2228,6 +2319,7 @@ def display_gene_network_tab_v2():
             graph, payload = build_single_query_network_graph(query_entry, settings)
             if graph:
                 render_network_with_legend(graph, height=650)
+                st.info(payload.get("graph_note", "This graph includes a 2nd-order expansion."))
 
                 stats_cols = st.columns(4)
                 stats_cols[0].metric("Displayed Nodes", len(payload.get("nodes", [])))
@@ -2243,7 +2335,15 @@ def display_gene_network_tab_v2():
                         "Type": metadata.get("node_type", ""),
                         "Source": metadata.get("node_source", ""),
                         "Similarity %": f"{node.get('similarity_score', 0.0):.1f}",
-                        "Role": "Seed" if node.get("is_seed") else "Neighbor",
+                        "Role": (
+                            "Seed"
+                            if node.get("is_seed")
+                            else "1-hop"
+                            if node.get("hop_distance", 0) == 1
+                            else "2-hop"
+                            if node.get("hop_distance", 0) >= 2
+                            else "Neighbor"
+                        ),
                         "Queries": ", ".join(sorted(node.get("queries", set()))),
                     })
                 if rows:
@@ -2267,6 +2367,7 @@ def display_gene_network_tab_v2():
             graph, payload = build_compound_query_network_graph(selected_queries, st.session_state.query_genes, settings)
             if graph:
                 render_network_with_legend(graph, height=700)
+                st.info(payload.get("graph_note", "This graph includes a 2nd-order expansion."))
 
                 col1, col2, col3, col4 = st.columns(4)
                 col1.metric("Displayed Nodes", len(payload.get("nodes", [])))
@@ -2733,7 +2834,7 @@ def main():
                     with st.spinner("Searching database and generating enhanced response..."):
                         try:
                             # Search the vector database with entity-aware query expansion.
-                            search_results, query_variants = _search_query_seed_nodes(
+                            search_results, query_variants, extracted_query_entities = _search_query_seed_nodes(
                                 st.session_state.db_manager,
                                 prompt,
                                 st.session_state.search_result_limit,
@@ -2745,6 +2846,7 @@ def main():
                                     'query': prompt,
                                     'genes': search_results,
                                     'query_variants': query_variants,
+                                    'extracted_entities': extracted_query_entities,
                                 })
                             
                             # Generate enhanced response with GPT-4 and citations

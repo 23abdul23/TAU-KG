@@ -263,7 +263,11 @@ def extract_entities_with_llm(text: str) -> Dict[str, List[str]]:
            - Include signaling cascades and cellular processes
            - Be comprehensive about involved pathways
         
-        5. Keywords: Return important scientific terms not in other categories
+        5. Relationships: Return normalized relationship terms explicitly mentioned or strongly implied
+           - Examples: activates, inhibits, regulates, interacts_with, associates_with, encodes, participates_in
+           - Focus on biological or disease-relevant relationships, not generic grammar
+        
+        6. Keywords: Return important scientific terms not in other categories
            - Include research methods, anatomical terms, and key concepts
            - Focus on domain-specific terminology
         
@@ -293,7 +297,7 @@ def extract_entities_with_llm(text: str) -> Dict[str, List[str]]:
         result = json.loads(llm_response.text)
         
         # Ensure all expected keys exist
-        expected_keys = ["genes", "proteins", "diseases", "pathways", "keywords"]
+        expected_keys = ["genes", "proteins", "diseases", "pathways", "relationships", "keywords"]
         for key in expected_keys:
             if key not in result:
                 result[key] = []
@@ -324,6 +328,7 @@ def extract_entities_from_text(text: str) -> Dict[str, List[str]]:
         "proteins": [],
         "diseases": [],
         "pathways": [],
+        "relationships": [],
         "keywords": [] # Add general keywords
     }
     text_lower = text.lower()
@@ -345,6 +350,24 @@ def extract_entities_from_text(text: str) -> Dict[str, List[str]]:
     # Extract pathways - capture original case
     pathways = set(re.findall(PATHWAY_PATTERN, text))
     entities["pathways"] = list(pathways)
+
+    relationship_patterns = {
+        "activates": r"\bactivat(?:e|es|ed|ing|ion)\b",
+        "inhibits": r"\binhibit(?:s|ed|ing|ion)?\b",
+        "regulates": r"\bregulat(?:e|es|ed|ing|ion)\b",
+        "interacts_with": r"\binteract(?:s|ed|ing)?(?:\s+with)?\b",
+        "associates_with": r"\bassociat(?:e|es|ed|ing|ion)\b",
+        "encodes": r"\bencod(?:e|es|ed|ing)\b",
+        "binds": r"\bbind(?:s|ing|ed)?\b",
+        "causes": r"\bcause(?:s|d|ing)?\b",
+        "treats": r"\btreat(?:s|ed|ing|ment)?\b",
+        "participates_in": r"\bparticipat(?:e|es|ed|ing)\b",
+        "expresses": r"\bexpress(?:es|ed|ing|ion)?\b",
+    }
+    entities["relationships"] = [
+        label for label, pattern in relationship_patterns.items()
+        if re.search(pattern, text_lower)
+    ]
 
     # Extract general keywords if specific entities are scarce
     if not any([entities["genes"], entities["diseases"], entities["proteins"], entities["pathways"]]):

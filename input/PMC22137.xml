@@ -1,0 +1,2521 @@
+
+<!DOCTYPE html>
+<html lang="en" >
+    <head >
+
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="HandheldFriendly" content="True" />
+        <meta name="MobileOptimized" content="320" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        
+        
+
+        
+        
+  <link  rel="stylesheet" href="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/assets/base_style-BxRs1iOp.css" />
+<script type="module" crossorigin="" src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/assets/base_style-D-jH62-1.js"></script>
+
+  <link  rel="stylesheet" href="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/assets/article_style-B67IZFds.css" />
+<link  rel="stylesheet" href="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/assets/style-D77LS1kY.css" />
+<script type="module" crossorigin="" src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/assets/article_style-CTAd1LmM.js"></script>
+
+  
+  
+    <style>
+  
+  
+  @media screen and (min-width: 64em) {
+    div.pmc-wm {
+      background: repeat-y;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='350' xmlns:xlink='http://www.w3.org/1999/xlink'%3E%3Cdefs%3E%3Cfilter x='-.02' y='0' width='1.05' height='1' id='c'%3E%3CfeFlood flood-color='%23FFF'/%3E%3CfeComposite in='SourceGraphic'/%3E%3C/filter%3E%3Ctext id='b' font-family='Helvetica' font-size='11pt' style='opacity:1;fill:%23005ea2;stroke:none;text-anchor:middle' x='175' y='14'%3E%3C/text%3E%3Cpath id='a' style='fill:%23005ea2' d='M0 8h350v3H0z'/%3E%3C/defs%3E%3Cuse xlink:href='%23a' transform='rotate(90 10 10)'/%3E%3Cuse xlink:href='%23b' transform='rotate(90 10 10)' filter='url(%23c)'/%3E%3C/svg%3E");
+      padding-left: 3rem;
+    }
+  }
+</style>
+
+  
+
+
+
+        
+            <link rel="apple-touch-icon"
+                  sizes="180x180"
+                  href="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/favicons/apple-touch-icon.png" />
+            <link rel="icon"
+                  type="image/png"
+                  sizes="48x48"
+                  href="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/favicons/favicon-48x48.png" />
+            <link rel="icon"
+                  type="image/png"
+                  sizes="32x32"
+                  href="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/favicons/favicon-32x32.png" />
+            <link rel="icon"
+                  type="image/png"
+                  sizes="16x16"
+                  href="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/favicons/favicon-16x16.png" />
+            <link rel="manifest" href="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/favicons/site.webmanifest" />
+            <link rel="mask-icon"
+                  href="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/favicons/safari-pinned-tab.svg"
+                  color="#0071bc" />
+            <meta name="msapplication-config"
+                  content="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/favicons/browserconfig.xml" />
+            <meta name="theme-color" content="#ffffff" />
+        
+
+        <title>
+            Protective immunity against murine hepatitis virus (MHV) induced by intranasal or subcutaneous administration of hybrids of tobacco mosaic virus that carries an MHV epitope - PMC
+        </title>
+
+        
+        
+  
+  <!-- Logging params: Pinger defaults -->
+<meta name="ncbi_app" content="cloudpmc-viewer" />
+<meta name="ncbi_db" content="pmc" />
+<meta name="ncbi_phid" content="1A812C2D9E487E730F2C2D0000C46310.m_1" />
+<meta name="ncbi_pinger_stat_url" content="https://pmc.ncbi.nlm.nih.gov/stat" />
+<!-- Logging params: Pinger custom -->
+<meta name="ncbi_pdid" content="article" />
+  
+    <link rel="preconnect" href="https://www.google-analytics.com" />
+
+    
+        <link rel="preconnect" href="https://cdn.ncbi.nlm.nih.gov" />
+    
+
+    <!-- Include USWDS Init Script -->
+    <script src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/assets/uswds-init.js"></script>
+
+
+    <meta name="ncbi_domain" content="pnas">
+<meta name="ncbi_type" content="fulltext">
+<meta name="ncbi_pcid" content="journal">
+<link rel="canonical" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC22137/">
+<meta name="robots" content="INDEX,NOFOLLOW,NOARCHIVE">
+<meta name="citation_journal_title" content="Proceedings of the National Academy of Sciences of the United States of America">
+<meta name="citation_title" content="Protective immunity against murine hepatitis virus (MHV) induced by intranasal or subcutaneous administration of hybrids of tobacco mosaic virus that carries an MHV epitope">
+<meta name="citation_author" content="Moses Koo">
+<meta name="citation_author_institution" content="Department of Cell Biology, Division of Plant Biology, BCC 206, and Department of Neuropharmacology, Division of Virology, CVN8, Scripps Research Institute, 10550 North Torrey Pines Road, La Jolla, CA 92037">
+<meta name="citation_author" content="Mohammed Bendahmane">
+<meta name="citation_author_institution" content="Department of Cell Biology, Division of Plant Biology, BCC 206, and Department of Neuropharmacology, Division of Virology, CVN8, Scripps Research Institute, 10550 North Torrey Pines Road, La Jolla, CA 92037">
+<meta name="citation_author" content="Gerard A Lettieri">
+<meta name="citation_author_institution" content="Department of Cell Biology, Division of Plant Biology, BCC 206, and Department of Neuropharmacology, Division of Virology, CVN8, Scripps Research Institute, 10550 North Torrey Pines Road, La Jolla, CA 92037">
+<meta name="citation_author" content="Alyssa D Paoletti">
+<meta name="citation_author_institution" content="Department of Cell Biology, Division of Plant Biology, BCC 206, and Department of Neuropharmacology, Division of Virology, CVN8, Scripps Research Institute, 10550 North Torrey Pines Road, La Jolla, CA 92037">
+<meta name="citation_author" content="Thomas E Lane">
+<meta name="citation_author_institution" content="Department of Cell Biology, Division of Plant Biology, BCC 206, and Department of Neuropharmacology, Division of Virology, CVN8, Scripps Research Institute, 10550 North Torrey Pines Road, La Jolla, CA 92037">
+<meta name="citation_author" content="John H Fitchen">
+<meta name="citation_author_institution" content="Department of Cell Biology, Division of Plant Biology, BCC 206, and Department of Neuropharmacology, Division of Virology, CVN8, Scripps Research Institute, 10550 North Torrey Pines Road, La Jolla, CA 92037">
+<meta name="citation_author" content="Michael J Buchmeier">
+<meta name="citation_author_institution" content="Department of Cell Biology, Division of Plant Biology, BCC 206, and Department of Neuropharmacology, Division of Virology, CVN8, Scripps Research Institute, 10550 North Torrey Pines Road, La Jolla, CA 92037">
+<meta name="citation_author" content="Roger N Beachy">
+<meta name="citation_author_institution" content="Department of Cell Biology, Division of Plant Biology, BCC 206, and Department of Neuropharmacology, Division of Virology, CVN8, Scripps Research Institute, 10550 North Torrey Pines Road, La Jolla, CA 92037">
+<meta name="citation_publication_date" content="1999 Jul 6">
+<meta name="citation_volume" content="96">
+<meta name="citation_issue" content="14">
+<meta name="citation_firstpage" content="7774">
+<meta name="citation_doi" content="10.1073/pnas.96.14.7774">
+<meta name="citation_pmid" content="10393897">
+<meta name="citation_abstract_html_url" content="https://pmc.ncbi.nlm.nih.gov/articles/PMC22137/">
+<meta name="citation_fulltext_html_url" content="https://pmc.ncbi.nlm.nih.gov/articles/PMC22137/">
+<meta name="citation_pdf_url" content="https://pmc.ncbi.nlm.nih.gov/articles/PMC22137/pdf/pq007774.pdf">
+<meta name="description" content="Hybrids of tobacco mosaic virus (TMV) were constructed with the use of fusion to the coat protein peptides of 10 or 15 amino acids, containing the 5B19 epitope from the spike protein of murine hepatitis virus (MHV) and giving rise to TMV-5B19 and ...">
+<meta name="og:title" content="Protective immunity against murine hepatitis virus (MHV) induced by intranasal or subcutaneous administration of hybrids of tobacco mosaic virus that carries an MHV epitope">
+<meta name="og:type" content="article">
+<meta name="og:site_name" content="PubMed Central (PMC)">
+<meta name="og:description" content="Hybrids of tobacco mosaic virus (TMV) were constructed with the use of fusion to the coat protein peptides of 10 or 15 amino acids, containing the 5B19 epitope from the spike protein of murine hepatitis virus (MHV) and giving rise to TMV-5B19 and ...">
+<meta name="og:url" content="https://pmc.ncbi.nlm.nih.gov/articles/PMC22137/">
+<meta name="og:image" content="https://cdn.ncbi.nlm.nih.gov/pmc/cms/images/pmc-card-share.jpg?_=0">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@ncbi">
+    
+    
+
+    </head>
+    <body >
+        
+    <a class="usa-skipnav " href="#main-content">
+      Skip to main content
+    </a>
+
+
+        
+            
+
+<section class="usa-banner " aria-label="Official website of the United States government" >
+    <div class="usa-accordion">
+        <header class="usa-banner__header">
+            <div class="usa-banner__inner">
+                <div class="grid-col-auto">
+                    <img aria-hidden="true"
+                         class="usa-banner__header-flag"
+                         src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/us_flag.svg"
+                         alt="" />
+                </div>
+
+                <div class="grid-col-fill tablet:grid-col-auto" aria-hidden="true">
+                    <p class="usa-banner__header-text">
+                        An official website of the United States government
+                    </p>
+                    <span class="usa-banner__header-action">Here's how you know</span>
+                </div>
+
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+        <button
+            type="button"
+        
+    
+    class="usa-accordion__button usa-banner__button
+           
+
+           
+               
+               
+               
+               
+            
+
+           
+           
+           
+           "
+    aria-expanded="false"
+    aria-controls="gov-banner-default"
+    
+    data-testid="storybook-django-banner"
+    
+    >
+    
+        
+
+        
+                    <span class="usa-banner__button-text">Here's how you know</span>
+                
+
+        
+    
+        
+            </button>
+        
+
+
+            </div>
+        </header>
+
+        <div class="usa-banner__content usa-accordion__content"
+             id="gov-banner-default"
+             hidden>
+            <div class="grid-row grid-gap-lg">
+                <div class="usa-banner__guidance tablet:grid-col-6">
+                    <img class="usa-banner__icon usa-media-block__img"
+                         src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/icon-dot-gov.svg"
+                         alt=""
+                         aria-hidden="true" />
+                    <div class="usa-media-block__body">
+                        <p>
+                            <strong>Official websites use .gov</strong>
+                            <br />
+                            A
+                            <strong>.gov</strong> website belongs to an official
+                            government organization in the United States.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="usa-banner__guidance tablet:grid-col-6">
+                    <img class="usa-banner__icon usa-media-block__img"
+                         src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/icon-https.svg"
+                         alt=""
+                         aria-hidden="true" />
+
+                    <div class="usa-media-block__body">
+                        <p>
+                            <strong>Secure .gov websites use HTTPS</strong>
+                            <br />
+                            A <strong>lock</strong> (
+                            <span class="icon-lock">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     width="52"
+                                     height="64"
+                                     viewBox="0 0 52 64"
+                                     class="usa-banner__lock-image"
+                                     role="graphics-symbol"
+                                     aria-labelledby="banner-lock-description"
+                                     focusable="false">
+                                    <title id="banner-lock-title">Lock</title>
+                                    <desc id="banner-lock-description">
+                                    Locked padlock icon
+                                    </desc>
+                                    <path fill="#000000"
+                                          fill-rule="evenodd"
+                                          d="M26 0c10.493 0 19 8.507 19 19v9h3a4 4 0 0 1 4 4v28a4 4 0 0 1-4 4H4a4 4 0 0 1-4-4V32a4 4 0 0 1 4-4h3v-9C7 8.507 15.507 0 26 0zm0 8c-5.979 0-10.843 4.77-10.996 10.712L15 19v9h22v-9c0-6.075-4.925-11-11-11z" />
+                                </svg>
+</span>) or <strong>https://</strong> means you've safely
+                                connected to the .gov website. Share sensitive
+                                information only on official, secure websites.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+        
+
+        
+    
+    
+    
+
+<div class="usa-overlay">
+</div>
+
+
+
+<header class="usa-header usa-header--extended usa-header--wide" data-header data-testid="header"    >
+    <div class="ncbi-header">
+        <div class="ncbi-header__container">
+            <a class="ncbi-header__logo-container"
+               href="https://www.ncbi.nlm.nih.gov/">
+                <img alt="NCBI home page"
+                     class="ncbi-header__logo-image"
+                     src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/ncbi-logos/nih-nlm-ncbi--white.svg"
+                     width="410"
+                     height="100" />
+            </a>
+
+            <!-- Mobile menu hamburger button -->
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+        <button
+            type="button"
+        
+    
+    class="usa-menu-btn ncbi-header__hamburger-button
+           
+
+           
+               
+               
+               
+               
+            
+
+           
+           
+           
+           "
+    
+    
+    aria-label="Show menu"
+    data-testid="navMenuButton"
+    
+    >
+    
+        
+
+        
+                <svg aria-hidden="true"
+                     class="ncbi-hamburger-icon"
+                     fill="none"
+                     focusable="false"
+                     height="21"
+                     viewBox="0 0 31 21"
+                     width="31"
+                     xmlns="http://www.w3.org/2000/svg">
+                    <path clip-rule="evenodd"
+                          d="M0.125 20.75H30.875V17.3333H0.125V20.75ZM0.125 12.2083H30.875V8.79167H0.125V12.2083ZM0.125 0.25V3.66667H30.875V0.25H0.125Z"
+                          fill="#F1F1F1"
+                          fill-rule="evenodd" />
+                </svg>
+            
+
+        
+    
+        
+            </button>
+        
+
+
+
+            
+                <!-- Desktop buttons-->
+                <div class="ncbi-header__desktop-buttons">
+                    
+                        <!-- Desktop search button -->
+                        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+        <button
+            type="button"
+        
+    
+    class="usa-button
+           
+
+           
+               
+               
+               
+               
+            
+
+           
+           
+           usa-button--unstyled ncbi-header__desktop-button
+           "
+    aria-expanded="false"
+    aria-controls="search-field-desktop-navigation"
+    aria-label="Show search overlay"
+    data-testid="toggleSearchPanelButton"
+    data-toggle-search-panel-button
+    >
+    
+        
+
+        
+                            
+
+
+
+    <img
+        src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/search.svg"
+        class="usa-icon "
+        aria-hidden="true"
+        
+        
+    />
+
+
+                            Search
+                        
+
+        
+    
+        
+            </button>
+        
+
+
+                    
+
+                    <!-- Desktop login dropdown -->
+                    
+                        <div class="ncbi-header__login-dropdown">
+                            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+        <button
+            type="button"
+        
+    
+    class="usa-button
+           
+
+           
+               
+               
+               
+               
+            
+
+           
+           
+           usa-button--unstyled ncbi-header__desktop-button ncbi-header__login-dropdown-button
+           "
+    aria-expanded="false"
+    aria-controls="login-dropdown-menu"
+    aria-label="Show login menu"
+    data-testid="toggleLoginMenuDropdown"
+    data-desktop-login-button
+    >
+    
+        
+
+        
+                                
+
+
+
+    <img
+        src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/person.svg"
+        class="usa-icon "
+        aria-hidden="true"
+        
+        
+    />
+
+
+
+                                <span data-login-dropdown-text>Log in</span>
+
+                                <!-- Dropdown icon pointing up -->
+                                
+
+
+
+    <img
+        src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/expand_less.svg"
+        class="usa-icon ncbi-header__login-dropdown-icon ncbi-header__login-dropdown-icon--expand-less ncbi-header__login-dropdown-icon--hidden"
+        aria-hidden="true"
+        data-login-dropdown-up-arrow
+        
+    />
+
+
+
+                                <!-- Dropdown icon pointing down -->
+                                
+
+
+
+    <img
+        src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/expand_more.svg"
+        class="usa-icon ncbi-header__login-dropdown-icon ncbi-header__login-dropdown-icon--expand-more ncbi-header__login-dropdown-icon--hidden"
+        aria-hidden="true"
+        data-login-dropdown-down-arrow
+        
+    />
+
+
+                            
+
+        
+    
+        
+            </button>
+        
+
+
+
+                            <!-- Login dropdown menu -->
+                            <ul class="usa-nav__submenu ncbi-header__login-dropdown-menu"
+                                id="login-dropdown-menu"
+                                data-desktop-login-menu-dropdown
+                                hidden>
+                                
+                                    <li class="usa-nav__submenu-item">
+                                        <!-- Uses custom style overrides to render external and document links. -->
+                                        
+
+
+
+
+
+
+
+
+
+    <a href="https://www.ncbi.nlm.nih.gov/myncbi/" class="usa-link  "  >
+        
+
+        
+            Dashboard
+        
+
+        
+    </a>
+
+
+                                    </li>
+                                
+                                    <li class="usa-nav__submenu-item">
+                                        <!-- Uses custom style overrides to render external and document links. -->
+                                        
+
+
+
+
+
+
+
+
+
+    <a href="https://www.ncbi.nlm.nih.gov/myncbi/collections/bibliography/" class="usa-link  "  >
+        
+
+        
+            Publications
+        
+
+        
+    </a>
+
+
+                                    </li>
+                                
+                                    <li class="usa-nav__submenu-item">
+                                        <!-- Uses custom style overrides to render external and document links. -->
+                                        
+
+
+
+
+
+
+
+
+
+    <a href="https://www.ncbi.nlm.nih.gov/account/settings/" class="usa-link  "  >
+        
+
+        
+            Account settings
+        
+
+        
+    </a>
+
+
+                                    </li>
+                                
+                                <li class="usa-nav__submenu-item">
+                                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+        <button
+            type="button"
+        
+    
+    class="usa-button
+           
+
+           
+               
+               
+               
+               
+            
+
+           
+           
+           usa-button--outline ncbi-header__login-dropdown-logout-button
+           "
+    
+    
+    
+    data-testid="desktopLogoutButton"
+    data-desktop-logout-button
+    >
+    
+        
+
+        Log out
+
+        
+    
+        
+            </button>
+        
+
+
+                                </li>
+                            </ul>
+                        </div>
+                    
+                </div>
+            
+        </div>
+    </div>
+
+    <!-- Search panel -->
+    
+        <div class="ncbi-search-panel ncbi--show-only-at-desktop"
+             data-header-search-panel
+             hidden>
+            <div class="ncbi-search-panel__container">
+                <form action="https://www.ncbi.nlm.nih.gov/search/all/"
+                      
+                      autocomplete="off"
+                      class="usa-search usa-search--big ncbi-search-panel__form"
+                      data-testid="desktop-navigation-search-form"
+                      method="GET"
+                      role="search">
+                    <label class="usa-sr-only" for="search-field-desktop-navigation">
+                        Search…
+                    </label>
+                    <input class="usa-input"
+                           id="search-field-desktop-navigation"
+                           name="term"
+                           
+                               placeholder="Search NCBI"
+                           
+                           type="search"
+                           value="" />
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+        <button
+            type="submit"
+        
+    
+    class="usa-button
+           
+
+           
+               
+               
+               
+               
+            
+
+           
+           
+           
+           "
+    
+    
+    
+    
+    
+    >
+    
+        
+
+        
+                        <span class="usa-search__submit-text">
+                            Search NCBI
+                        </span>
+                    
+
+        
+    
+        
+            </button>
+        
+
+
+                </form>
+
+                
+            </div>
+        </div>
+    
+
+    <nav aria-label="Primary navigation" class="usa-nav">
+        <p class="usa-sr-only" id="primary-navigation-sr-only-title">
+            Primary site navigation
+        </p>
+
+        <!-- Mobile menu close button -->
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+        <button
+            type="button"
+        
+    
+    class="usa-nav__close ncbi-nav__close-button
+           
+
+           
+               
+               
+               
+               
+            
+
+           
+           
+           
+           "
+    
+    
+    aria-label="Close navigation menu"
+    data-testid="navCloseButton"
+    
+    >
+    
+        
+
+        
+            <img src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/usa-icons/close.svg" alt="Close" />
+        
+
+        
+    
+        
+            </button>
+        
+
+
+
+        
+            <!-- Mobile search component -->
+            <form class="usa-search usa-search--small ncbi--hide-at-desktop"
+                  action="https://www.ncbi.nlm.nih.gov/search/all/"
+                  
+                  autocomplete="off"
+                  data-testid="mobile-navigation-search-form"
+                  method="GET"
+                  role="search">
+                <label class="usa-sr-only" for="search-field-mobile-navigation">
+                    Search
+                </label>
+
+                <input class="usa-input"
+                       id="search-field-mobile-navigation"
+                       type="search"
+                       
+                           placeholder="Search NCBI"
+                       
+                       name="term" />
+
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+        <button
+            type="submit"
+        
+    
+    class="usa-button
+           
+
+           
+               
+               
+               
+               
+            
+
+           
+           
+           
+           "
+    
+    
+    
+    
+    
+    >
+    
+        
+
+        
+                    <!-- This SVG should be kept inline and not replaced with a link to the icon as otherwise it will render in the wrong color -->
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0Ij48cGF0aCBkPSJNMCAwaDI0djI0SDB6IiBmaWxsPSJub25lIi8+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTE1LjUgMTRoLS43OWwtLjI4LS4yN0E2LjQ3MSA2LjQ3MSAwIDAgMCAxNiA5LjUgNi41IDYuNSAwIDEgMCA5LjUgMTZjMS42MSAwIDMuMDktLjU5IDQuMjMtMS41N2wuMjcuMjh2Ljc5bDUgNC45OUwyMC40OSAxOWwtNC45OS01em0tNiAwQzcuMDEgMTQgNSAxMS45OSA1IDkuNVM3LjAxIDUgOS41IDUgMTQgNy4wMSAxNCA5LjUgMTEuOTkgMTQgOS41IDE0eiIvPjwvc3ZnPg=="
+                         class="usa-search__submit-icon"
+                         alt="Search" />
+                
+
+        
+    
+        
+            </button>
+        
+
+
+            </form>
+
+            
+        
+
+        <!-- Primary navigation menu items -->
+        <!-- This usa-nav__inner wrapper is required to correctly style the navigation items on Desktop -->
+        
+
+        
+            <div class="ncbi-nav__mobile-login-menu ncbi--hide-at-desktop"
+                 data-mobile-login-menu
+                 hidden>
+                <p class="ncbi-nav__mobile-login-menu-status">
+                    Logged in as:
+                    <strong class="ncbi-nav__mobile-login-menu-email"
+                            data-mobile-login-email-text></strong>
+                </p>
+                <ul class="usa-nav__primary usa-accordion">
+                    
+                        <li class="usa-nav__primary-item">
+                            
+
+
+
+
+
+
+
+
+
+    <a href="https://www.ncbi.nlm.nih.gov/myncbi/" class="usa-link  "  >
+        
+
+        
+            Dashboard
+        
+
+        
+    </a>
+
+
+                        </li>
+                    
+                        <li class="usa-nav__primary-item">
+                            
+
+
+
+
+
+
+
+
+
+    <a href="https://www.ncbi.nlm.nih.gov/myncbi/collections/bibliography/" class="usa-link  "  >
+        
+
+        
+            Publications
+        
+
+        
+    </a>
+
+
+                        </li>
+                    
+                        <li class="usa-nav__primary-item">
+                            
+
+
+
+
+
+
+
+
+
+    <a href="https://www.ncbi.nlm.nih.gov/account/settings/" class="usa-link  "  >
+        
+
+        
+            Account settings
+        
+
+        
+    </a>
+
+
+                        </li>
+                    
+                </ul>
+            </div>
+        
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+        <button
+            type="button"
+        
+    
+    class="usa-button
+           
+
+           
+               
+               
+               
+               
+            
+
+           
+           
+           ncbi-nav__mobile-login-button ncbi--hide-at-desktop
+           "
+    
+    
+    
+    data-testid="mobileLoginButton"
+    data-mobile-login-button
+    >
+    
+        
+
+        Log in
+
+        
+    
+        
+            </button>
+        
+
+
+    </nav>
+</header>
+
+    
+    
+        
+
+<section class="pmc-header pmc-header--basic" aria-label="PMC Header with search box">
+    <div class="pmc-nav-container">
+        <div class="pmc-header__bar">
+           <div class="pmc-header__logo">
+               <a href="/" title="Home" aria-label="PMC Home"></a>
+           </div>
+            <button
+                    type="button"
+                    class="usa-button usa-button--unstyled pmc-header__search__button"
+                    aria-label="Open search"
+                    data-ga-category="search"
+                    data-ga-action="PMC"
+                    data-ga-label="pmc_search_panel_mobile"
+            >
+                <img src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/search.svg" alt="PMC search open icon" aria-hidden="true" class="usa-icon usa-icon--size-4 pmc-icon__open" />
+                <img src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/close.svg" alt="PMC search close ison" aria-hidden="true" class="usa-icon usa-icon--size-4 pmc-icon__close" />
+            </button>
+        </div>
+        <div class="pmc-header__search">
+            
+
+
+<form class="usa-search usa-search--extra usa-search--article-right-column  pmc-header__search__form" id="pmc-search-form" autocomplete="off" role="search">
+<label class="usa-sr-only" for="pmc-search">Search PMC Full-Text Archive</label>
+<span class="autoComplete_wrapper flex-1">
+<input class="usa-input width-full maxw-none" required="required" placeholder="Search PMC Full-Text Archive" id="pmc-search"  type="search" name="term" data-autocomplete-url="https://pmc.ncbi.nlm.nih.gov/autocomp/search/autocomp/"/>
+</span>
+<button
+class="usa-button"
+type="submit"
+formaction="https://pmc.ncbi.nlm.nih.gov/search/"
+data-ga-category="search"
+data-ga-action="PMC"
+data-ga-label="PMC_search_button"
+>
+<span class="usa-search__submit-text">Search in PMC</span>
+<img
+src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/usa-icons-bg/search--white.svg"
+class="usa-search__submit-icon"
+alt="Search"
+/>
+</button>
+</form>
+            <div class="display-flex flex-column tablet:flex-row tablet:flex-justify flex-justify-center flex-align-center width-full desktop:maxw-44">
+                <ul class="pmc-header__search__menu">
+                    <li>
+                        
+                            <a class="usa-link" href="/journals/" data-ga-action="featured_link" data-ga-label="journal list">
+                                Journal List
+                            </a>
+                        
+                    </li>
+                    <li>
+                        
+                            <a class="usa-link" href="/about/userguide/" data-ga-action="featured_link"
+                            data-ga-label="user guide">
+                                User Guide
+                            </a>
+                        
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+    
+
+
+        
+        
+
+       
+  <div class="usa-section padding-top-0 desktop:padding-top-6 pmc-article-section" data-article-db="pmc" data-article-id="22137">
+
+    
+
+   
+
+
+
+<div class="grid-container pmc-actions-bar" aria-label="Actions bar" role="complementary">
+    <div class="grid-row">
+        <div class="grid-col-fill display-flex">
+             <div class="display-flex">
+                <ul class="usa-list usa-list--unstyled usa-list--horizontal">
+                    <li class="margin-right-2 mobile-lg:margin-right-4 display-flex mob">
+                        <button
+                                type="button"
+                                class="usa-button pmc-sidenav__container__open usa-button--unstyled width-auto display-flex"
+                                aria-label="Open resources"
+                                data-extra-class="is-visible-resources"
+                                data-ga-category="resources_accordion"
+                                data-ga-action="click"
+                                data-ga-label="mobile_icon"
+                        >
+                            <img src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/more_vert.svg" alt="Open resources icon" class="usa-icon usa-icon--size-4 usa-icon--link" />
+                        </button>
+                    </li>
+                    
+                    <li class="margin-right-2 mobile-lg:margin-right-4 display-flex mob">
+                        <a
+                                href="https://doi.org/10.1073/pnas.96.14.7774"
+                                class="usa-link display-flex usa-tooltip"
+                                role="button"
+                                target="_blank"
+                                rel="noreferrer noopener"
+                                title="View on publisher site"
+                                data-position="bottom"
+                                aria-label="View on publisher site"
+                                data-ga-category="actions"
+                                data-ga-action="click"
+                                data-ga-label="publisher_link_mobile"
+                        >
+                                <img src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/launch.svg" alt="View on publisher site icon" class="usa-icon usa-icon--size-4 usa-icon--link" />
+                        </a>
+                    </li>
+                    
+                    
+                        <li class="margin-right-2 mobile-lg:margin-right-4 display-flex">
+                             <a
+                                     href="pdf/pq007774.pdf"
+                                     class="usa-link display-flex usa-tooltip"
+                                     role="button"
+                                     title="Download PDF"
+                                     data-position="bottom"
+                                     aria-label="Download PDF"
+                                     data-ga-category="actions"
+                                     data-ga-action="click"
+                                     data-ga-label="pdf_download_mobile"
+                             >
+
+                                 <img src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/file_download.svg" alt="Download PDF icon" aria-hidden="true" class="usa-icon usa-icon--size-4 usa-icon--link" />
+                            </a>
+                        </li>
+                    
+                    <li class="margin-right-2 mobile-lg:margin-right-4 display-flex">
+                        <button
+                            class="usa-button usa-button--unstyled  usa-tooltip collections-dialog-trigger collections-button display-flex collections-button-empty"
+                            title="Add to Collections"
+                            data-position="bottom"
+                            aria-label="Save article in MyNCBI collections."
+                            data-ga-category="actions"
+                            data-ga-action="click"
+                            data-ga-label="collections_button_mobile"
+                            data-collections-open-dialog-enabled="false"
+                            data-collections-open-dialog-url="https://account.ncbi.nlm.nih.gov/?back_url=https%3A%2F%2Fpmc.ncbi.nlm.nih.gov%2Farticles%2FPMC22137%2F%3Fformat%3Dxml%23open-collections-dialog"
+                            data-in-collections="false"
+                        >
+                            <img src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/action-bookmark-full.svg" alt="Collections icon" aria-hidden="true" class="usa-icon usa-icon--size-4 usa-icon--link usa-icon--bookmark-full" />
+                            <img src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/action-bookmark-empty.svg" alt="Collections icon" aria-hidden="true" class="usa-icon usa-icon--size-4 usa-icon--link usa-icon--bookmark-empty" />
+                        </button>
+                    </li>
+                    
+                    <li class="margin-right-2 mobile-lg:margin-right-4 display-flex">
+                        <button role="button" class="usa-button usa-button--unstyled usa-tooltip citation-dialog-trigger display-flex"
+                            aria-label="Open dialog with citation text in different styles"
+                            title="Cite"
+                            data-position="bottom"
+                            data-ga-category="actions"
+                            data-ga-action="open"
+                            data-ga-label="cite_mobile"
+                            data-all-citations-url="/resources/citations/22137/"
+                            data-citation-style="nlm"
+                            data-download-format-link="/resources/citations/22137/export/"
+                        >
+                            <img src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/format_quote.svg" alt="Cite icon" aria-hidden="true" class="usa-icon usa-icon--size-4 usa-icon--link" />
+                        </button>
+                    </li>
+                    
+                    <li class="pmc-permalink display-flex" >
+                         <button
+                                 type="button"
+                                 title="Permalink"
+                                 data-position="bottom"
+                                 class="usa-button usa-button--unstyled display-flex usa-tooltip"
+                                 aria-label="Show article permalink"
+                                 aria-expanded="false"
+                                 aria-haspopup="true"
+                                 data-ga-category="actions"
+                                 data-ga-action="open"
+                                 data-ga-label="permalink_mobile"
+                         >
+                            <img src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/share.svg" alt="Show article permalink icon" aria-hidden="true" class="usa-icon usa-icon--size-4 usa-icon--link" />
+                        </button>
+                        
+
+<div class="pmc-permalink__dropdown" hidden>
+    <div class="pmc-permalink__dropdown__container">
+          <h2 class="usa-modal__heading margin-top-0 margin-bottom-2 text-uppercase font-sans-xs">PERMALINK</h2>
+          <div class="pmc-permalink__dropdown__content">
+              <input type="text" class="usa-input" value="https://pmc.ncbi.nlm.nih.gov/articles/PMC22137/" aria-label="Article permalink">
+              <button class="usa-button display-inline-flex pmc-permalink__dropdown__copy__btn margin-right-0" title="Copy article permalink" data-ga-category="save_share" data-ga-action="link" data-ga-label="copy_link">
+                  <img src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/content_copy.svg" alt="Copy icon" aria-hidden="true" class="usa-icon usa-icon--white" />
+                  <span class="margin-left-1">Copy</span>
+              </button>
+          </div>
+    </div>
+</div>
+                    </li>
+                </ul>
+            </div>
+            <button
+                    type="button"
+                    class="usa-button pmc-sidenav__container__open usa-button--unstyled width-auto display-flex"
+                    aria-label="Open article navigation"
+                    data-extra-class="is-visible-in-page"
+                    data-ga-category="actions"
+                    data-ga-action="open"
+                    data-ga-label="article_nav_mobile"
+            >
+                <img src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/list.svg" alt="Open article navigation icon" aria-hidden="true" class="usa-icon usa-icon--size-4 usa-icon--link" />
+            </button>
+        </div>
+    </div>
+</div>
+    <div class="grid-container desktop:padding-left-6">
+      <div id="article-container" class="grid-row grid-gap">
+        <div class="grid-col-12 desktop:grid-col-8 order-2 pmc-layout__content">
+            <div class="grid-container padding-left-0 padding-right-0">
+                <div class="grid-row desktop:margin-left-neg-6">
+                    <div class="grid-col-12">
+                        <div class="pmc-layout__disclaimer" role="complementary" aria-label="Disclaimer note">
+    As a library, NLM provides access to scientific literature. Inclusion in an NLM database does not imply endorsement of, or agreement with,
+    the contents by NLM or the National Institutes of Health.<br/>
+    Learn more:
+    <a class="usa-link" data-ga-category="Link click" data-ga-action="Disclaimer" data-ga-label="New disclaimer box" href="/about/disclaimer/">PMC Disclaimer</a>
+    |
+    <a class="usa-link" data-ga-category="Link click" data-ga-action="PMC Copyright Notice" data-ga-label="New disclaimer box" href="/about/copyright/">
+        PMC Copyright Notice
+    </a>
+</div>
+                    </div>
+                </div>
+                <div class="grid-row pmc-wm desktop:margin-left-neg-6">
+                    <!-- Main content -->
+                    <main
+                      id="main-content"
+                      class="usa-layout-docs__main usa-layout-docs grid-col-12 pmc-layout pmc-prose padding-0"
+                    >
+
+                      
+                        <section class="pmc-journal-banner text-center line-height-none" aria-label="Journal banner"><img src="https://cdn.ncbi.nlm.nih.gov/pmc/banners/logo-pnas.png" alt="Proceedings of the National Academy of Sciences of the United States of America logo" usemap="#pmc-banner-imagemap" width="500" height="75"><map name="pmc-banner-imagemap"><area alt="Link to Proceedings of the National Academy of Sciences of the United States of America" title="Link to Proceedings of the National Academy of Sciences of the United States of America" shape="default" href="https://doi.org/10.1073/pnas.96.14.7774" target="_blank" rel="noopener noreferrer"></map></section><article lang="en"><section aria-label="Article citation and metadata"><section class="pmc-layout__citation font-secondary font-xs"><div>
+<div class="display-inline-block"><button type="button" class="cursor-pointer text-no-underline bg-transparent border-0 padding-0 text-left margin-0 text-normal text-primary" aria-controls="journal_context_menu">Proc Natl Acad Sci U S A</button></div>. 1999 Jul 6;96(14):7774–7779. doi: <a href="https://doi.org/10.1073/pnas.96.14.7774" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">10.1073/pnas.96.14.7774</a>
+</div>
+<nav id="journal_context_menu" hidden="hidden"><ul class="menu-list font-family-ui" role="menu">
+<li role="presentation"><a href='https://pmc.ncbi.nlm.nih.gov/search/?term="Proc%20Natl%20Acad%20Sci%20U%20S%20A"[jour]' class="usa-link" role="menuitem">Search in PMC</a></li>
+<li role="presentation"><a href='https://pubmed.ncbi.nlm.nih.gov/?term="Proc%20Natl%20Acad%20Sci%20U%20S%20A"[jour]' lang="en" class="usa-link" role="menuitem">Search in PubMed</a></li>
+<li role="presentation"><a href='https://www.ncbi.nlm.nih.gov/nlmcatalog?term="Proc%20Natl%20Acad%20Sci%20U%20S%20A"[Title%20Abbreviation]' class="usa-link" role="menuitem">View in NLM Catalog</a></li>
+<li role="presentation"><a href='?term="Proc%20Natl%20Acad%20Sci%20U%20S%20A"[jour]' class="usa-link" role="menuitem" data-add-to-search="true">Add to search</a></li>
+</ul></nav></section><section class="front-matter"><div class="ameta p font-secondary font-xs">
+<hgroup><h1>Protective immunity against murine hepatitis virus (MHV) induced by intranasal or subcutaneous administration of hybrids of tobacco mosaic virus that carries an MHV epitope</h1></hgroup><div class="cg p">
+<a href='https://pubmed.ncbi.nlm.nih.gov/?term="Koo%20M"[Author]' class="usa-link" aria-describedby="id1"><span class="name western">Moses Koo</span></a><div hidden="hidden" id="id1">
+<h3><span class="name western">Moses Koo</span></h3>
+<div class="p">
+<sup>*</sup>Department of Cell Biology, Division of Plant Biology, BCC 206, and <sup>¶</sup>Department of Neuropharmacology, Division of Virology, CVN8, Scripps Research Institute, 10550 North Torrey Pines Road, La Jolla, CA 92037</div>
+<div class="p">Find articles by <a href='https://pubmed.ncbi.nlm.nih.gov/?term="Koo%20M"[Author]' class="usa-link"><span class="name western">Moses Koo</span></a>
+</div>
+</div>
+<sup>*,</sup><sup>†,</sup><sup>‡</sup>, <a href='https://pubmed.ncbi.nlm.nih.gov/?term="Bendahmane%20M"[Author]' class="usa-link" aria-describedby="id2"><span class="name western">Mohammed Bendahmane</span></a><div hidden="hidden" id="id2">
+<h3><span class="name western">Mohammed Bendahmane</span></h3>
+<div class="p">
+<sup>*</sup>Department of Cell Biology, Division of Plant Biology, BCC 206, and <sup>¶</sup>Department of Neuropharmacology, Division of Virology, CVN8, Scripps Research Institute, 10550 North Torrey Pines Road, La Jolla, CA 92037</div>
+<div class="p">Find articles by <a href='https://pubmed.ncbi.nlm.nih.gov/?term="Bendahmane%20M"[Author]' class="usa-link"><span class="name western">Mohammed Bendahmane</span></a>
+</div>
+</div>
+<sup>*,</sup><sup>†,</sup><sup>§</sup>, <a href='https://pubmed.ncbi.nlm.nih.gov/?term="Lettieri%20GA"[Author]' class="usa-link" aria-describedby="id3"><span class="name western">Gerard A Lettieri</span></a><div hidden="hidden" id="id3">
+<h3><span class="name western">Gerard A Lettieri</span></h3>
+<div class="p">
+<sup>*</sup>Department of Cell Biology, Division of Plant Biology, BCC 206, and <sup>¶</sup>Department of Neuropharmacology, Division of Virology, CVN8, Scripps Research Institute, 10550 North Torrey Pines Road, La Jolla, CA 92037</div>
+<div class="p">Find articles by <a href='https://pubmed.ncbi.nlm.nih.gov/?term="Lettieri%20GA"[Author]' class="usa-link"><span class="name western">Gerard A Lettieri</span></a>
+</div>
+</div>
+<sup>*</sup>, <a href='https://pubmed.ncbi.nlm.nih.gov/?term="Paoletti%20AD"[Author]' class="usa-link" aria-describedby="id4"><span class="name western">Alyssa D Paoletti</span></a><div hidden="hidden" id="id4">
+<h3><span class="name western">Alyssa D Paoletti</span></h3>
+<div class="p">
+<sup>*</sup>Department of Cell Biology, Division of Plant Biology, BCC 206, and <sup>¶</sup>Department of Neuropharmacology, Division of Virology, CVN8, Scripps Research Institute, 10550 North Torrey Pines Road, La Jolla, CA 92037</div>
+<div class="p">Find articles by <a href='https://pubmed.ncbi.nlm.nih.gov/?term="Paoletti%20AD"[Author]' class="usa-link"><span class="name western">Alyssa D Paoletti</span></a>
+</div>
+</div>
+<sup>¶</sup>, <a href='https://pubmed.ncbi.nlm.nih.gov/?term="Lane%20TE"[Author]' class="usa-link" aria-describedby="id5"><span class="name western">Thomas E Lane</span></a><div hidden="hidden" id="id5">
+<h3><span class="name western">Thomas E Lane</span></h3>
+<div class="p">
+<sup>*</sup>Department of Cell Biology, Division of Plant Biology, BCC 206, and <sup>¶</sup>Department of Neuropharmacology, Division of Virology, CVN8, Scripps Research Institute, 10550 North Torrey Pines Road, La Jolla, CA 92037</div>
+<div class="p">Find articles by <a href='https://pubmed.ncbi.nlm.nih.gov/?term="Lane%20TE"[Author]' class="usa-link"><span class="name western">Thomas E Lane</span></a>
+</div>
+</div>
+<sup>¶</sup>, <a href='https://pubmed.ncbi.nlm.nih.gov/?term="Fitchen%20JH"[Author]' class="usa-link" aria-describedby="id6"><span class="name western">John H Fitchen</span></a><div hidden="hidden" id="id6">
+<h3><span class="name western">John H Fitchen</span></h3>
+<div class="p">
+<sup>*</sup>Department of Cell Biology, Division of Plant Biology, BCC 206, and <sup>¶</sup>Department of Neuropharmacology, Division of Virology, CVN8, Scripps Research Institute, 10550 North Torrey Pines Road, La Jolla, CA 92037</div>
+<div class="p">Find articles by <a href='https://pubmed.ncbi.nlm.nih.gov/?term="Fitchen%20JH"[Author]' class="usa-link"><span class="name western">John H Fitchen</span></a>
+</div>
+</div>
+<sup>*,</sup><sup>‖</sup>, <a href='https://pubmed.ncbi.nlm.nih.gov/?term="Buchmeier%20MJ"[Author]' class="usa-link" aria-describedby="id7"><span class="name western">Michael J Buchmeier</span></a><div hidden="hidden" id="id7">
+<h3><span class="name western">Michael J Buchmeier</span></h3>
+<div class="p">
+<sup>*</sup>Department of Cell Biology, Division of Plant Biology, BCC 206, and <sup>¶</sup>Department of Neuropharmacology, Division of Virology, CVN8, Scripps Research Institute, 10550 North Torrey Pines Road, La Jolla, CA 92037</div>
+<div class="p">Find articles by <a href='https://pubmed.ncbi.nlm.nih.gov/?term="Buchmeier%20MJ"[Author]' class="usa-link"><span class="name western">Michael J Buchmeier</span></a>
+</div>
+</div>
+<sup>¶</sup>, <a href='https://pubmed.ncbi.nlm.nih.gov/?term="Beachy%20RN"[Author]' class="usa-link" aria-describedby="id8"><span class="name western">Roger N Beachy</span></a><div hidden="hidden" id="id8">
+<h3><span class="name western">Roger N Beachy</span></h3>
+<div class="p">
+<sup>*</sup>Department of Cell Biology, Division of Plant Biology, BCC 206, and <sup>¶</sup>Department of Neuropharmacology, Division of Virology, CVN8, Scripps Research Institute, 10550 North Torrey Pines Road, La Jolla, CA 92037</div>
+<div class="p">Find articles by <a href='https://pubmed.ncbi.nlm.nih.gov/?term="Beachy%20RN"[Author]' class="usa-link"><span class="name western">Roger N Beachy</span></a>
+</div>
+</div>
+<sup>*,</sup><sup>§,</sup><sup>**</sup>
+</div>
+<ul class="d-buttons inline-list">
+<li><button class="d-button" aria-controls="aip_a" aria-expanded="false">Author information</button></li>
+<li><button class="d-button" aria-controls="clp_a" aria-expanded="false">Copyright and License information</button></li>
+</ul>
+<div class="d-panels font-secondary-light">
+<div id="aip_a" class="d-panel p" style="display: none">
+<div class="p" id="N0x959afe8.0x9eb3d70">
+<sup>*</sup>Department of Cell Biology, Division of Plant Biology, BCC 206, and <sup>¶</sup>Department of Neuropharmacology, Division of Virology, CVN8, Scripps Research Institute, 10550 North Torrey Pines Road, La Jolla, CA 92037</div>
+<div class="author-notes p">
+<div class="fn" id="FN151">
+<sup>†</sup><p class="display-inline">M.K. and M.B. contributed equally to this work.</p>
+</div>
+<div class="fn" id="FN152">
+<sup>‡</sup><p class="display-inline">Present address: Plant Molecular Biology and Biotechnology Research Center, Department of Biochemistry, Gyeongsang National University, Chinju 660-701, Korea.</p>
+</div>
+<div class="fn" id="FN153">
+<sup>§</sup><p class="display-inline">Present address: Donald Danforth Plant Science Center, 7425 Forsyth Boulevard, Box 1098, St. Louis, MO 63105.</p>
+</div>
+<div class="fn" id="FN155">
+<sup>‖</sup><p class="display-inline">Present address: EPIgen, 8445 Camino Santa Fe, Suite 102, San Diego, CA 92121.</p>
+</div>
+<div class="fn" id="FN160">
+<sup>**</sup><p class="display-inline">To whom reprint requests should be addressed at present address. e-mail: <span>rnbeachy@danforthcenter.org</span>.</p>
+</div>
+<div class="fn" id="fn6"><p>Contributed by Roger N. Beachy, (received for review May 7, 1999)</p></div>
+</div>
+</div>
+<div id="clp_a" class="d-panel p" style="display: none">
+<div>Copyright © 1999, The National Academy of Sciences</div>
+<div class="p"><a href="/about/copyright/" class="usa-link">PMC Copyright notice</a></div>
+</div>
+</div>
+<div>PMCID: PMC22137  PMID: <a href="https://pubmed.ncbi.nlm.nih.gov/10393897/" class="usa-link">10393897</a>
+</div>
+</div></section></section><section aria-label="Article content"><section class="body main-article-body"><section class="abstract" id="abstract1"><h2>Abstract</h2>
+<p>Hybrids of tobacco mosaic virus (TMV) were constructed with the use of fusion to the coat protein peptides of 10 or 15 amino acids, containing the 5B19 epitope from the spike protein of murine hepatitis virus (MHV) and giving rise to TMV-5B19 and TMV-5B19L, respectively. The TMV hybrids were propagated in tobacco plants, and the virus particles were purified. Immunogold labeling, with the use of the monoclonal MAb5B19 antibody, showed specific decoration of hybrid TMV particles, confirming the expression and display of the MHV epitope on the surface of the TMV. Mice were immunized with purified hybrid viruses after several regimens of immunization. Mice that received TMV-5B19L intranasally developed serum IgG and IgA specific for the 5B19 epitope and for the TMV coat protein. Hybrid TMV-5B19, administered by subcutaneous injections, elicited high titers of serum IgG that was specific for the 5B19 epitope and for coat protein, but IgA that was specific against 5B19 was not observed. Mice that were immunized with hybrid virus by subcutaneous or intranasal routes of administration survived challenge with a lethal dose (10 × LD<sub>50</sub>) of MHV strain JHM, whereas mice administered wild-type TMV died 10 d post challenge. Furthermore, there was a positive correlation between the dose of administered immunogen and protection against MHV infection. These studies show that TMV can be an effective vaccine delivery vehicle for parenteral and mucosal immunization and for protection from challenge with viral infection.</p></section><hr class="headless">
+<p>Several plant viruses have been developed for use as vectors for the expression and delivery of foreign peptides (<a href="#B1" class="usa-link" aria-describedby="B1">1</a>–<a href="#B7" class="usa-link" aria-describedby="B7">7</a>). These examples include immunogenic epitopes that can be used in vaccines to confer protective immunity against human and animal diseases. We have demonstrated that a hybrid tobacco mosaic virus (TMV), containing the 13 amino acid sequence of the murine zona pellucida ZP3 epitope fused to a region near the C terminus of the coat protein (CP) successfully elicited the production of anti-ZP3 antibody in parenterally immunized animals. Anti-ZP3 antibody accumulated around the ova of immunized animals; however, it did not prevent fertilization (<a href="#B5" class="usa-link" aria-describedby="B5">5</a>).</p>
+<p>Murine hepatitis virus (MHV), a member of the <em>Coronaviridae</em> family, is responsible for a variety of acute and chronic diseases in its natural host. The strain JHM of MHV induces demyelinating encephalomyelitis with high mortality, and surviving mice exhibit chronic demyelination. MHV contains at least three dominant structural proteins: the membrane glycoprotein (M protein), the nucleocapsid protein (N protein), and the spike glycoprotein (S protein) (<a href="#B8" class="usa-link" aria-describedby="B8">8</a>). The S protein is posttranslationally processed to yield the S1 and the S2 proteins (<a href="#B9" class="usa-link" aria-describedby="B9">9</a>). The S protein has been the focus of many studies because of its important role in viral attachment to target cellular receptors (<a href="#B10" class="usa-link" aria-describedby="B10">10</a>), its membrane penetration, and its ability to induce cell fusion (<a href="#B11" class="usa-link" aria-describedby="B11">11</a>). The S protein is a critical determinant of viral pathogenicity and has been shown to contain major immunodominant neutralization domains. Protective neutralizing antibodies were induced in mice by immunization with purified S protein (<a href="#B12" class="usa-link" aria-describedby="B12">12</a>) and synthetic peptides derived from the S2 protein (<a href="#B13" class="usa-link" aria-describedby="B13">13</a>, <a href="#B14" class="usa-link" aria-describedby="B14">14</a>).</p>
+<p>The monoclonal antibody 5B19.2 was shown to protect against lethal challenge by passive immunization (<a href="#B15" class="usa-link" aria-describedby="B15">15</a>, <a href="#B16" class="usa-link" aria-describedby="B16">16</a>). Epitope-mapping and peptide-scanning studies were used to map the 5B19.2 antibody recognition sequence to a 10-amino acid segment, L<sup>900</sup>LGCIGSTCA<sup>909</sup> of the S2 glycoprotein of MHV strain A59 (<a href="#B17" class="usa-link" aria-describedby="B17">17</a>, <a href="#B18" class="usa-link" aria-describedby="B18">18</a>).</p>
+<p>In this communication, we show that intranasal and subcutaneous immunization of mice with TMV hybrid viruses carrying the MHV 5B19 epitope elicited protective immunity against challenge infection with MHV strain JHM. Mice immunized with wild-type (w.t.) TMV produced antibody only against TMV coat protein; they were not protected against MHV infection. These studies demonstrate the successful use of TMV as a vaccine carrier and delivery vehicle for parenteral and mucosal routes of immunization.</p>
+<section id="sec1"><h2 class="pmc_sec_title">MATERIALS AND METHODS</h2>
+<section id="sec2"><h4 class="pmc_sec_title">Construction of Hybrid TMV CP Molecules.</h4>
+<p>Physical maps of hybrid TMV molecules used in this study are shown in Fig. <a href="#F1" class="usa-link">1</a>. Peptides 5B19 (<span class="text-underline">L</span><sup>900</sup><span class="text-underline">LGCIGSTCA</span><sup>909</sup>) and 5B19L (P<sup>899</sup><span class="text-underline">LLGCIGSTCA</span>EDGN<sup>913</sup>) containing the 5B19 epitope (underlined sequence) from MHV strain JHM S2 glycoprotein (<a href="#B15" class="usa-link" aria-describedby="B15">15</a>, <a href="#B18" class="usa-link" aria-describedby="B18">18</a>) were inserted between amino acid residues Ser-154 and Gly-155 of the TMV CP by the following method. A double-stranded oligonucleotide encoding 10 amino acids of the 5B19 peptide (L<sup>900</sup>LGCIGSTCA<sup>909</sup>) with <em>Ahd</em>I cohesive ends was formed by annealing two oligonucleotides 5′-t TTA TTA GGA TGT ATA GGA TCT ACT TGT GCT-3′ and 5′-GC ACA AGT AGA TCC TAT ACA TCC TAA TAA ag-3′ (sequences in upper case represent the 5B19 peptide coding sequence; the coding frame is indicated). The annealed oligonucleotides were inserted into the <em>Ahd</em>I site of the TMV cDNA clone U3/4–12 (<a href="#B19" class="usa-link" aria-describedby="B19">19</a>). The resulting hybrid is an infectious full-length cDNA clone referred to as TMV-5B19; it carries the mutant CP gene CP-5B19.  </p>
+<figure class="fig xbox font-sm" id="F1"><h4 class="obj_head">Figure 1.</h4>
+<p class="img-box line-height-none margin-x-neg-2 tablet:margin-x-0 text-center"><a class="tileshop" target="_blank" href="https://www.ncbi.nlm.nih.gov/core/lw/2.0/html/tileshop_pmc/tileshop_pmc_inline.html?title=Click%20on%20image%20to%20zoom&amp;p=PMC3&amp;id=22137_pq1491832001.jpg"><img class="graphic zoom-in" src="https://cdn.ncbi.nlm.nih.gov/pmc/blobs/306b/22137/b60971e92a55/pq1491832001.jpg" loading="lazy" height="128" width="400" alt="Figure 1"></a></p>
+<div class="p text-right font-secondary"><a href="figure/F1/" class="usa-link" target="_blank" rel="noopener noreferrer">Open in a new tab</a></div>
+<figcaption><p>Map of hybrid TMV cDNA clones. The position of the 5B19 and 5B19L peptides between Ser-154 and Gly-155 of the TMV coat protein (CP) is indicated. The T7 promoter was used to produce viral RNA in <em>in vitro</em> transcription reactions. MP, Movement protein.</p></figcaption></figure><p>To construct the TMV-5B19L hybrid virus, the 5B19L peptide was inserted in the plasmid pKN2 (which contains the TMV CP gene) (<a href="#B20" class="usa-link" aria-describedby="B20">20</a>) by using PCR-based, site-directed mutagenesis and the following primers: 5′-GT ATA GGA TCT ACT TGT GCA GAG GAC GGA AAT ggt cct gca act tga gg-3′ and 5′-CC GTC CTC TGC ACA AGT AGA TCC TAT ACA TCC TAA TAA TGG aga ggt cca acc caa ac-3′ (sequences in upper case represent the 5B19L peptide coding sequence). These primers placed the 5B19L coding sequence between Ser-154 and Gly-155 of the TMV CP, and were used in the PCR reactions in combination with the AATTAACCCTCACTAAAGGG (T3) and TAATACGACTCACTATAGGG (T7) primers, respectively. The amplified fragments contain partial sequences of the CP and the overlapping coding sequence of the 5B19L peptide; the fragments were used in PCR in combination with the T3 and T7 primers to produce a full-length CP sequence that contained the 45 nucleotides encoding the 5B19L peptide. The amplified fragment was digested with <em>Xba</em>I and <em>Kpn</em>I and cloned into the vector pKN2 to produce the plasmid pCP. The fragment <em>Nco</em>I–<em>Kpn</em>I from the plasmid pCP:5B19L was used to replace its homologue in the TMV cDNA clone U3/12–4 (<a href="#B19" class="usa-link" aria-describedby="B19">19</a>) linearized with <em>Nco</em>I and <em>Kpn</em>I. These reactions resulted in the generation of an infectious full-length cDNA clone referred to as TMV-5B19L; it contains the hybrid CP gene CP-5B19L.</p></section><section id="sec3"><h4 class="pmc_sec_title">Plant Inoculation and Virus Purification.</h4>
+<p>Infectious RNA transcripts were generated <em>in vitro</em> from the w.t. TMV, TMV-5B19, and TMV-5B19L cDNA clones by using T7 RNA polymerase as described previously (<a href="#B19" class="usa-link" aria-describedby="B19">19</a>). Transcripts were inoculated to 4-week-old <em>Nicotiana tabacum</em> Xanthi-nn and Xanthi-NN plants. Wild-type TMV and TMV-5B19L were purified from infected leaves 2 weeks postinoculation as previously described (<a href="#B21" class="usa-link" aria-describedby="B21">21</a>). TMV-5B19 was purified as follows: infected leaves were ground to a fine powder and suspended in 50 mM sodium phosphate buffer (pH 7.0) at a ratio of 1.5 ml/g of leaf material. The slurry was centrifuged at 5,000 × <em>g</em> for 20 min, and the supernatant was mixed with 5% (wt/vol) diatomaceous earth and cleared at 12,000 × <em>g</em> for 30 min at 4°C. Virus-like particles in the supernatant were pelleted by ultracentrifugation at 90,000 × <em>g</em> for 90 min. After the supernatant was removed, the pellet was resuspended in 1× PBS with short ultrasonic disruption.</p></section><section id="sec4"><h4 class="pmc_sec_title">SDS/PAGE and Western Immunoblot Analysis.</h4>
+<p>Tobacco leaves were ground to fine powder and homogenized in Laemmli sample loading buffer (<a href="#B22" class="usa-link" aria-describedby="B22">22</a>). Total protein extracts were boiled and fractionated by electrophoresis on a 12.5% polyacrylamide gel containing SDS (SDS/PAGE). Separated proteins were either stained with Coomassie blue or transferred onto nitrocellulose membranes and analyzed by using Western immunoblots (<a href="#B23" class="usa-link" aria-describedby="B23">23</a>). To detect TMV CP, membranes were first reacted with rabbit anti-TMV polyclonal antibody followed by a mouse anti-rabbit Ig conjugated with horseradish peroxidase (Amersham). Specific binding reactions were detected by using the chemiluminescence ECL-kit (Amersham) according to the manufacturer’s instructions. To detect the MHV-5B19 epitope, the anti-TMV antibody was stripped off the membrane, and the blots were reprobed with the anti-5B19 monoclonal antibody MAb5B19 (<a href="#B15" class="usa-link" aria-describedby="B15">15</a>). A goat anti-mouse Ig conjugated with horseradish peroxidase was used as the secondary antibody and detected as described above.</p></section><section id="sec5"><h4 class="pmc_sec_title">Mass Spectrometry.</h4>
+<p>CP purified from w.t. TMV and TMV-5B19L particles, either nondigested or treated with trypsin, was subjected to matrix-assisted laser absorption/desorption ionization MS (<a href="#B24" class="usa-link" aria-describedby="B24">24</a>) analysis as described (<a href="#B25" class="usa-link" aria-describedby="B25">25</a>).</p></section><section id="sec6"><h4 class="pmc_sec_title">Electron Microscopy and Immunogold Labeling.</h4>
+<p>Purified w.t. TMV and TMV-5B19L particles were applied to carbon-coated copper electron-microscopy grids and used in immunogold labeling experiments as described (<a href="#B26" class="usa-link" aria-describedby="B26">26</a>). The antibody MAb5B19 (<a href="#B15" class="usa-link" aria-describedby="B15">15</a>) was used as first reactant and a goat anti-mouse IgG antibody conjugated with 50 nm gold particles (Ted Pella, Redding, CA) was used as second antibody. The grids were negatively stained with 1% phosphotungstic acid solution (pH 5.8) for 2 min and examined on an electron microscope (model CM100, Philips) at 39,000× magnification.</p></section><section id="sec7"><h4 class="pmc_sec_title">Immunization of Mice and MHV Protection Assays.</h4>
+<p>Female BALB/cBj mice that were TMV- and MHV-seronegative were obtained from The Scripps Research Institute rodent-breeding colony. Six different protocols were used to administer immunogens to mice. Mice were lightly anesthetized by inhalation of Metofane (methoxyfluorane) before administration of the antigen. The immunization schedules are shown in Fig. <a href="#F4" class="usa-link">4</a>. Six groups of six mice each were administered w.t. TMV, TMV-5B19L, or TMV-5B19. The mice in groups 1, 2, and 3 were intranasally administered TMV-5B19L (in 10 μl of PBS), 3 d per week (50 μg of virus per administration) for 10, 6, and 4 weeks prior to challenge, respectively. Mice in groups 4 and 5 were intranasally immunized with a single dose per week (50 μg of virus per administration) for 6 and 4 weeks, respectively. Mice in group 6 were immunized by subcutaneous injection with 50 μg of TMV-5B19 emulsified with MPL-TDM adjuvant (RIBI Immunochemicals Research) at d 1, 14, and 28. During each regime of immunization, each mouse in a group of six was administered w.t. TMV. Serum samples were prepared from blood obtained by tail bleeding at 10-d intervals and stored at −70°C until they were analyzed.</p>
+<figure class="fig xbox font-sm" id="F4"><h4 class="obj_head">Figure 4.</h4>
+<p class="img-box line-height-none margin-x-neg-2 tablet:margin-x-0 text-center"><a class="tileshop" target="_blank" href="https://www.ncbi.nlm.nih.gov/core/lw/2.0/html/tileshop_pmc/tileshop_pmc_inline.html?title=Click%20on%20image%20to%20zoom&amp;p=PMC3&amp;id=22137_pq1491832004.jpg"><img class="graphic zoom-in" src="https://cdn.ncbi.nlm.nih.gov/pmc/blobs/306b/22137/5c932fc7fc58/pq1491832004.jpg" loading="lazy" height="256" width="400" alt="Figure 4"></a></p>
+<div class="p text-right font-secondary"><a href="figure/F4/" class="usa-link" target="_blank" rel="noopener noreferrer">Open in a new tab</a></div>
+<figcaption><p>Schedule of immunization of groups of mice. Solid arrows represent times of administration; open arrows represent times of sample collection.</p></figcaption></figure><p>One week after completion of the immunization schedules, mice in all of the groups were challenged on the same day by intranasal injection with a single batch of inoculum consisting of 10 × LD<sub>50</sub> [112 plaque-forming units (pfu)/ml] of MHV strain JHM. Mice were observed daily and disease symptoms and death were scored.</p></section><section id="sec8"><h4 class="pmc_sec_title">Antibody Titration of Mouse Serum.</h4>
+<p>Titers of anti-TMV or anti-5B19 IgG and IgA were determined by limiting dilution of sera in ELISAs for mice in each group. Plates (Maxisorp, Nunc) were precoated with TMV (250 ng per well) or with a synthetic peptide SP<span class="text-underline">LLGCIGSTCA</span>EDGNK (250 ng per well) containing the 5B19 epitope (underlined; MHV S-protein amino acid residues 898–914) and additional flanking sequences, after conjugation to BSA (<a href="#B27" class="usa-link" aria-describedby="B27">27</a>). Plates were blocked with 2% BSA in 1× Tris-buffered saline and 0.05% Tween 20 (TBST) for 1 h at 37°C. Sera from immunized mice were applied in duplicate wells by using a 2-fold dilution series in PBS containing 2% BSA. Preimmune serum was serially diluted and used as the control. After 2 h of incubation at 37°C, the plates were washed with TBST and the secondary anti-mouse IgG or anti-mouse IgA, conjugated with horseradish peroxidase (Bio-Rad) and diluted 1:5000 in 2% BSA in TBST was applied to each well and incubated for 2 h at 37°C. An ELISA plate reader (Bio-Rad) was used to quantitate reactions. Antibody titers were defined as the highest dilution that produced an <em>A</em><sub>405</sub> 150% greater than the mean value of the preimmune serum.</p></section></section><section id="sec9"><h2 class="pmc_sec_title">RESULTS</h2>
+<section id="sec10"><h4 class="pmc_sec_title">Characterization of Hybrid Viruses TMV-5B19 and TMV-5B19L.</h4>
+<p>The TMV coat protein gene was modified by site-directed mutagenesis to encode a hybrid CP that contained either the peptide 5B19L (residues 899–913 of MHV strain JHM S2 protein) or 5B19 (residues 900–909) placed between residues Ser-154 and Gly-155 of the TMV coat protein (Fig. <a href="#F1" class="usa-link">1</a>). Plasmids containing the modified full-length cDNAs TMV-5B19L and TMV-5B19 were used to produce infectious viral RNA <em>in vitro</em>. TMV-5B19L and TMV-5B19 systemically infected <em>N. tabacum</em> Xanthi-nn plants and induced typical mosaic symptoms (data not shown). Infectious virus was recovered from systemically infected leaves and passaged to other plants.</p>
+<p>SDS/PAGE and immunoblot assays performed with protein extracts from leaves infected with TMV-5B19L and TMV-5B19 showed high levels of accumulation of the hybrid coat proteins (Fig. <a href="#F2" class="usa-link">2</a>). The hybrid proteins CP-5B19L and CP-5B19 migrated more slowly than the w.t. CP on SDS/PAGE and were specifically recognized by MAb5B19 (Fig. <a href="#F2" class="usa-link">2</a>).  </p>
+<figure class="fig xbox font-sm" id="F2"><h4 class="obj_head">Figure 2.</h4>
+<p class="img-box line-height-none margin-x-neg-2 tablet:margin-x-0 text-center"><a class="tileshop" target="_blank" href="https://www.ncbi.nlm.nih.gov/core/lw/2.0/html/tileshop_pmc/tileshop_pmc_inline.html?title=Click%20on%20image%20to%20zoom&amp;p=PMC3&amp;id=22137_pq1491832002.jpg"><img class="graphic zoom-in" src="https://cdn.ncbi.nlm.nih.gov/pmc/blobs/306b/22137/ed403d204ded/pq1491832002.jpg" loading="lazy" height="118" width="400" alt="Figure 2"></a></p>
+<div class="p text-right font-secondary"><a href="figure/F2/" class="usa-link" target="_blank" rel="noopener noreferrer">Open in a new tab</a></div>
+<figcaption><p>Accumulation of hybrid TMV coat protein in tobacco leaves. Total leaf proteins extracted from infected tobacco tissues or partially purified proteins were fractionated on duplicate 12.5% SDS/12.5% PAGE. One gel was stained with Coomassie blue (<em>Left</em>), the other gel was used for immunoblot analysis with the monoclonal antibody to 5B19, MAb5B19 (<em>Center</em>), or with the polyclonal antibody specific for TMV (<em>Right</em>). M, Protein molecular mass. Lane 1, Extract from non-infected plant; lane 2, extract from TMV-5B19 infected plant; lane 3, extract from TMV-5B19L infected plant; lane 4, partially purified TMV-5B19; lane 5, purified TMV-5B19L; lane 6, purified w.t. TMV.</p></figcaption></figure><p>TMV-5B19 was quite different from TMV-5B19L. More than 90% of the TMV-5B19 was recovered in an insoluble fraction and ultrasonication was required to solubilize the TMV-5B19 particles. In contrast, TMV-5B19L was purified by using the same method as for purification of the w.t. TMV. These data suggest that the differences in solubility between the hybrid viruses result from the presence or absence of specific residues of the S2 epitope sequence<strong>.</strong></p>
+<p>The molecular mass of the hybrid CP in the purified TMV-5B19L particles was analyzed by MS (Fig. <a href="#F3" class="usa-link">3</a> <em>A</em> and <em>B</em>). A signal corresponding to the predicted mass of CP-5B19L was observed, demonstrating the presence of the full-length chimeric CP. Furthermore, digestion of the CP-5B19L with trypsin (Fig. <a href="#F3" class="usa-link">3</a><em>B</em>) revealed the presence of a fragment, the mass of which corresponds to the mass of the peptide containing amino acids 142 to 173, which represents the full amino acid sequence of the 5B19L peptide and the amino acids 142 to 154 and 155 to 158 of the w.t. CP.  </p>
+<figure class="fig xbox font-sm" id="F3"><h4 class="obj_head">Figure 3.</h4>
+<p class="img-box line-height-none margin-x-neg-2 tablet:margin-x-0 text-center"><a class="tileshop" target="_blank" href="https://www.ncbi.nlm.nih.gov/core/lw/2.0/html/tileshop_pmc/tileshop_pmc_inline.html?title=Click%20on%20image%20to%20zoom&amp;p=PMC3&amp;id=22137_pq1491832003.jpg"><img class="graphic zoom-in" src="https://cdn.ncbi.nlm.nih.gov/pmc/blobs/306b/22137/f03503df97d8/pq1491832003.jpg" loading="lazy" height="959" width="400" alt="Figure 3"></a></p>
+<div class="p text-right font-secondary"><a href="figure/F3/" class="usa-link" target="_blank" rel="noopener noreferrer">Open in a new tab</a></div>
+<figcaption><p>(<em>A</em> and <em>B</em>) MS analysis of w.t. CP (<em>Left</em>) and CP-5B19L (<em>Right</em>) purified from virus particles. Molecular mass of the CPs untreated (<em>A</em>) or treated with trypsin (<em>B</em>) was determined by matrix-assisted laser absorption/desorption ionization MS. (<em>B</em>) The mass and the amino acid coordinates (between parentheses) of the fragment containing the 5B19L peptide and its homologue in w.t. CP are indicated by arrows. (<em>C</em>) Electron microscopy and immunogold labeling of TMV-5B19L and TMV-U1. Purified virus was subjected to treatment with a monoclonal antibody against the 5B19 peptide followed by goat anti-mouse antibody conjugated to 5-nm gold particles. Samples were negatively stained and analyzed and viewed at 39,000×. (Bar = 200 nm.)</p></figcaption></figure><p>Immunogold-labeling experiments performed with purified TMV-5B19L and TMV-U1 by using the MAb5B19 (Fig. <a href="#F3" class="usa-link">3</a><em>C</em>) revealed that the antibody specifically recognized TMV-5B19L, whereas there was no reaction with the w.t. TMV (Fig. <a href="#F3" class="usa-link">3</a><em>C</em>).</p></section><section id="sec11"><h4 class="pmc_sec_title">Immunogenicity of Hybrid TMV in Mice.</h4>
+<p>The serum antibody titers in the mice immunized with TMV-5B19, TMV-5B19L, or w.t. TMV were determined by limiting dilution of ELISA. Mice from group 1, which were immunized intranasally with TMV-5B19L 3 d per week for 10 weeks (Fig. <a href="#F4" class="usa-link">4</a>), had high titers of IgG and moderate titers of IgA specific to the S2 peptide (Fig. <a href="#F5" class="usa-link">5</a><em>A</em> and <em>B</em>, respectively). Measurable amounts of anti-5B19 IgG were detected approximately 10 d after the first administration of the immunogen, whereas the anti-5B19 IgA response occurred 10 to 15 d later. High IgG and moderate IgA titers specific to TMV were also induced (Fig. <a href="#F5" class="usa-link">5</a> <em>C</em> and <em>D</em>, respectively).    </p>
+<figure class="fig xbox font-sm" id="F5"><h4 class="obj_head">Figure 5.</h4>
+<p class="img-box line-height-none margin-x-neg-2 tablet:margin-x-0 text-center"><a class="tileshop" target="_blank" href="https://www.ncbi.nlm.nih.gov/core/lw/2.0/html/tileshop_pmc/tileshop_pmc_inline.html?title=Click%20on%20image%20to%20zoom&amp;p=PMC3&amp;id=22137_pq1491832005.jpg"><img class="graphic zoom-in" src="https://cdn.ncbi.nlm.nih.gov/pmc/blobs/306b/22137/6f69560fb555/pq1491832005.jpg" loading="lazy" height="794" width="400" alt="Figure 5"></a></p>
+<div class="p text-right font-secondary"><a href="figure/F5/" class="usa-link" target="_blank" rel="noopener noreferrer">Open in a new tab</a></div>
+<figcaption><p>Immune response of group 1 mice (treated as indicated in Fig. <a href="#F4" class="usa-link">4</a>). IgG and IgA antibodies specific to the 5B19 peptide (<em>A, B, E,</em> and <em>F</em>) or TMV (<em>C, D, G,</em> and <em>H</em>) were determined in ELISA. Serum IgG and IgA antibodies were detected with goat anti-mouse IgG or anti-mouse IgA antibodies conjugated with horseradish peroxidase. (<em>A–D</em>) Serum titers of mice immunized with TMV-5B19L; (<em>E–H</em>) Serum titers of the mice immunized with w.t. TMV. Short vertical bars on the <em>x</em> axis indicate the days of immunization. Each line represents the response of a single mouse.</p></figcaption></figure><p>In animals immunized with the w.t. TMV, high anti-TMV IgG and moderate IgA titers were obtained (Fig. <a href="#F5" class="usa-link">5</a> <em>G</em> and <em>H</em>), but neither IgG nor IgA specific to the 5B19 epitope was detected (Fig. <a href="#F5" class="usa-link">5</a> <em>E</em> and <em>F</em>). Anti-TMV or anti-5B19 IgGs were detected 20 d after the first administration, and after approximately 50 d, serum IgG and IgA reached maximal levels (Fig. <a href="#F5" class="usa-link">5</a>).</p>
+<p>To determine the minimal doses of TMV-5B19L that are required to elicit antibody responses, mice groups 2, 3, 4, and 5 (Fig. <a href="#F4" class="usa-link">4</a>) were intranasally administrated one or three doses per week for 4 and 6 weeks. In mice immunized with three doses (group 2) or one dose (group 4) per week for 6 weeks, similar levels of anti-TMV and anti-5B19 serum IgG and IgA antibody were observed (Fig. <a href="#F6" class="usa-link">6</a>: compare <em>A</em> to <em>E</em> and <em>C</em> to <em>G</em> for IgG titers, and <em>B</em> to <em>F</em> and <em>D</em> to <em>H</em> for IgA titers). Measurable amounts of anti-TMV IgA were observed approximately 20 d after the first injection (Fig. <a href="#F6" class="usa-link">6</a>). In mice that received TMV-5B19L for 4 weeks (group 3), lower but detectable amounts of serum antibodies were observed by 20 d after the first injection (data not shown). These data suggest that a minimum 6-week regimen of immunization with this immunogen is necessary to reach maximal antibody levels.  </p>
+<figure class="fig xbox font-sm" id="F6"><h4 class="obj_head">Figure 6.</h4>
+<p class="img-box line-height-none margin-x-neg-2 tablet:margin-x-0 text-center"><a class="tileshop" target="_blank" href="https://www.ncbi.nlm.nih.gov/core/lw/2.0/html/tileshop_pmc/tileshop_pmc_inline.html?title=Click%20on%20image%20to%20zoom&amp;p=PMC3&amp;id=22137_pq1491832006.jpg"><img class="graphic zoom-in" src="https://cdn.ncbi.nlm.nih.gov/pmc/blobs/306b/22137/0158bac89b6d/pq1491832006.jpg" loading="lazy" height="541" width="400" alt="Figure 6"></a></p>
+<div class="p text-right font-secondary"><a href="figure/F6/" class="usa-link" target="_blank" rel="noopener noreferrer">Open in a new tab</a></div>
+<figcaption><p>Immune responses of mice that received low regimen of immunization with TMV-5B19L by intranasal injection. IgG and IgA antibodies specific to peptide (<em>A, B, E, F, I,</em> and <em>J</em> ) or TMV (<em>C, D, G, H, K,</em> and <em>L</em>) were determined in mouse sera by using as antigen 5B19 peptide-BSA conjugate or with TMV, respectively, in ELISAs as in Fig. <a href="#F5" class="usa-link">5</a>. The regime of immunization of each group is shown in Fig. <a href="#F4" class="usa-link">4</a>. The small vertical bars on the <em>x</em> axis indicate the days of immunization. Each line represent the response of an individual mouse.</p></figcaption></figure><p>Because TMV-5B19 was highly insoluble it was difficult to purify the virus in the quantities necessary for intranasal administration. Therefore a protocol to use subcutaneous administration was adopted. After subcutaneous injections, serum IgG and IgA titers specific for TMV and for the 5B19 peptide were measured by ELISA. High titers of anti-TMV CP IgG and anti-5B19 IgG were induced approximately 10 d after the first injection (Fig. <a href="#F7" class="usa-link">7</a>). However, no measurable anti-TMV CP IgA or anti-5B19 IgA were induced in the immunized mice (Fig. <a href="#F7" class="usa-link">7</a>). These data show that the 10 amino acid 5B19 epitope sequence elicited an immune response in mice by subcutaneous administration similar to that in mice immunized by intranasal administration with the 5B19L peptide.  </p>
+<figure class="fig xbox font-sm" id="F7"><h4 class="obj_head">Figure 7.</h4>
+<p class="img-box line-height-none margin-x-neg-2 tablet:margin-x-0 text-center"><a class="tileshop" target="_blank" href="https://www.ncbi.nlm.nih.gov/core/lw/2.0/html/tileshop_pmc/tileshop_pmc_inline.html?title=Click%20on%20image%20to%20zoom&amp;p=PMC3&amp;id=22137_pq1491832007.jpg"><img class="graphic zoom-in" src="https://cdn.ncbi.nlm.nih.gov/pmc/blobs/306b/22137/fbb6d7c24418/pq1491832007.jpg" loading="lazy" height="404" width="400" alt="Figure 7"></a></p>
+<div class="p text-right font-secondary"><a href="figure/F7/" class="usa-link" target="_blank" rel="noopener noreferrer">Open in a new tab</a></div>
+<figcaption><p>Immune responses of mice immunized with TMV-5B19 by subcutaneous injection (group 6 in Fig. <a href="#F4" class="usa-link">4</a>). Antibodies specific to the peptide (<em>A</em> and <em>B</em>) or TMV (<em>C</em> and <em>D</em>) were determined with ELISA as in Fig. <a href="#F5" class="usa-link">5</a>. The immunization regimen of each group is shown in Fig. <a href="#F4" class="usa-link">4</a>. Short vertical bars on the <em>x</em> axis indicate the days of immunization. Each line represents the response of an indivdual mouse.</p></figcaption></figure></section><section id="sec12"><h4 class="pmc_sec_title">Protection of Mice from Viral Challenge.</h4>
+<p>To determine whether immunization with the TMV that contained the 5B19 epitope (TMV-5B19L or TMV-5B19) gave protection against MHV infection, mice were challenged intranasally with 10 × LD<sub>50</sub> (112 pfu/ml) of MHV strain JHM. Groups of mice were challenged on the same day, 1 week after completion of the immunization schedule with the same batch of MHV strain JHM (Fig. <a href="#F4" class="usa-link">4</a>). Mortality was scored daily for 21 d after challenge (Fig. <a href="#F8" class="usa-link">8</a>). Five of the six mice immunized intranasally for 10 weeks (group 1) or by subcutaneous injection (group 6) survived through the 21-d period, whereas two of six mice intranasally immunized for 6 weeks (group 2) and only one of six mice intranasally immunized for 4 weeks (group 3) survived (Fig. <a href="#F8" class="usa-link">8</a><em>A</em>). Although some surviving mice showed mild signs of infection within 4 or 5 d after challenge with MHV, the disease did not progress. All mice immunized intranasally with a single weekly dose of hybrid TMV containing the 5B19 epitope for 6 and 4 weeks (groups 4 and 5) and all of the mice immunized with the w.t. TMV died 11 d after MHV challenge (Fig. <a href="#F8" class="usa-link">8</a>).  </p>
+<figure class="fig xbox font-sm" id="F8"><h4 class="obj_head">Figure 8.</h4>
+<p class="img-box line-height-none margin-x-neg-2 tablet:margin-x-0 text-center"><a class="tileshop" target="_blank" href="https://www.ncbi.nlm.nih.gov/core/lw/2.0/html/tileshop_pmc/tileshop_pmc_inline.html?title=Click%20on%20image%20to%20zoom&amp;p=PMC3&amp;id=22137_pq1491832008.jpg"><img class="graphic zoom-in" src="https://cdn.ncbi.nlm.nih.gov/pmc/blobs/306b/22137/81895f8d2b27/pq1491832008.jpg" loading="lazy" height="740" width="400" alt="Figure 8"></a></p>
+<div class="p text-right font-secondary"><a href="figure/F8/" class="usa-link" target="_blank" rel="noopener noreferrer">Open in a new tab</a></div>
+<figcaption><p>Protection of immunized mice against MHV strain JHM. Groups of six mice were infected with 10 × LD<sub>50</sub> (112 pfu/ml) of MHV strain JHM, and survival was scored over a 21-d interval. The immunization regimen of each group is shown in Fig. <a href="#F4" class="usa-link">4</a>. (<em>A</em>) Survival of mice immunized with TMV-5B19L or TMV-5B19. (<em>B</em>) Survival of mice immunized with w.t. type TMV.</p></figcaption></figure></section></section><section id="sec13"><h2 class="pmc_sec_title">DISCUSSION</h2>
+<p>We report here the successful use of TMV as a carrier and delivery system for a vaccine against MHV. Synthetic peptides that contain the 5B19 epitope of the MHV glycoprotein elicit production of protective neutralizing antibodies when administered intraperitoneally (<a href="#B13" class="usa-link" aria-describedby="B13">13</a>) or subcutaneously (<a href="#B14" class="usa-link" aria-describedby="B14">14</a>) to mice. In the present work, we determined whether the 5B19 epitope fused to the CP of TMV could elicit protective immunity against MHV strain JHM when administered intranasally or subcutaneously. The advantages of using TMV as a carrier and delivery vector include the high yield of the peptide fused to the CP, the simplicity of growth, and the ease of purification of large amounts of the vaccine. Both peptides selected for the present study span the immunodominant domain containing the 5B19 epitope, here referred to as 5B19 and 5B19L, which contain 10 or 15 amino acids, respectively.</p>
+<p>TMV-5B19L produced typical mosaic symptoms in infected tobacco plants and virus particles were readily purified by using a standard TMV-purification method in quantities similar to those obtained with the w.t. TMV. The purified TMV-5B19L virus particles were similar in shape and length to the w.t. TMV particles, and they retained infectivity; the epitope was not lost after two or three repeated passages in tobacco plants. Analyses by MS showed the presence of the 5B19L peptide fused to the CP, and immunogold-labeling experiments showed the specific reaction of TMV-5B19L virus particles. These results demonstrate that the full-length sequence of the peptide is maintained on virus particles and that the antigenic sequence on the 5B19 epitope is exposed on or near the surface of the assembled virus particles.</p>
+<p>Although TMV-5B19 assembled to form virus-like particles and systemically infected <em>N. tabacum</em> Xanthi-nn plants, purification was difficult because of the high insolubility of the virus. Most of the virions remained in the insoluble fraction and precipitated with the cell debris, resulting in a very low yield of purified TMV-5B19. We reported similar insolubility problems when the murine zona pellucida ZP3 epitope was similarly fused to the C terminus of the TMV CP (<a href="#B5" class="usa-link" aria-describedby="B5">5</a>). The reasons for insolubility remain unclear; we suggest that insertion of the 5B19 peptide near the C terminus of the CP may create a domain that interacts with cellular membranes and anchors virus particles to cellular debris during extraction (<a href="#B26" class="usa-link" aria-describedby="B26">26</a>).</p>
+<p>The 5B19 epitope elicited antibody response in mice administered the high dose regimen of hybrid TMV-5B19L; high titers of antigen-specific IgG antibody were detected between 10 and 20 d after initial inoculation. At that time mice had received six to nine doses, and the equivalent of 300 to 450 μg of virus (groups 1, 2, and 3). Studies of the minimal dose of hybrid virus needed to induce IgG production indicated that a single dose per week for 2 weeks (group 4; Fig. <a href="#F6" class="usa-link">6</a>) was sufficient. However, the antibody titers in these animals were slightly lower than they were in the mice that were immunized three times per week. Anti-5B19 IgA was also induced in mice that were administered high doses of TMV-5B19L. However, the titers of IgA were very low with lower amounts of immunogen or with shorter times of administration. These results demonstrate that TMV is an immunogenic delivery vehicle for this epitope and that it acts in a dose-dependent manner.</p>
+<p>Despite the solubility problems of TMV-5B19, we succeeded in recovering sufficient amounts of the chimeric virus for subcutaneous administration. These experiments showed that the 5B19 epitope displayed on TMV can induce a high level of anti-5B19 IgG. However, in these mice little or no anti-5B19 IgA was produced in comparison with mice that were immunized intranasally (e.g., group 1). The difference in antibody induction by TMV-5B19 and TMV-5B19L was probably because of the different routes of administration, i.e., intranasal for TMV-5B19L versus subcutaneous for TMV-5B19. Mice that were intranasally administered TMV-5B19L, TMV-5B19, or w.t. TMV had high titers of anti-TMV IgG and IgA. The immunogenicity of TMV did not interfere with the immunogenicity of the 5B19 epitope in mice that were administered TMV-5B19L or TMV-5B19.</p>
+<p>Mice that produced high titers of anti-5B19 antibody were protected against MHV strain JHM infection. Even though all of the mice challenged with MHV showed minor clinical signs of MHV strain JHM infection, those that received the high dose regimens of immunization (three injections per week for 10 weeks) or that were immunized by subcutaneous injection had a higher survival rate than those that received lower doses. Therefore, the regimen of immunization positively correlated with the amount of antibody and the degree of protection against MHV-JMH infection. However, the amount of subcutaneously administered immunogen that was required to achieve effective protection was at least 10 times less than that required for intranasal administration.</p>
+<p>The question of whether IgG, IgA, or both are responsible for the protection against MHV infection is not completely answered here. However, it is likely that at least a part of the inoculum was neutralized by anti-5B19 IgA, resulting in the reduction of acute disease. Thus the mice that received low levels of immunogen and had high anti-5B19 IgG titers, but low IgA titers were not protected as well as the mice treated with the high regime of immunization that resulted in higher anti-5B19 IgA titers.</p>
+<p>These results demonstrate that TMV can be used as a carrier and delivery vehicle for a protective epitope from MHV. This work correlates with previous reports of studies in which mice that were subcutaneously immunized with the 5B19 peptide alone or that received the monoclonal antibody 5B19.2 by passive transfer were protected against MHV infection (<a href="#B14" class="usa-link" aria-describedby="B14">14</a>, <a href="#B15" class="usa-link" aria-describedby="B15">15</a>). The advantage of the vector described here is the simplicity of the expression system, involving a nonpathogenic virus (to humans and animals) that yields high quantities of the immunogenic peptide at low cost.</p>
+<p>The present system of vaccine delivery may be suitable for oral vaccine development. Arakawa <em>et al</em>. (<a href="#B28" class="usa-link" aria-describedby="B28">28</a>) showed that transgenic potatoes that express the cholera toxin B-subunit pentamer elicited a mucosal protective immune response in mice that were fed such potatoes. Similarly, an immune response was induced in humans who consumed transgenic potatoes containing the <em>Escherichia coli</em> heat-labile toxin B (<a href="#B29" class="usa-link" aria-describedby="B29">29</a>). Combining a similar system of mucosal targeting with the TMV system may lead to the development of an alternative low-cost oral vaccine.</p></section><section id="ack1" class="ack"><h2 class="pmc_sec_title">Acknowledgments</h2>
+<p>We thank Drs. Judit Szecsi and Gregg Clark for critical reading of the manuscript. This work was supported by funds from The Scripps Family Chair, Jean and Keith Kellogg, The Seaver Foundation, Aline and Sam Skaggs, and The Plant Molecular Biology and Biotechnology Research Center (South Korea). Other support was provided by Grant AI27161 to R.N.B. and Grants AI25913 and AI43103 to M.J.B. from the National Institutes of Health.</p></section><section id="glossary1" class="glossary"><h2 class="pmc_sec_title">ABBREVIATIONS</h2>
+<dl class="def-list">
+<dt id="G1">CP</dt>
+<dd><p>coat protein</p></dd>
+<dt id="G2">MHV</dt>
+<dd><p>murine hepatitis virus</p></dd>
+<dt id="G3">TMV</dt>
+<dd><p>tobacco mosaic virus</p></dd>
+<dt id="G4">w.t.</dt>
+<dd><p>wild type</p></dd>
+<dt id="G5">S protein</dt>
+<dd><p>spike protein</p></dd>
+</dl></section><section id="ref-list1" class="ref-list"><h2 class="pmc_sec_title">References</h2>
+<section id="ref-list1_sec2"><ul class="ref-list font-sm" style="list-style-type:none">
+<li id="B1">
+<span class="label">1.</span><cite>Haynes J B, Cunningham J, von Seefried A, Lennick M, Garvin R T, Shen S. Bio/Technology. 1986;4:637–641. doi: 10.1038/nbt0786-637.</cite> [<a href="https://doi.org/10.1038/nbt0786-637" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">DOI</a>] [<a href="/articles/PMC7097054/" class="usa-link">PMC free article</a>] [<a href="https://pubmed.ncbi.nlm.nih.gov/32226216/" class="usa-link">PubMed</a>] [<a href="https://scholar.google.com/scholar_lookup?journal=Bio/Technology&amp;author=J%20B%20Haynes&amp;author=J%20Cunningham&amp;author=A%20von%20Seefried&amp;author=M%20Lennick&amp;author=R%20T%20Garvin&amp;volume=4&amp;publication_year=1986&amp;pages=637-641&amp;pmid=32226216&amp;doi=10.1038/nbt0786-637&amp;" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">Google Scholar</a>]</li>
+<li id="B2">
+<span class="label">2.</span><cite>Hamamoto H, Sugiyama Y, Nakagawa N, Hashida E, Matsunaga Y, Takemoto S, Watanabe Y, Okada Y. Bio/Technology. 1993;11:930–932. doi: 10.1038/nbt0893-930.</cite> [<a href="https://doi.org/10.1038/nbt0893-930" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">DOI</a>] [<a href="https://pubmed.ncbi.nlm.nih.gov/7763916/" class="usa-link">PubMed</a>] [<a href="https://scholar.google.com/scholar_lookup?journal=Bio/Technology&amp;author=H%20Hamamoto&amp;author=Y%20Sugiyama&amp;author=N%20Nakagawa&amp;author=E%20Hashida&amp;author=Y%20Matsunaga&amp;volume=11&amp;publication_year=1993&amp;pages=930-932&amp;pmid=7763916&amp;doi=10.1038/nbt0893-930&amp;" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">Google Scholar</a>]</li>
+<li id="B3">
+<span class="label">3.</span><cite>Usha R, Rohll J B, Spall V E, Shanks M, Maule A J, Johnson J E, Lomonossoff G P. Virology. 1993;197:366–374. doi: 10.1006/viro.1993.1598.</cite> [<a href="https://doi.org/10.1006/viro.1993.1598" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">DOI</a>] [<a href="https://pubmed.ncbi.nlm.nih.gov/7692669/" class="usa-link">PubMed</a>] [<a href="https://scholar.google.com/scholar_lookup?journal=Virology&amp;author=R%20Usha&amp;author=J%20B%20Rohll&amp;author=V%20E%20Spall&amp;author=M%20Shanks&amp;author=A%20J%20Maule&amp;volume=197&amp;publication_year=1993&amp;pages=366-374&amp;pmid=7692669&amp;doi=10.1006/viro.1993.1598&amp;" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">Google Scholar</a>]</li>
+<li id="B4">
+<span class="label">4.</span><cite>Jagadish M N, Hamilton R C, Fernandez C S, Schoofs P, Davern K M, Kalnins H, Ward C W, Nisbet I T. Bio/Technology. 1993;11:1166–1170. doi: 10.1038/nbt1093-1166.</cite> [<a href="https://doi.org/10.1038/nbt1093-1166" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">DOI</a>] [<a href="https://pubmed.ncbi.nlm.nih.gov/7764098/" class="usa-link">PubMed</a>] [<a href="https://scholar.google.com/scholar_lookup?journal=Bio/Technology&amp;author=M%20N%20Jagadish&amp;author=R%20C%20Hamilton&amp;author=C%20S%20Fernandez&amp;author=P%20Schoofs&amp;author=K%20M%20Davern&amp;volume=11&amp;publication_year=1993&amp;pages=1166-1170&amp;pmid=7764098&amp;doi=10.1038/nbt1093-1166&amp;" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">Google Scholar</a>]</li>
+<li id="B5">
+<span class="label">5.</span><cite>Fitchen J, Beachy N R, Hein M B. Vaccine. 1995;13:1051–1057. doi: 10.1016/0264-410x(95)00075-c.</cite> [<a href="https://doi.org/10.1016/0264-410x(95)00075-c" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">DOI</a>] [<a href="https://pubmed.ncbi.nlm.nih.gov/7491811/" class="usa-link">PubMed</a>] [<a href="https://scholar.google.com/scholar_lookup?journal=Vaccine&amp;author=J%20Fitchen&amp;author=N%20R%20Beachy&amp;author=M%20B%20Hein&amp;volume=13&amp;publication_year=1995&amp;pages=1051-1057&amp;pmid=7491811&amp;doi=10.1016/0264-410x(95)00075-c&amp;" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">Google Scholar</a>]</li>
+<li id="B6">
+<span class="label">6.</span><cite>Sugiyama Y, Hamamoto H, Takemoto S, Watanabe Y, Okada Y. FEBS Lett. 1995;359:247–250. doi: 10.1016/0014-5793(95)00054-d.</cite> [<a href="https://doi.org/10.1016/0014-5793(95)00054-d" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">DOI</a>] [<a href="https://pubmed.ncbi.nlm.nih.gov/7532596/" class="usa-link">PubMed</a>] [<a href="https://scholar.google.com/scholar_lookup?journal=FEBS%20Lett&amp;author=Y%20Sugiyama&amp;author=H%20Hamamoto&amp;author=S%20Takemoto&amp;author=Y%20Watanabe&amp;author=Y%20Okada&amp;volume=359&amp;publication_year=1995&amp;pages=247-250&amp;pmid=7532596&amp;doi=10.1016/0014-5793(95)00054-d&amp;" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">Google Scholar</a>]</li>
+<li id="B7">
+<span class="label">7.</span><cite>Lomonossoff G P, Johnson J E. Curr Opin Struct Biol. 1996;6:176–182. doi: 10.1016/S0959-440X(96)80072-8.</cite> [<a href="https://doi.org/10.1016/S0959-440X(96)80072-8" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">DOI</a>] [<a href="/articles/PMC7133382/" class="usa-link">PMC free article</a>] [<a href="https://pubmed.ncbi.nlm.nih.gov/8728650/" class="usa-link">PubMed</a>] [<a href="https://scholar.google.com/scholar_lookup?journal=Curr%20Opin%20Struct%20Biol&amp;author=G%20P%20Lomonossoff&amp;author=J%20E%20Johnson&amp;volume=6&amp;publication_year=1996&amp;pages=176-182&amp;pmid=8728650&amp;doi=10.1016/S0959-440X(96)80072-8&amp;" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">Google Scholar</a>]</li>
+<li id="B8">
+<span class="label">8.</span><cite>Cavanagh D, Brian D A, Enjuanes L, Holmes K V, Lai M M C, Laude H, Siddell S G, Spaan W, Taguchi F, Talbot P J. Virology. 1990;176:306–307. doi: 10.1016/0042-6822(90)90259-T.</cite> [<a href="https://doi.org/10.1016/0042-6822(90)90259-T" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">DOI</a>] [<a href="/articles/PMC7130901/" class="usa-link">PMC free article</a>] [<a href="https://pubmed.ncbi.nlm.nih.gov/2184577/" class="usa-link">PubMed</a>] [<a href="https://scholar.google.com/scholar_lookup?journal=Virology&amp;author=D%20Cavanagh&amp;author=D%20A%20Brian&amp;author=L%20Enjuanes&amp;author=K%20V%20Holmes&amp;author=M%20M%20C%20Lai&amp;volume=176&amp;publication_year=1990&amp;pages=306-307&amp;pmid=2184577&amp;doi=10.1016/0042-6822(90)90259-T&amp;" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">Google Scholar</a>]</li>
+<li id="B9">
+<span class="label">9.</span><cite>Sturman L S, Ricard C S, Holmes K V. J Virol. 1985;56:904–911. doi: 10.1128/jvi.56.3.904-911.1985.</cite> [<a href="https://doi.org/10.1128/jvi.56.3.904-911.1985" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">DOI</a>] [<a href="/articles/PMC252663/" class="usa-link">PMC free article</a>] [<a href="https://pubmed.ncbi.nlm.nih.gov/2999443/" class="usa-link">PubMed</a>] [<a href="https://scholar.google.com/scholar_lookup?journal=J%20Virol&amp;author=L%20S%20Sturman&amp;author=C%20S%20Ricard&amp;author=K%20V%20Holmes&amp;volume=56&amp;publication_year=1985&amp;pages=904-911&amp;pmid=2999443&amp;doi=10.1128/jvi.56.3.904-911.1985&amp;" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">Google Scholar</a>]</li>
+<li id="B10">
+<span class="label">10.</span><cite>Williams R K, Jiang G S, Holmes K V. Proc Natl Acad Sci USA. 1991;88:5533–5536. doi: 10.1073/pnas.88.13.5533.</cite> [<a href="https://doi.org/10.1073/pnas.88.13.5533" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">DOI</a>] [<a href="/articles/PMC51911/" class="usa-link">PMC free article</a>] [<a href="https://pubmed.ncbi.nlm.nih.gov/1648219/" class="usa-link">PubMed</a>] [<a href="https://scholar.google.com/scholar_lookup?journal=Proc%20Natl%20Acad%20Sci%20USA&amp;author=R%20K%20Williams&amp;author=G%20S%20Jiang&amp;author=K%20V%20Holmes&amp;volume=88&amp;publication_year=1991&amp;pages=5533-5536&amp;pmid=1648219&amp;doi=10.1073/pnas.88.13.5533&amp;" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">Google Scholar</a>]</li>
+<li id="B11">
+<span class="label">11.</span><cite>Collins A R, Knobler R L, Powell H, Buchmeier M J. Virology. 1982;119:358–371. doi: 10.1016/0042-6822(82)90095-2.</cite> [<a href="https://doi.org/10.1016/0042-6822(82)90095-2" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">DOI</a>] [<a href="/articles/PMC7130542/" class="usa-link">PMC free article</a>] [<a href="https://pubmed.ncbi.nlm.nih.gov/6281979/" class="usa-link">PubMed</a>] [<a href="https://scholar.google.com/scholar_lookup?journal=Virology&amp;author=A%20R%20Collins&amp;author=R%20L%20Knobler&amp;author=H%20Powell&amp;author=M%20J%20Buchmeier&amp;volume=119&amp;publication_year=1982&amp;pages=358-371&amp;pmid=6281979&amp;doi=10.1016/0042-6822(82)90095-2&amp;" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">Google Scholar</a>]</li>
+<li id="B12">
+<span class="label">12.</span><cite>Daniel C, Talbot P J. Virology. 1990;174:87–94. doi: 10.1016/0042-6822(90)90057-X.</cite> [<a href="https://doi.org/10.1016/0042-6822(90)90057-X" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">DOI</a>] [<a href="/articles/PMC7131235/" class="usa-link">PMC free article</a>] [<a href="https://pubmed.ncbi.nlm.nih.gov/2152996/" class="usa-link">PubMed</a>] [<a href="https://scholar.google.com/scholar_lookup?journal=Virology&amp;author=C%20Daniel&amp;author=P%20J%20Talbot&amp;volume=174&amp;publication_year=1990&amp;pages=87-94&amp;pmid=2152996&amp;doi=10.1016/0042-6822(90)90057-X&amp;" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">Google Scholar</a>]</li>
+<li id="B13">
+<span class="label">13.</span><cite>Talbot P J, Dionne G, Lacroix M. J Virol. 1988;62:3032–3036. doi: 10.1128/jvi.62.8.3032-3036.1988.</cite> [<a href="https://doi.org/10.1128/jvi.62.8.3032-3036.1988" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">DOI</a>] [<a href="/articles/PMC253743/" class="usa-link">PMC free article</a>] [<a href="https://pubmed.ncbi.nlm.nih.gov/2455823/" class="usa-link">PubMed</a>] [<a href="https://scholar.google.com/scholar_lookup?journal=J%20Virol&amp;author=P%20J%20Talbot&amp;author=G%20Dionne&amp;author=M%20Lacroix&amp;volume=62&amp;publication_year=1988&amp;pages=3032-3036&amp;pmid=2455823&amp;doi=10.1128/jvi.62.8.3032-3036.1988&amp;" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">Google Scholar</a>]</li>
+<li id="B14">
+<span class="label">14.</span><cite>Koolen M J M, Borst M A J, Horzinek M C, Spaan W J M. J Virol. 1990;64:6270–6273. doi: 10.1128/jvi.64.12.6270-6273.1990.</cite> [<a href="https://doi.org/10.1128/jvi.64.12.6270-6273.1990" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">DOI</a>] [<a href="/articles/PMC248803/" class="usa-link">PMC free article</a>] [<a href="https://pubmed.ncbi.nlm.nih.gov/1700835/" class="usa-link">PubMed</a>] [<a href="https://scholar.google.com/scholar_lookup?journal=J%20Virol&amp;author=M%20J%20M%20Koolen&amp;author=M%20A%20J%20Borst&amp;author=M%20C%20Horzinek&amp;author=W%20J%20M%20Spaan&amp;volume=64&amp;publication_year=1990&amp;pages=6270-6273&amp;pmid=1700835&amp;doi=10.1128/jvi.64.12.6270-6273.1990&amp;" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">Google Scholar</a>]</li>
+<li id="B15">
+<span class="label">15.</span><cite>Buchmeier M J, Lewicki H A, Talbot P J, Knobler R L. Virology. 1984;132:261–270. doi: 10.1016/0042-6822(84)90033-3.</cite> [<a href="https://doi.org/10.1016/0042-6822(84)90033-3" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">DOI</a>] [<a href="/articles/PMC7131302/" class="usa-link">PMC free article</a>] [<a href="https://pubmed.ncbi.nlm.nih.gov/6199889/" class="usa-link">PubMed</a>] [<a href="https://scholar.google.com/scholar_lookup?journal=Virology&amp;author=M%20J%20Buchmeier&amp;author=H%20A%20Lewicki&amp;author=P%20J%20Talbot&amp;author=R%20L%20Knobler&amp;volume=132&amp;publication_year=1984&amp;pages=261-270&amp;pmid=6199889&amp;doi=10.1016/0042-6822(84)90033-3&amp;" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">Google Scholar</a>]</li>
+<li id="B16">
+<span class="label">16.</span><cite>Wege H, Dorries R, Wege H. J Gen Virol. 1984;65:1931–1942. doi: 10.1099/0022-1317-65-11-1931.</cite> [<a href="https://doi.org/10.1099/0022-1317-65-11-1931" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">DOI</a>] [<a href="https://pubmed.ncbi.nlm.nih.gov/6209363/" class="usa-link">PubMed</a>] [<a href="https://scholar.google.com/scholar_lookup?journal=J%20Gen%20Virol&amp;author=H%20Wege&amp;author=R%20Dorries&amp;author=H%20Wege&amp;volume=65&amp;publication_year=1984&amp;pages=1931-1942&amp;pmid=6209363&amp;doi=10.1099/0022-1317-65-11-1931&amp;" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">Google Scholar</a>]</li>
+<li id="B17">
+<span class="label">17.</span><cite>Talbot P J, Salmi A A, Knobler R L, Buchmeier M J. Virology. 1984;132:250–260. doi: 10.1016/0042-6822(84)90032-1.</cite> [<a href="https://doi.org/10.1016/0042-6822(84)90032-1" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">DOI</a>] [<a href="/articles/PMC7131154/" class="usa-link">PMC free article</a>] [<a href="https://pubmed.ncbi.nlm.nih.gov/6199888/" class="usa-link">PubMed</a>] [<a href="https://scholar.google.com/scholar_lookup?journal=Virology&amp;author=P%20J%20Talbot&amp;author=A%20A%20Salmi&amp;author=R%20L%20Knobler&amp;author=M%20J%20Buchmeier&amp;volume=132&amp;publication_year=1984&amp;pages=250-260&amp;pmid=6199888&amp;doi=10.1016/0042-6822(84)90032-1&amp;" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">Google Scholar</a>]</li>
+<li id="B18">
+<span class="label">18.</span><cite>Luytjes W, Geerts D, Posthumus R, Meloen R, Spaan W. J Virol. 1989;63:1408–1412. doi: 10.1128/jvi.63.3.1408-1412.1989.</cite> [<a href="https://doi.org/10.1128/jvi.63.3.1408-1412.1989" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">DOI</a>] [<a href="/articles/PMC247841/" class="usa-link">PMC free article</a>] [<a href="https://pubmed.ncbi.nlm.nih.gov/2464703/" class="usa-link">PubMed</a>] [<a href="https://scholar.google.com/scholar_lookup?journal=J%20Virol&amp;author=W%20Luytjes&amp;author=D%20Geerts&amp;author=R%20Posthumus&amp;author=R%20Meloen&amp;author=W%20Spaan&amp;volume=63&amp;publication_year=1989&amp;pages=1408-1412&amp;pmid=2464703&amp;doi=10.1128/jvi.63.3.1408-1412.1989&amp;" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">Google Scholar</a>]</li>
+<li id="B19">
+<span class="label">19.</span><cite>Holt C A, Beachy R N. Virology. 1991;181:109–117. doi: 10.1016/0042-6822(91)90475-q.</cite> [<a href="https://doi.org/10.1016/0042-6822(91)90475-q" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">DOI</a>] [<a href="https://pubmed.ncbi.nlm.nih.gov/1994570/" class="usa-link">PubMed</a>] [<a href="https://scholar.google.com/scholar_lookup?journal=Virology&amp;author=C%20A%20Holt&amp;author=R%20N%20Beachy&amp;volume=181&amp;publication_year=1991&amp;pages=109-117&amp;pmid=1994570&amp;doi=10.1016/0042-6822(91)90475-q&amp;" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">Google Scholar</a>]</li>
+<li id="B20">
+<span class="label">20.</span><cite>Bendahmane M, Fitchen J H, Zhang G, Beachy R N. J Virol. 1997;71:7942–7950. doi: 10.1128/jvi.71.10.7942-7950.1997.</cite> [<a href="https://doi.org/10.1128/jvi.71.10.7942-7950.1997" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">DOI</a>] [<a href="/articles/PMC192152/" class="usa-link">PMC free article</a>] [<a href="https://pubmed.ncbi.nlm.nih.gov/9311885/" class="usa-link">PubMed</a>] [<a href="https://scholar.google.com/scholar_lookup?journal=J%20Virol&amp;author=M%20Bendahmane&amp;author=J%20H%20Fitchen&amp;author=G%20Zhang&amp;author=R%20N%20Beachy&amp;volume=71&amp;publication_year=1997&amp;pages=7942-7950&amp;pmid=9311885&amp;doi=10.1128/jvi.71.10.7942-7950.1997&amp;" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">Google Scholar</a>]</li>
+<li id="B21">
+<span class="label">21.</span><cite>Asselin A, Zaitlin M. Virology. 1978;91:173–181. doi: 10.1016/0042-6822(78)90365-3.</cite> [<a href="https://doi.org/10.1016/0042-6822(78)90365-3" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">DOI</a>] [<a href="https://pubmed.ncbi.nlm.nih.gov/726261/" class="usa-link">PubMed</a>] [<a href="https://scholar.google.com/scholar_lookup?journal=Virology&amp;author=A%20Asselin&amp;author=M%20Zaitlin&amp;volume=91&amp;publication_year=1978&amp;pages=173-181&amp;pmid=726261&amp;doi=10.1016/0042-6822(78)90365-3&amp;" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">Google Scholar</a>]</li>
+<li id="B22">
+<span class="label">22.</span><cite>Laemmli U K. Nature. 1970;227:680–685. doi: 10.1038/227680a0.</cite> [<a href="https://doi.org/10.1038/227680a0" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">DOI</a>] [<a href="https://pubmed.ncbi.nlm.nih.gov/5432063/" class="usa-link">PubMed</a>] [<a href="https://scholar.google.com/scholar_lookup?journal=Nature&amp;author=U%20K%20Laemmli&amp;volume=227&amp;publication_year=1970&amp;pages=680-685&amp;pmid=5432063&amp;doi=10.1038/227680a0&amp;" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">Google Scholar</a>]</li>
+<li id="B23">
+<span class="label">23.</span><cite>Sambrook J, Fritsch E F, Maniatis T.  Molecular Cloning: A Laboratory Manual. 2nd Ed. Plainview, NY: Cold Spring Harbor Laboratory Press; 1989. </cite> [<a href="https://scholar.google.com/scholar_lookup?title=Molecular%20Cloning:%20A%20Laboratory%20Manual&amp;author=J%20Sambrook&amp;author=E%20F%20Fritsch&amp;author=T%20Maniatis&amp;publication_year=1989&amp;" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">Google Scholar</a>]</li>
+<li id="B24">
+<span class="label">24.</span><cite>Siuzdak G.  Mass Spectrometry for Biotechnology. San Diego: Academic; 1996. </cite> [<a href="https://scholar.google.com/scholar_lookup?title=Mass%20Spectrometry%20for%20Biotechnology&amp;author=G%20Siuzdak&amp;publication_year=1996&amp;" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">Google Scholar</a>]</li>
+<li id="B25">
+<span class="label">25.</span><cite>Lewis K J, Bendahmane M, Smith T J, Beachy R N, Siuzdak G. Proc Natl Acad Sci USA. 1998;95:8596–8601. doi: 10.1073/pnas.95.15.8596.</cite> [<a href="https://doi.org/10.1073/pnas.95.15.8596" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">DOI</a>] [<a href="/articles/PMC21121/" class="usa-link">PMC free article</a>] [<a href="https://pubmed.ncbi.nlm.nih.gov/9671723/" class="usa-link">PubMed</a>] [<a href="https://scholar.google.com/scholar_lookup?journal=Proc%20Natl%20Acad%20Sci%20USA&amp;author=K%20J%20Lewis&amp;author=M%20Bendahmane&amp;author=T%20J%20Smith&amp;author=R%20N%20Beachy&amp;author=G%20Siuzdak&amp;volume=95&amp;publication_year=1998&amp;pages=8596-8601&amp;pmid=9671723&amp;doi=10.1073/pnas.95.15.8596&amp;" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">Google Scholar</a>]</li>
+<li id="B26">
+<span class="label">26.</span><cite>Bendahmane M, Koo M, Karrer E, Beachy R N. J Mol Biol. 1999;290:9–20. doi: 10.1006/jmbi.1999.2860.</cite> [<a href="https://doi.org/10.1006/jmbi.1999.2860" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">DOI</a>] [<a href="/articles/PMC7126444/" class="usa-link">PMC free article</a>] [<a href="https://pubmed.ncbi.nlm.nih.gov/10388554/" class="usa-link">PubMed</a>] [<a href="https://scholar.google.com/scholar_lookup?journal=J%20Mol%20Biol&amp;author=M%20Bendahmane&amp;author=M%20Koo&amp;author=E%20Karrer&amp;author=R%20N%20Beachy&amp;volume=290&amp;publication_year=1999&amp;pages=9-20&amp;pmid=10388554&amp;doi=10.1006/jmbi.1999.2860&amp;" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">Google Scholar</a>]</li>
+<li id="B27">
+<span class="label">27.</span><cite>Harlow E, Lane D.  Antibodies: A Laboratory Manual. 2nd Ed. Plainview, NY: Cold Spring Harbor Laboratory Press; 1988. pp. 78–81.</cite> [<a href="https://scholar.google.com/scholar_lookup?title=Antibodies:%20A%20Laboratory%20Manual&amp;author=E%20Harlow&amp;author=D%20Lane&amp;publication_year=1988&amp;" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">Google Scholar</a>]</li>
+<li id="B28">
+<span class="label">28.</span><cite>Arakawa T, Chong D K X, Langridge W H R. Nat Biotechnol. 1998;16:292–297. doi: 10.1038/nbt0398-292.</cite> [<a href="https://doi.org/10.1038/nbt0398-292" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">DOI</a>] [<a href="https://pubmed.ncbi.nlm.nih.gov/9528012/" class="usa-link">PubMed</a>] [<a href="https://scholar.google.com/scholar_lookup?journal=Nat%20Biotechnol&amp;author=T%20Arakawa&amp;author=D%20K%20X%20Chong&amp;author=W%20H%20R%20Langridge&amp;volume=16&amp;publication_year=1998&amp;pages=292-297&amp;pmid=9528012&amp;doi=10.1038/nbt0398-292&amp;" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">Google Scholar</a>]</li>
+<li id="B29">
+<span class="label">29.</span><cite>Tacket C O, Mason H S, Losonsky G, Clements J D, Levine M M, Arntzen J. Nat Med. 1998;4:607–609. doi: 10.1038/nm0598-607.</cite> [<a href="https://doi.org/10.1038/nm0598-607" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">DOI</a>] [<a href="https://pubmed.ncbi.nlm.nih.gov/9585236/" class="usa-link">PubMed</a>] [<a href="https://scholar.google.com/scholar_lookup?journal=Nat%20Med&amp;author=C%20O%20Tacket&amp;author=H%20S%20Mason&amp;author=G%20Losonsky&amp;author=J%20D%20Clements&amp;author=M%20M%20Levine&amp;volume=4&amp;publication_year=1998&amp;pages=607-609&amp;pmid=9585236&amp;doi=10.1038/nm0598-607&amp;" class="usa-link usa-link--external" data-ga-action="click_feat_suppl" target="_blank" rel="noopener noreferrer">Google Scholar</a>]</li>
+</ul></section></section></section><footer class="p courtesy-note font-secondary font-sm text-center"><hr class="headless">
+<p>Articles from Proceedings of the National Academy of Sciences of the United States of America are provided here courtesy of <strong>National Academy of Sciences</strong></p></footer></section></article>
+
+                      
+
+                    </main>
+                </div>
+            </div>
+        </div>
+
+        
+
+
+
+<!-- Secondary navigation placeholder -->
+<div class="pmc-sidenav desktop:grid-col-4 display-flex">
+    <section class="pmc-sidenav__container" aria-label="Article resources and navigation">
+        <button type="button" class="pmc-sidenav__container__close">
+            <img src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/usa-icons/close.svg" role="img" alt="Close" />
+        </button>
+    <div class="display-none desktop:display-block">
+       <section class="margin-top-4 desktop:margin-top-0">
+              <h2 class="margin-top-0">ACTIONS</h2>
+           <ul class="usa-list usa-list--unstyled usa-list--actions">
+               
+               <li>
+                     <a
+                             href="https://doi.org/10.1073/pnas.96.14.7774"
+                             class="usa-button usa-button--outline width-24 font-xs display-inline-flex flex-align-center flex-justify-start padding-left-1"
+                             target="_blank"
+                             rel="noreferrer noopener"
+                             data-ga-category="actions"
+                             data-ga-action="click"
+                             data-ga-label="publisher_link_desktop"
+                     >
+                         <img src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/launch.svg" alt="View on publisher site icon" class="usa-icon usa-icon--size-3 usa-icon--link"/>
+                         <span class="display-inline-flex flex-justify-center flex-1 padding-right-2">View on publisher site</span>
+                     </a>
+               </li>
+               
+               
+               <li>
+                    <a
+                            href="pdf/pq007774.pdf"
+                            class="usa-button usa-button--outline width-24 display-inline-flex flex-align-center flex-justify-start padding-left-1"
+                            data-ga-category="actions"
+                            data-ga-action="click"
+                            data-ga-label="pdf_download_desktop"
+                    >
+                         <img src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/file_download.svg" alt="Download PDF icon" class="usa-icon usa-icon--size-3 usa-icon--link"/>
+                        <span class="display-inline-flex flex-justify-center flex-1">PDF (172.9 KB)</span>
+                    </a>
+               </li>
+               
+                
+               <li>
+                   <button role="button" class="usa-button width-24 citation-dialog-trigger display-inline-flex flex-align-center flex-justify-start padding-left-1"
+                        aria-label="Open dialog with citation text in different styles"
+                        data-ga-category="actions"
+                        data-ga-action="open"
+                        data-ga-label="cite_desktop"
+                        data-all-citations-url="/resources/citations/22137/"
+                        data-citation-style="nlm"
+                        data-download-format-link="/resources/citations/22137/export/"
+                    >
+                       <img src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/format_quote.svg" alt="Cite icon" class="usa-icon usa-icon--size-3 usa-icon--white"/>
+                       <span class="display-inline-flex flex-justify-center flex-1 button-label">Cite</span>
+                    </button>
+               </li>
+                
+               <li>
+
+                        <button class="usa-button width-24 collections-dialog-trigger collections-button display-inline-flex flex-align-center flex-justify-start padding-left-1 collections-button-empty"
+                              aria-label="Save article in MyNCBI collections."
+                              data-ga-category="actions"
+                              data-ga-action="click"
+                              data-ga-label="collections_button_desktop"
+                              data-collections-open-dialog-enabled="false"
+                              data-collections-open-dialog-url="https://account.ncbi.nlm.nih.gov/?back_url=https%3A%2F%2Fpmc.ncbi.nlm.nih.gov%2Farticles%2FPMC22137%2F%3Fformat%3Dxml%23open-collections-dialog"
+                              data-in-collections="false">
+                            <img src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/action-bookmark-full.svg" alt="Collections icon" class="usa-icon usa-icon--size-3 usa-icon--white usa-icon--bookmark-full" hidden />
+                            <img src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/action-bookmark-empty.svg" alt="Collections icon" class="usa-icon usa-icon--size-3 usa-icon--white usa-icon--bookmark-empty" hidden />
+                            <span class="display-inline-flex flex-justify-center flex-1">Collections</span>
+                       </button>
+               </li>
+               <li class="pmc-permalink">
+                    <button
+                            type="button"
+                            class="usa-button width-24 display-inline-flex flex-align-center flex-justify padding-left-1 shadow-none"
+                            aria-label="Show article permalink"
+                            aria-expanded="false"
+                            aria-haspopup="true"
+                            data-ga-category="actions"
+                            data-ga-action="open"
+                            data-ga-label="permalink_desktop"
+                    >
+                        <img src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/share.svg" alt="Permalink icon" class="usa-icon usa-icon--size-3 usa-icon--white"/>
+                        <span class="display-inline-flex flex-justify-center flex-1 button-label">Permalink</span>
+                    </button>
+                   
+
+<div class="pmc-permalink__dropdown" hidden>
+    <div class="pmc-permalink__dropdown__container">
+          <h2 class="usa-modal__heading margin-top-0 margin-bottom-2 text-uppercase font-sans-xs">PERMALINK</h2>
+          <div class="pmc-permalink__dropdown__content">
+              <input type="text" class="usa-input" value="https://pmc.ncbi.nlm.nih.gov/articles/PMC22137/" aria-label="Article permalink">
+              <button class="usa-button display-inline-flex pmc-permalink__dropdown__copy__btn margin-right-0" title="Copy article permalink" data-ga-category="save_share" data-ga-action="link" data-ga-label="copy_link">
+                  <img src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/content_copy.svg" alt="Copy icon" aria-hidden="true" class="usa-icon usa-icon--white" />
+                  <span class="margin-left-1">Copy</span>
+              </button>
+          </div>
+    </div>
+</div>
+               </li>
+           </ul>
+       </section>
+     </div>
+
+        <section class="pmc-resources margin-top-6 desktop:margin-top-4" data-page-path="/articles/PMC22137/">
+            <h2 class="margin-top-0">RESOURCES</h2>
+            
+                <div class="usa-accordion usa-accordion--multiselectable" data-allow-multiple>
+                    <h3 class="usa-accordion__heading">
+                        <button
+                        type="button"
+                        class="usa-accordion__button"
+                        aria-expanded="false"
+                        aria-controls="resources-similar-articles"
+                        data-ga-category="resources_accordion"
+                        data-ga-action="open_similar_articles"
+                        data-ga-label="/articles/PMC22137/"
+                        data-action-open="open_similar_articles"
+                        data-action-close="close_similar_articles"
+                        >
+                            Similar articles
+                        </button>
+                    </h3>
+                    <div
+                            id="resources-similar-articles"
+                            class="usa-accordion__content usa-prose"
+                            
+                                data-source-url="/resources/similar-article-links/10393897/"
+                            
+                    >
+                        
+                    </div>
+                    <h3 class="usa-accordion__heading">
+                        <button
+                        type="button"
+                        class="usa-accordion__button"
+                        aria-expanded="false"
+                        aria-controls="resources-cited-by-other-articles"
+                        data-ga-category="resources_accordion"
+                        data-ga-action="open_cited_by"
+                        data-ga-label="/articles/PMC22137/"
+                        data-action-open="open_cited_by"
+                        data-action-close="close_cited_by"
+                        >
+                             Cited by other articles
+                        </button>
+                    </h3>
+                    <div
+                            id="resources-cited-by-other-articles"
+                            class="usa-accordion__content usa-prose"
+                            
+                                data-source-url="/resources/cited-by-links/10393897/"
+                            
+                    >
+                          
+                    </div>
+                    
+                        <h3 class="usa-accordion__heading">
+                            <button
+                            type="button"
+                            class="usa-accordion__button"
+                            aria-expanded="false"
+                            aria-controls="resources-links-to-ncbi-databases"
+                            data-ga-category="resources_accordion"
+                            data-ga-action="open_NCBI_links"
+                            data-ga-label="/articles/PMC22137/"
+                            data-action-open="open_NCBI_links"
+                            data-action-close="close_NCBI_link"
+                            >
+                                 Links to NCBI Databases
+                            </button>
+                        </h3>
+                        <div
+                                id="resources-links-to-ncbi-databases"
+                                class="usa-accordion__content usa-prose"
+                                data-source-url="/resources/db-links/22137/"
+                        >
+                        </div>
+                    
+                    
+                </div>
+            
+        </section>
+
+
+        <section
+        class="usa-in-page-nav usa-in-page-nav--wide margin-top-6 desktop:margin-top-4"
+        data-title-text="On this page"
+        data-title-heading-level="h2"
+        data-scroll-offset="0"
+        data-root-margin="-10% 0px -80% 0px"
+        data-main-content-selector="main"
+        data-threshold="1"
+        hidden
+        ></section>
+    </section>
+</div>
+
+        
+
+<div class="overlay" role="dialog" aria-label="Citation Dialog" hidden>
+    <div class="dialog citation-dialog" aria-hidden="true">
+        <div class="display-inline-flex flex-align-center flex-justify width-full margin-bottom-2">
+            <h2 class="usa-modal__heading margin-0">Cite</h2>
+             <button type="button" class="usa-button usa-button--unstyled close-overlay text-black width-auto"  tabindex="1">
+                 <img src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/close.svg" alt="Close icon" class="usa-icon usa-icon--size-3 usa-icon--button" />
+             </button>
+        </div>
+
+        
+
+<div class="citation-text-block">
+  <div class="citation-text margin-bottom-2"></div>
+  <ul class="usa-list usa-list--unstyled display-inline-flex flex-justify width-full flex-align-center">
+      <li>
+        <button
+          class="usa-button usa-button--unstyled text-no-underline display-flex flex-align-center copy-button dialog-focus"
+          data-ga-category="save_share"
+          data-ga-action="cite"
+          data-ga-label="copy"
+          tabindex="2">
+            <img src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/content_copy.svg" alt="Copy icon" class="usa-icon usa-icon--size-3 usa-icon--link" />
+            <span>Copy</span>
+        </button>
+      </li>
+      <li>
+          <a
+              href="#"
+              role="button"
+              class="usa-button usa-button--unstyled text-no-underline display-flex flex-align-center export-button"
+              data-ga-category="save_share"
+              data-ga-action="cite"
+              data-ga-label="download"
+              title="Download a file for external citation management software"
+              tabindex="3">
+                <img src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/file_download.svg" alt="Download icon" aria-hidden="true" class="usa-icon usa-icon--size-3 usa-icon--link" />
+                <span class="display-none mobile-lg:display-inline">Download .nbib</span>
+                <span class="display-inline mobile-lg:display-none">.nbib</span>
+            </a>
+      </li>
+      <li>
+          
+
+<div class="display-inline-flex flex-align-center">
+  <label class="usa-label margin-top-0">Format:</label>
+  <select aria-label="Format" class="usa-select citation-style-selector padding-1 margin-top-0 border-0 padding-right-4" tabindex="4" >
+    
+      <option data-style-url-name="ama"
+              value="AMA"
+              >
+        AMA
+      </option>
+    
+      <option data-style-url-name="apa"
+              value="APA"
+              >
+        APA
+      </option>
+    
+      <option data-style-url-name="mla"
+              value="MLA"
+              >
+        MLA
+      </option>
+    
+      <option data-style-url-name="nlm"
+              value="NLM"
+              selected="selected">
+        NLM
+      </option>
+    
+  </select>
+</div>
+      </li>
+  </ul>
+</div>
+    </div>
+</div>
+
+        <div class="overlay" role="dialog" hidden>
+  <div id="collections-action-dialog" class="dialog collections-dialog" aria-hidden="true">
+   <div class="display-inline-flex flex-align-center flex-justify width-full margin-bottom-2">
+        <h2 class="usa-modal__heading margin-0">Add to Collections</h2>
+    </div>
+    <div class="collections-action-panel action-panel">
+      
+
+
+<form id="collections-action-dialog-form"
+      class="usa-form maxw-full collections-action-panel-form action-panel-content action-form action-panel-smaller-selectors"
+      data-existing-collections-url="/list-existing-collections/"
+      data-add-to-existing-collection-url="/add-to-existing-collection/"
+      data-create-and-add-to-new-collection-url="/create-and-add-to-new-collection/"
+      data-myncbi-max-collection-name-length="100"
+      data-collections-root-url="https://www.ncbi.nlm.nih.gov/myncbi/collections/">
+
+    <input type="hidden" name="csrfmiddlewaretoken" value="CdRI22eszBnIDNd3IShPApD777XNpGEfb2ysAYP5ifqqiDQ1Xg4ARDRkTHwjYcBZ">
+
+    <fieldset class="usa-fieldset margin-bottom-2">
+        <div class="usa-radio">
+            <input type="radio"
+            id="collections-action-dialog-new"
+            class="usa-radio__input usa-radio__input--tile collections-new  margin-top-0"
+            name="collections"
+            value="new"
+            data-ga-category="collections_button"
+            data-ga-action="click"
+            data-ga-label="collections_radio_new" />
+            <label class="usa-radio__label" for="collections-action-dialog-new">Create a new collection</label>
+        </div>
+        <div class="usa-radio">
+            <input type="radio"
+            id="collections-action-dialog-existing"
+            class="usa-radio__input usa-radio__input--tile collections-existing"
+            name="collections"
+            value="existing"
+            checked="true"
+            data-ga-category="collections_button"
+            data-ga-action="click"
+            data-ga-label="collections_radio_existing" />
+            <label class="usa-radio__label" for="collections-action-dialog-existing">Add to an existing collection</label>
+        </div>
+    </fieldset>
+
+    <fieldset class="usa-fieldset margin-bottom-2">
+        <div class="action-panel-control-wrap new-collections-controls">
+           <label for="collections-action-dialog-add-to-new" class="usa-label margin-top-0">
+                Name your collection
+               <abbr title="required" class="usa-hint usa-hint--required text-no-underline">*</abbr>
+          </label>
+          <input
+            type="text"
+            name="add-to-new-collection"
+            id="collections-action-dialog-add-to-new"
+            class="usa-input collections-action-add-to-new"
+            pattern="[^&quot;&amp;=&lt;&gt;/]*" title="The following characters are not allowed in the Name field: &quot;&amp;=&lt;&gt;/"
+            maxlength=""
+            data-ga-category="collections_button"
+            data-ga-action="create_collection"
+            data-ga-label="non_favorties_collection"
+            required
+          />
+        </div>
+        <div class="action-panel-control-wrap existing-collections-controls">
+             <label for="collections-action-dialog-add-to-existing" class="usa-label margin-top-0">
+                Choose a collection
+              </label>
+              <select id="collections-action-dialog-add-to-existing"
+                      class="usa-select collections-action-add-to-existing"
+                      data-ga-category="collections_button"
+                      data-ga-action="select_collection"
+                      data-ga-label="($('.collections-action-add-to-existing').val() === 'Favorites') ? 'Favorites' : 'non_favorites_collection'">
+              </select>
+              <div class="collections-retry-load-on-error usa-input-error-message selection-validation-message">
+                Unable to load your collection due to an error<br>
+                <a href="#">Please try again</a>
+              </div>
+        </div>
+    </fieldset>
+
+    <div class="display-inline-flex">
+        <button class="usa-button margin-top-0 action-panel-submit"
+            type="submit"
+            data-loading-label="Adding..."
+            data-pinger-ignore
+            data-ga-category="collections_button"
+            data-ga-action="click"
+            data-ga-label="add">
+          Add
+        </button>
+        <button class="usa-button usa-button--outline margin-top-0 action-panel-cancel"
+                aria-label="Close 'Add to Collections' panel"
+                ref="linksrc=close_collections_panel"
+                data-ga-category="collections_button"
+                data-ga-action="click"
+                data-ga-label="cancel">
+          Cancel
+        </button>
+    </div>
+</form>
+    </div>
+  </div>
+</div>
+
+        
+
+      </div>
+    </div>
+  </div>
+
+
+
+        
+    
+    
+
+<footer class="ncbi-footer ncbi-dark-background " >
+    
+        <div class="ncbi-footer__icon-section">
+            <div class="ncbi-footer__social-header">
+                Follow NCBI
+            </div>
+
+            <div class="grid-container ncbi-footer__ncbi-social-icons-container">
+                
+                    <a href="https://twitter.com/ncbi"
+                       class="ncbi-footer__social-icon ncbi-footer__social-icon--gray"
+                       target="_blank"
+                       rel="noreferrer noopener">
+                        <svg width="40"
+                             height="40"
+                             viewBox="0 0 40 40"
+                             fill="none"
+                             xmlns="http://www.w3.org/2000/svg"
+                             focusable="false"
+                             aria-hidden="true">
+                            <path d="m6.067 8 10.81 13.9L6 33.2h4.2l8.4-9.1 7.068 9.1H34L22.8 18.5 31.9 8h-3.5l-7.7 8.4L14.401 8H6.067Zm3.6 1.734h3.266l16.8 21.732H26.57L9.668 9.734Z">
+                            </path>
+                        </svg>
+                        <span class="usa-sr-only">NCBI on X (formerly known as Twitter)</span>
+                    </a>
+                
+
+                
+                    <a href="https://www.facebook.com/ncbi.nlm"
+                       class="ncbi-footer__social-icon ncbi-footer__social-icon--gray"
+                       target="_blank"
+                       rel="noreferrer noopener">
+                        <svg width="16"
+                             height="29"
+                             focusable="false"
+                             aria-hidden="true"
+                             viewBox="0 0 16 29"
+                             fill="none"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3.8809 21.4002C3.8809 19.0932 3.8809 16.7876 3.8809 14.478C3.8809 14.2117 3.80103 14.1452 3.54278 14.1492C2.53372 14.1638 1.52334 14.1492 0.514288 14.1598C0.302626 14.1598 0.248047 14.0972 0.248047 13.8936C0.256034 12.4585 0.256034 11.0239 0.248047 9.58978C0.248047 9.37013 0.302626 9.30224 0.528931 9.3049C1.53798 9.31688 2.54837 9.3049 3.55742 9.31555C3.80103 9.31555 3.8809 9.26097 3.87957 9.00272C3.87158 8.00565 3.85428 7.00592 3.90753 6.00884C3.97142 4.83339 4.31487 3.73115 5.04437 2.78467C5.93095 1.63318 7.15699 1.09005 8.56141 0.967577C10.5582 0.79319 12.555 0.982221 14.5518 0.927641C14.7102 0.927641 14.7462 0.99287 14.7449 1.13664C14.7449 2.581 14.7449 4.02668 14.7449 5.47104C14.7449 5.67604 14.6517 5.68669 14.4946 5.68669C13.4523 5.68669 12.4113 5.68669 11.3703 5.68669C10.3506 5.68669 9.92057 6.10868 9.90593 7.13904C9.89661 7.7647 9.91525 8.39303 9.89794 9.01869C9.88995 9.26364 9.96583 9.31822 10.2015 9.31688C11.7204 9.30623 13.2393 9.31688 14.7595 9.3049C15.0257 9.3049 15.0723 9.3728 15.0444 9.62439C14.89 10.9849 14.7515 12.3467 14.6144 13.7085C14.5691 14.1571 14.5785 14.1585 14.1458 14.1585C12.8386 14.1585 11.5313 14.1665 10.2254 14.1518C9.95119 14.1518 9.89794 14.2317 9.89794 14.4899C9.90593 19.0799 9.89794 23.6752 9.91125 28.2612C9.91125 28.5674 9.8407 28.646 9.53186 28.6433C7.77866 28.6273 6.02414 28.6366 4.27094 28.634C3.82499 28.634 3.87158 28.6992 3.87158 28.22C3.87602 25.9472 3.87913 23.6739 3.8809 21.4002Z">
+                            </path>
+                        </svg>
+                        <span class="usa-sr-only">NCBI on Facebook</span>
+                    </a>
+                
+
+                
+                    <a href="https://www.linkedin.com/company/ncbinlm"
+                       class="ncbi-footer__social-icon ncbi-footer__social-icon--gray"
+                       target="_blank"
+                       rel="noreferrer noopener">
+                        <svg width="25"
+                             height="23"
+                             viewBox="0 0 26 24"
+                             fill="none"
+                             xmlns="http://www.w3.org/2000/svg"
+                             focusable="false"
+                             aria-hidden="true">
+                            <path d="M14.6983 9.98423C15.6302 9.24808 16.5926 8.74754 17.6762 8.51991C19.673 8.09126 21.554 8.30824 23.1262 9.7526C24.2351 10.7723 24.7529 12.1115 25.0165 13.5612C25.1486 14.3363 25.2105 15.1218 25.2015 15.9081C25.2015 18.3043 25.2015 20.6898 25.2082 23.0806C25.2082 23.3468 25.1549 23.444 24.8621 23.4414C23.1297 23.4272 21.3992 23.4272 19.6704 23.4414C19.4041 23.4414 19.3429 23.3588 19.3442 23.1019C19.3535 20.5194 19.3442 17.9368 19.3442 15.3543C19.3442 14.0005 18.3258 12.9448 17.0266 12.9488C15.7273 12.9528 14.6983 14.0071 14.6983 15.361C14.6983 17.9328 14.6917 20.5047 14.6983 23.0753C14.6983 23.3708 14.6198 23.444 14.3296 23.4427C12.6185 23.4294 10.9079 23.4294 9.19779 23.4427C8.93155 23.4427 8.86099 23.3735 8.86232 23.1086C8.8783 19.7619 8.88628 16.4144 8.88628 13.066C8.88628 11.5688 8.87874 10.0708 8.86365 8.57182C8.86365 8.3575 8.90758 8.27896 9.14054 8.28029C10.9048 8.29094 12.6687 8.29094 14.4321 8.28029C14.6464 8.28029 14.6983 8.34818 14.6983 8.54653C14.6903 9.00047 14.6983 9.45441 14.6983 9.98423Z">
+                            </path>
+                            <path d="M6.55316 15.8443C6.55316 18.2564 6.55316 20.6699 6.55316 23.082C6.55316 23.3629 6.48127 23.4388 6.19906 23.4374C4.47737 23.4241 2.75568 23.4241 1.03399 23.4374C0.767751 23.4374 0.69986 23.3629 0.701191 23.1006C0.709178 18.2648 0.709178 13.4281 0.701191 8.59053C0.701191 8.34026 0.765089 8.27237 1.01669 8.2737C2.74991 8.28435 4.48048 8.28435 6.20838 8.2737C6.47462 8.2737 6.5465 8.33627 6.54517 8.6065C6.54783 11.0186 6.55316 13.4308 6.55316 15.8443Z">
+                            </path>
+                            <path d="M3.65878 0.243898C5.36804 0.243898 6.58743 1.45529 6.58743 3.1406C6.58743 4.75801 5.32145 5.95742 3.60819 5.96807C3.22177 5.97614 2.83768 5.90639 2.47877 5.76299C2.11985 5.61959 1.79344 5.40546 1.51897 5.13334C1.24449 4.86123 1.02755 4.53668 0.881058 4.17902C0.734563 3.82136 0.661505 3.43788 0.666231 3.05141C0.67555 1.42601 1.9362 0.242566 3.65878 0.243898Z">
+                            </path>
+                        </svg>
+                        <span class="usa-sr-only">NCBI on LinkedIn</span>
+                    </a>
+                
+
+                
+                    <a href="https://github.com/ncbi"
+                       class="ncbi-footer__social-icon ncbi-footer__social-icon--gray"
+                       target="_blank"
+                       rel="noreferrer noopener">
+                        <svg width="28"
+                             height="27"
+                             viewBox="0 0 28 28"
+                             fill="none"
+                             xmlns="http://www.w3.org/2000/svg"
+                             focusable="false"
+                             aria-hidden="true">
+                            <path d="M16.7228 20.6334C17.5057 20.5527 18.2786 20.3944 19.0301 20.1608C21.3108 19.4193 22.5822 17.8259 22.963 15.4909C23.1228 14.5112 23.1814 13.5287 22.9883 12.5437C22.8106 11.6423 22.4013 10.8028 21.8007 10.1076C21.7526 10.0605 21.7197 10 21.7064 9.934C21.6931 9.86799 21.7 9.79952 21.7262 9.73748C22.0856 8.6206 21.9711 7.51969 21.601 6.42677C21.582 6.3497 21.5345 6.2827 21.468 6.23923C21.4016 6.19577 21.3211 6.17906 21.2429 6.19248C20.7329 6.21649 20.2313 6.33051 19.7611 6.52928C19.1103 6.7908 18.4899 7.12198 17.9104 7.51703C17.84 7.56996 17.7581 7.60551 17.6713 7.62078C17.5846 7.63605 17.4954 7.6306 17.4112 7.60489C15.2596 7.05882 13.0054 7.06203 10.8554 7.61421C10.7806 7.63586 10.7018 7.63967 10.6253 7.62534C10.5487 7.611 10.4766 7.57892 10.4148 7.53167C9.64788 7.03247 8.85171 6.58918 7.96368 6.33359C7.65781 6.24338 7.34123 6.19458 7.02239 6.18849C6.94879 6.17986 6.87462 6.19893 6.81432 6.242C6.75402 6.28507 6.71191 6.34904 6.69621 6.42145C6.32342 7.51437 6.2209 8.61527 6.56307 9.73348C6.59635 9.84264 6.64694 9.93316 6.54177 10.0516C5.47666 11.2604 5.09988 12.6834 5.19574 14.2676C5.2663 15.4244 5.46201 16.5466 6.01454 17.5769C6.84399 19.1171 8.21664 19.9119 9.85158 20.3352C10.3938 20.4706 10.9444 20.5698 11.4998 20.632C11.5384 20.7492 11.4506 20.7798 11.408 20.8291C11.1734 21.1179 10.9894 21.4441 10.8634 21.7942C10.7622 22.0458 10.8315 22.4039 10.6065 22.5516C10.263 22.7766 9.83827 22.8485 9.42421 22.8871C8.17936 23.0056 7.26471 22.4877 6.6283 21.4348C6.25552 20.8184 5.76956 20.3325 5.08523 20.0663C4.76981 19.9325 4.42139 19.8967 4.08537 19.9638C3.7898 20.029 3.73788 20.1901 3.93891 20.4111C4.03639 20.5234 4.14989 20.6207 4.27575 20.6999C4.9796 21.1318 5.51717 21.7884 5.80152 22.5636C6.37002 23.9973 7.48039 24.5697 8.93825 24.6323C9.43741 24.6575 9.93768 24.615 10.4254 24.5058C10.5892 24.4672 10.6531 24.4872 10.6517 24.6762C10.6451 25.4936 10.6637 26.3123 10.6517 27.131C10.6517 27.6635 10.1684 27.9297 9.58663 27.7393C8.17396 27.2671 6.84977 26.5631 5.66838 25.656C2.59555 23.2891 0.720966 20.1861 0.217704 16.3376C-0.357453 11.9127 0.911353 8.00824 3.98551 4.73881C6.11909 2.42656 8.99932 0.939975 12.1203 0.540191C16.5351 -0.0601815 20.4347 1.14323 23.7232 4.16373C26.2449 6.47869 27.724 9.37672 28.1048 12.7726C28.5828 17.0325 27.3686 20.7945 24.4768 23.9827C22.9762 25.6323 21.0956 26.8908 18.9982 27.6488C18.8783 27.6927 18.7585 27.738 18.636 27.7726C18.0356 27.9404 17.6189 27.6395 17.6189 27.0098C17.6189 25.7452 17.6308 24.4806 17.6295 23.2159C17.6329 22.9506 17.6128 22.6856 17.5696 22.4238C17.4325 21.6664 17.3419 21.484 16.7228 20.6334Z">
+                            </path>
+                        </svg>
+                        <span class="usa-sr-only">NCBI on GitHub</span>
+                    </a>
+                
+
+                
+                    <a href="https://ncbiinsights.ncbi.nlm.nih.gov/"
+                       class="ncbi-footer__social-icon ncbi-footer__social-icon--gray"
+                       target="_blank"
+                       rel="noreferrer noopener">
+                        <svg width="26"
+                             height="26"
+                             viewBox="0 0 27 27"
+                             fill="none"
+                             xmlns="http://www.w3.org/2000/svg"
+                             focusable="false"
+                             aria-hidden="true">
+                            <path d="M23.7778 26.4574C23.1354 26.3913 22.0856 26.8024 21.636 26.3087C21.212 25.8444 21.4359 24.8111 21.324 24.0347C19.9933 14.8323 14.8727 8.80132 6.09057 5.85008C4.37689 5.28406 2.58381 4.99533 0.779072 4.99481C0.202773 4.99481 -0.0229751 4.83146 0.00455514 4.21479C0.0660406 3.08627 0.0660406 1.95525 0.00455514 0.826734C-0.0413285 0.0815827 0.259669 -0.0193618 0.896534 0.00266238C6.96236 0.222904 12.3693 2.24179 16.9889 6.16209C22.9794 11.2478 26.1271 17.7688 26.4372 25.648C26.4629 26.294 26.3179 26.5271 25.6609 26.4684C25.0827 26.417 24.4991 26.4574 23.7778 26.4574Z">
+                            </path>
+                            <path d="M14.8265 26.441C14.0924 26.441 13.2371 26.6795 12.6626 26.3786C12.0092 26.0372 12.3781 25.0644 12.246 24.378C11.1154 18.5324 6.6849 14.5497 0.74755 14.1001C0.217135 14.0615 -0.0104482 13.9422 0.0134113 13.3659C0.0519536 12.1454 0.0482829 10.9213 0.0134113 9.69524C-0.00127145 9.14464 0.196946 9.03268 0.703502 9.04736C9.21217 9.27128 16.5994 16.2511 17.2804 24.7231C17.418 26.4446 17.418 26.4446 15.6579 26.4446H14.832L14.8265 26.441Z">
+                            </path>
+                            <path d="M3.58928 26.4555C2.64447 26.4618 1.73584 26.0925 1.06329 25.4289C0.39073 24.7653 0.00933763 23.8617 0.0030097 22.9169C-0.00331824 21.9721 0.365937 21.0635 1.02954 20.3909C1.69315 19.7184 2.59675 19.337 3.54156 19.3306C4.48637 19.3243 5.39499 19.6936 6.06755 20.3572C6.7401 21.0208 7.1215 21.9244 7.12782 22.8692C7.13415 23.814 6.7649 24.7226 6.10129 25.3952C5.43768 26.0677 4.53409 26.4491 3.58928 26.4555Z">
+                            </path>
+                        </svg>
+                        <span class="usa-sr-only">NCBI RSS feed</span>
+                    </a>
+                
+            </div>
+        </div>
+    
+
+    <div data-testid="gridContainer"
+         class="grid-container ncbi-footer__container">
+        <div class="grid-row ncbi-footer__main-content-container"
+             data-testid="grid">
+            
+                <div class="ncbi-footer__column">
+                    
+                        <p class="ncbi-footer__circled-icons-heading">
+                            Connect with NLM
+                        </p>
+                    
+
+                    <div class="ncbi-footer__circled-icons-list">
+                        
+                            <a href=https://twitter.com/nlm_nih class="ncbi-footer__social-icon ncbi-footer__social-icon--circled" target="_blank" rel="noreferrer noopener">
+                                <svg width="32"
+                                     height="32"
+                                     viewBox="0 0 40 40"
+                                     fill="none"
+                                     xmlns="http://www.w3.org/2000/svg"
+                                     focusable="false"
+                                     aria-hidden="true">
+                                    <path d="m6.067 8 10.81 13.9L6 33.2h4.2l8.4-9.1 7.068 9.1H34L22.8 18.5 31.9 8h-3.5l-7.7 8.4L14.401 8H6.067Zm3.6 1.734h3.266l16.8 21.732H26.57L9.668 9.734Z">
+                                    </path>
+                                </svg>
+                                <span class="usa-sr-only">NLM on X (formerly known as Twitter)</span>
+                            </a>
+                        
+
+                        
+                            <a href=https://www.facebook.com/nationallibraryofmedicine class="ncbi-footer__social-icon ncbi-footer__social-icon--circled" target="_blank" rel="noreferrer noopener">
+                                <svg width="13"
+                                     height="24"
+                                     viewBox="0 0 13 24"
+                                     fill="none"
+                                     xmlns="http://www.w3.org/2000/svg"
+                                     focusable="false"
+                                     aria-hidden="true">
+                                    <path d="M4.11371 23.1369C4.11371 23.082 4.11371 23.0294 4.11371 22.9745V12.9411H0.817305C0.6709 12.9411 0.670898 12.9411 0.670898 12.8016C0.670898 11.564 0.670898 10.3287 0.670898 9.09341C0.670898 8.97903 0.705213 8.95158 0.815017 8.95158C1.8673 8.95158 2.91959 8.95158 3.97417 8.95158H4.12057V8.83263C4.12057 7.8055 4.12057 6.7738 4.12057 5.74897C4.1264 4.92595 4.31387 4.11437 4.66959 3.37217C5.12916 2.38246 5.94651 1.60353 6.95717 1.1921C7.64827 0.905008 8.3913 0.764035 9.13953 0.778051C10.0019 0.791777 10.8644 0.830666 11.7268 0.860404C11.8869 0.860404 12.047 0.894717 12.2072 0.90158C12.2964 0.90158 12.3261 0.940469 12.3261 1.02968C12.3261 1.5421 12.3261 2.05452 12.3261 2.56465C12.3261 3.16857 12.3261 3.7725 12.3261 4.37642C12.3261 4.48165 12.2964 4.51367 12.1912 4.51138C11.5369 4.51138 10.8804 4.51138 10.2261 4.51138C9.92772 4.51814 9.63058 4.5526 9.33855 4.61433C9.08125 4.6617 8.84537 4.78881 8.66431 4.97766C8.48326 5.16652 8.3662 5.40755 8.32972 5.66661C8.28476 5.89271 8.26027 6.1224 8.25652 6.35289C8.25652 7.19014 8.25652 8.02969 8.25652 8.86923C8.25652 8.89439 8.25652 8.91955 8.25652 8.95615H12.0219C12.1797 8.95615 12.182 8.95616 12.1614 9.10714C12.0768 9.76596 11.9876 10.4248 11.9029 11.0813C11.8312 11.6319 11.7626 12.1824 11.697 12.733C11.6719 12.9434 11.6787 12.9434 11.4683 12.9434H8.26338V22.899C8.26338 22.979 8.26338 23.0591 8.26338 23.1392L4.11371 23.1369Z">
+                                    </path>
+                                </svg>
+                                <span class="usa-sr-only">NLM on Facebook</span>
+                            </a>
+                        
+
+                        
+                            <a href=https://www.youtube.com/user/NLMNIH class="ncbi-footer__social-icon ncbi-footer__social-icon--circled" target="_blank" rel="noreferrer noopener">
+                                <svg width="21"
+                                     height="15"
+                                     viewBox="0 0 21 15"
+                                     fill="none"
+                                     xmlns="http://www.w3.org/2000/svg"
+                                     focusable="false"
+                                     aria-hidden="true">
+                                    <path d="M19.2561 1.47914C18.9016 1.15888 18.5699 0.957569 17.2271 0.834039C15.5503 0.678484 13.2787 0.655608 11.563 0.65332H9.43556C7.71987 0.65332 5.4483 0.678484 3.77151 0.834039C2.43098 0.957569 2.097 1.15888 1.74242 1.47914C0.813665 2.32097 0.619221 4.62685 0.598633 6.89384C0.598633 7.31781 0.598633 7.74101 0.598633 8.16345C0.626084 10.4121 0.827391 12.686 1.74242 13.521C2.097 13.8412 2.4287 14.0425 3.77151 14.1661C5.4483 14.3216 7.71987 14.3445 9.43556 14.3468H11.563C13.2787 14.3468 15.5503 14.3216 17.2271 14.1661C18.5676 14.0425 18.9016 13.8412 19.2561 13.521C20.1712 12.6929 20.3725 10.451 20.3999 8.22064C20.3999 7.74025 20.3999 7.25986 20.3999 6.77946C20.3725 4.54907 20.1689 2.30724 19.2561 1.47914ZM8.55942 10.5311V4.65201L13.5601 7.50005L8.55942 10.5311Z"
+                                          fill="white" />
+                                </svg>
+                                <span class="usa-sr-only">NLM on YouTube</span>
+                            </a>
+                        
+                    </div>
+                </div>
+            
+
+            
+                <address class="ncbi-footer__address ncbi-footer__column">
+                    
+        <p>
+            <a class="usa-link usa-link--external"
+            href="https://www.google.com/maps/place/8600+Rockville+Pike,+Bethesda,+MD+20894/%4038.9959508,
+            -77.101021,17z/data%3D!3m1!4b1!4m5!3m4!1s0x89b7c95e25765ddb%3A0x19156f88b27635b8!8m2!3d38.9959508!
+            4d-77.0988323"
+            rel="noopener noreferrer" target="_blank">National Library of Medicine
+            <br/> 8600 Rockville Pike<br/> Bethesda, MD 20894</a>
+        </p>
+    
+                </address>
+            
+
+            
+                <ul class="usa-list usa-list--unstyled ncbi-footer__vertical-list ncbi-footer__column">
+                    
+                        <li class="ncbi-footer__vertical-list-item">
+                            
+
+
+
+
+
+
+
+
+
+    <a href="https://www.nlm.nih.gov/web_policies.html" class="usa-link  usa-link--alt ncbi-footer__link"  >
+        
+
+        
+            Web Policies
+        
+
+        
+    </a>
+
+
+                        </li>
+                    
+                        <li class="ncbi-footer__vertical-list-item">
+                            
+
+
+
+
+
+
+
+
+
+    <a href="https://www.nih.gov/institutes-nih/nih-office-director/office-communications-public-liaison/freedom-information-act-office" class="usa-link  usa-link--alt ncbi-footer__link"  >
+        
+
+        
+            FOIA
+        
+
+        
+    </a>
+
+
+                        </li>
+                    
+                        <li class="ncbi-footer__vertical-list-item">
+                            
+
+
+
+
+
+
+
+
+
+    <a href="https://www.hhs.gov/vulnerability-disclosure-policy/index.html" class="usa-link usa-link--external usa-link--alt ncbi-footer__link" rel="noreferrer noopener" target='_blank' >
+        
+
+        
+            HHS Vulnerability Disclosure
+        
+
+        
+    </a>
+
+
+                        </li>
+                    
+                </ul>
+            
+
+            
+                <ul class="usa-list usa-list--unstyled ncbi-footer__vertical-list ncbi-footer__column">
+                    
+                        <li class="ncbi-footer__vertical-list-item">
+                            
+
+
+
+
+
+
+
+
+
+    <a href="https://support.nlm.nih.gov/" class="usa-link  usa-link--alt ncbi-footer__link"  >
+        
+
+        
+            Help
+        
+
+        
+    </a>
+
+
+                        </li>
+                    
+                        <li class="ncbi-footer__vertical-list-item">
+                            
+
+
+
+
+
+
+
+
+
+    <a href="https://www.nlm.nih.gov/accessibility.html" class="usa-link  usa-link--alt ncbi-footer__link"  >
+        
+
+        
+            Accessibility
+        
+
+        
+    </a>
+
+
+                        </li>
+                    
+                        <li class="ncbi-footer__vertical-list-item">
+                            
+
+
+
+
+
+
+
+
+
+    <a href="https://www.nlm.nih.gov/careers/careers.html" class="usa-link  usa-link--alt ncbi-footer__link"  >
+        
+
+        
+            Careers
+        
+
+        
+    </a>
+
+
+                        </li>
+                    
+                </ul>
+            
+        </div>
+
+        
+            <div class="grid-row grid-col-12" data-testid="grid">
+                <ul class="ncbi-footer__bottom-links-list">
+                    
+                        <li class="ncbi-footer__bottom-list-item">
+                            
+
+
+
+
+
+
+
+
+
+    <a href="https://www.nlm.nih.gov/" class="usa-link  usa-link--alt ncbi-footer__link"  >
+        
+
+        
+            NLM
+        
+
+        
+    </a>
+
+
+                        </li>
+                    
+                        <li class="ncbi-footer__bottom-list-item">
+                            
+
+
+
+
+
+
+
+
+
+    <a href="https://www.nih.gov/" class="usa-link  usa-link--alt ncbi-footer__link"  >
+        
+
+        
+            NIH
+        
+
+        
+    </a>
+
+
+                        </li>
+                    
+                        <li class="ncbi-footer__bottom-list-item">
+                            
+
+
+
+
+
+
+
+
+
+    <a href="https://www.hhs.gov/" class="usa-link usa-link--external usa-link--alt ncbi-footer__link" rel="noreferrer noopener" target='_blank' >
+        
+
+        
+            HHS
+        
+
+        
+    </a>
+
+
+                        </li>
+                    
+                        <li class="ncbi-footer__bottom-list-item">
+                            
+
+
+
+
+
+
+
+
+
+    <a href="https://www.usa.gov/" class="usa-link usa-link--external usa-link--alt ncbi-footer__link" rel="noreferrer noopener" target='_blank' >
+        
+
+        
+            USA.gov
+        
+
+        
+    </a>
+
+
+                        </li>
+                    
+                </ul>
+            </div>
+        
+    </div>
+</footer>
+
+    
+
+
+        
+        
+    
+  <script  type="text/javascript" src="https://cdn.ncbi.nlm.nih.gov/core/pinger/pinger.js"> </script>
+
+
+    
+        
+
+<button class="back-to-top" data-ga-category="pagination" data-ga-action="back_to_top">
+    <label>Back to Top</label>
+    <img src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/img/arrow_upward.svg" alt="back to top icon" class="usa-icon usa-icon--size-3 order-0 usa-icon--white" />
+</button>
+    
+
+
+        
+    
+    <div id="icon-container" style="display: none;"></div>
+    
+    
+        
+    <script type="application/javascript">
+    window.ncbi = window.ncbi || {};
+    window.ncbi.pmc = window.ncbi.pmc || {};
+    window.ncbi.pmc.options = {
+        logLevel: 'INFO',
+        
+        staticEndpoint: 'https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/',
+        
+        citeCookieName: 'pmc-cf',
+    };
+</script>
+    <script type="module" crossorigin="" src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/assets/base-Cp_Il6gk.js"></script>
+<link href="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/assets/vendor-Co8Vdmw2.js" type="text/javascript" crossorigin="anonymous" rel="modulepreload" as="script" />
+    
+    <script type="text/javascript" src="https://cdn.ncbi.nlm.nih.gov/core/jquery/jquery-3.6.0.min.js">&#xA0;</script>
+    <script type="text/javascript">
+        jQuery.getScript("https://cdn.ncbi.nlm.nih.gov/core/alerts/alerts.js", function () {
+            galert(['div.nav_and_browser', 'div.header', '#universal_header', '.usa-banner', 'body > *:nth-child(1)'])
+        });
+    </script>
+
+
+    <script type="text/javascript">var exports = {};</script>
+     <script src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/CACHE/js/output.4e25b6297b38.js"></script>
+
+    <script type="module" crossorigin="" src="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/assets/article-BxyWTbsj.js"></script>
+<link href="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/assets/vendor-Co8Vdmw2.js" type="text/javascript" crossorigin="anonymous" rel="modulepreload" as="script" />
+<link href="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/assets/index-DXSA0fsx.js" type="text/javascript" crossorigin="anonymous" rel="modulepreload" as="script" />
+<link href="https://cdn.ncbi.nlm.nih.gov/pmc/pd-medc-pmc-cloudpmc-viewer/production/a2b04810/var/data/static/assets/secure-cookie-Br6x5jtB.js" type="text/javascript" crossorigin="anonymous" rel="modulepreload" as="script" />
+    
+    
+
+    </body>
+</html>

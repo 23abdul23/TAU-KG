@@ -1,0 +1,15 @@
+# Python 3.10 benchmark dependencies for:
+# - scispacy_ner.py
+# - biobert_ner.py
+# - bern2_ner.py
+
+requests>=2.31,<3.0
+lxml>=4.9,<6.0
+python-dotenv>=1.0,<2.0
+
+torch>=2.1,<3.0
+transformers>=4.38,<5.0
+
+spacy>=3.7,<3.8
+scispacy>=0.5.4,<0.6
+https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.5.4/en_ner_bionlp13cg_md-0.5.4.tar.gz
