@@ -1,19 +1,52 @@
-# 🎈 Blank app template
+# TAU-KG
 
-A simple Streamlit app template for you to modify!
+TAU-KG is a Streamlit-based biomedical knowledge graph project.
 
-[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://blank-app-template.streamlit.app/)
+## Run locally (without Docker)
 
-### How to run it on your own machine
+1. Install dependencies:
 
-1. Install the requirements
+```bash
+pip install -r requirements.txt
+```
 
-   ```
-   $ pip install -r requirements.txt
-   ```
+2. Start the app:
 
-2. Run the app
+```bash
+streamlit run streamlit_app.py
+```
 
-   ```
-   $ streamlit run streamlit_app.py
-   ```
+## Docker containers
+
+### Standard container (port 8778)
+
+Build and start using the main Compose file:
+
+```bash
+docker compose -f compose.yml up --build -d
+```
+
+Stop it:
+
+```bash
+docker compose -f compose.yml down
+```
+
+### Development container (port 8998)
+
+Build and start the development container (uses `Dockerfile.dev` and mounts the repo for active development):
+
+```bash
+docker compose -f compose.dev.yml up --build -d
+```
+
+Stop it:
+
+```bash
+docker compose -f compose.dev.yml down
+```
+
+## Open in browser
+
+- Standard app: http://localhost:8778
+- Development app: http://localhost:8998

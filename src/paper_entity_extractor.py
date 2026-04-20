@@ -19,8 +19,8 @@ Features:
 import os
 import json
 import re
-from typing import List, Dict, Any, Tuple, Optional
-from datetime import datetime
+from functools import lru_cache
+from typing import List, Dict, Any, Tuple, Optional, Iterable
 import logging
 from src.llm_provider import LLMClient
 from src.paper_schema import (
@@ -61,6 +61,13 @@ EXTRACTION_SECTION_BUDGETS = {
     "methods": 0.05,
 }
 EXTRACTION_FALLBACK_BUCKETS = ["supplementary", "other"]
+SCISPACY_DEFAULT_MODEL = "en_ner_bionlp13cg_md"
+SCISPACY_DEFAULT_CHUNK_SIZE = 50000
+SCISPACY_ENTITY_LABEL_MAP = {
+    "GENE_OR_GENE_PRODUCT": ("gene_or_protein", 0.83),
+    "DISEASE": ("disease", 0.88),
+}
+RELATIONSHIP_CONTEXT_CHARS = 220
 
 
 def get_llm_client() -> LLMClient:
@@ -119,6 +126,342 @@ def _join_bucket_texts(parts: List[str]) -> str:
         seen.add(clean_part)
         ordered_parts.append(clean_part)
     return "\n\n".join(ordered_parts)
+
+
+def _get_extraction_backend() -> str:
+    raw_backend = os.getenv("PAPER_ENTITY_EXTRACTION_BACKEND", "hybrid").strip().lower()
+    if raw_backend in {"llm", "scispacy", "hybrid"}:
+        return raw_backend
+    logger.warning(
+        "Invalid PAPER_ENTITY_EXTRACTION_BACKEND=%r. Falling back to 'hybrid'.",
+        raw_backend,
+    )
+    return "hybrid"
+
+
+def _iter_text_chunks(text: str, chunk_size: int) -> Iterable[Tuple[int, str]]:
+    clean_text = str(text or "")
+    for index in range(0, len(clean_text), max(1000, chunk_size)):
+        yield index, clean_text[index:index + chunk_size]
+
+
+@lru_cache(maxsize=1)
+def _get_scispacy_nlp():
+    try:
+        import spacy
+    except Exception as exc:
+        logger.warning("spaCy import failed; SciSpaCy backend disabled: %s", exc)
+        return None
+
+    model_name = os.getenv("PAPER_SCISPACY_MODEL", SCISPACY_DEFAULT_MODEL).strip() or SCISPACY_DEFAULT_MODEL
+    try:
+        return spacy.load(model_name)
+    except Exception as exc:
+        logger.warning(
+            "Unable to load SciSpaCy model '%s'; backend disabled: %s",
+            model_name,
+            exc,
+        )
+        return None
+
+
+def _is_probable_sequence(name: str) -> bool:
+    token = re.sub(r"[^A-Za-z]", "", name or "")
+    if len(token) < 10:
+        return False
+    base_count = sum(token.upper().count(ch) for ch in "ACGTN")
+    return (base_count / max(1, len(token))) >= 0.85
+
+
+def _is_valid_entity_mention(name: str) -> bool:
+    cleaned = re.sub(r"\s+", " ", str(name or "")).strip()
+    if len(cleaned) < 2 or len(cleaned) > 80:
+        return False
+    if cleaned.lower() in {"co2", "co 2", "dna", "rna"}:
+        return False
+    if _is_probable_sequence(cleaned):
+        return False
+    if re.search(r"\b(?:table|figure|fig\.?|supplementary|copyright)\b", cleaned, re.IGNORECASE):
+        return False
+    if re.fullmatch(r"[A-Z0-9 _\-:/]{20,}", cleaned) and " " not in cleaned.strip():
+        return False
+    return True
+
+
+def _infer_gene_or_protein_bucket(name: str, context: str) -> str:
+    candidate = f"{name} {context}".lower()
+    if re.search(r"\b(protein|peptide|kinase|phosphatase|receptor|enzyme|antibody)\b", candidate):
+        return "proteins"
+    if re.fullmatch(r"[A-Z0-9\-]{2,12}", name or ""):
+        return "genes"
+    return "genes"
+
+
+def _extract_context_window(text: str, start: int, end: int, radius: int = RELATIONSHIP_CONTEXT_CHARS) -> str:
+    left = max(0, start - radius)
+    right = min(len(text), end + radius)
+    window = text[left:right].strip()
+    return re.sub(r"\s+", " ", window)
+
+
+def _is_valid_pathway_name(name: str) -> bool:
+    clean_name = re.sub(r"\s+", " ", str(name or "")).strip(" -;,.")
+    if len(clean_name) < 5 or len(clean_name) > 120:
+        return False
+    if clean_name.lower() in {"pathway", "signaling pathway", "signalling pathway"}:
+        return False
+    tokens = clean_name.split()
+    if len(tokens) > 8:
+        return False
+    if tokens[0].lower() in {"the", "a", "an", "disease", "alzheimer", "parkinson"}:
+        return False
+    if re.search(r"\b(involves?|involved|regulates?|activates?|inhibits?|causes?|associated|showed|shows)\b", clean_name, re.IGNORECASE):
+        return False
+    return True
+
+
+def _normalize_pathway_candidate(raw_name: str) -> str:
+    tokens = re.sub(r"\s+", " ", str(raw_name or "")).strip(" -;,.").split(" ")
+    if not tokens:
+        return ""
+
+    lowering = [tok.lower() for tok in tokens]
+    relation_words = {"involves", "involve", "involved", "regulates", "regulate", "activates", "activate", "inhibits", "inhibit", "associated"}
+    for idx, tok in enumerate(lowering):
+        if tok in relation_words and idx < len(tokens) - 1:
+            tokens = tokens[idx + 1:]
+            lowering = lowering[idx + 1:]
+            break
+
+    if "signaling" in lowering:
+        idx = lowering.index("signaling")
+        start = max(0, idx - 2)
+        tokens = tokens[start:]
+    elif "signalling" in lowering:
+        idx = lowering.index("signalling")
+        start = max(0, idx - 2)
+        tokens = tokens[start:]
+    elif "pathway" in lowering and len(tokens) > 4:
+        idx = lowering.index("pathway")
+        start = max(0, idx - 3)
+        tokens = tokens[start:]
+
+    return " ".join(tokens).strip(" -;,.")
+
+
+def _extract_pathway_entities(text: str) -> List[Dict[str, Any]]:
+    if not text:
+        return []
+
+    patterns = [
+        re.compile(
+            r"\b([A-Za-z0-9\-/]+(?:\s+[A-Za-z0-9\-/]+){0,3}\s+(?:signaling|signalling)\s+pathway)\b",
+            re.IGNORECASE,
+        ),
+        re.compile(
+            r"\b([A-Za-z0-9\-/]+(?:\s+[A-Za-z0-9\-/]+){0,2}\s+(?:pathway|signaling cascade|signalling cascade|signaling axis|signalling axis))\b",
+            re.IGNORECASE,
+        ),
+        re.compile(r"\b(autophagy|neuroinflammation|mitochondrial dysfunction|oxidative stress)\b", re.IGNORECASE),
+    ]
+
+    seen = set()
+    extracted = []
+    for pattern in patterns:
+        for match in pattern.finditer(text):
+            name = _normalize_pathway_candidate(match.group(1))
+            normalized_key = name.lower()
+            if not _is_valid_pathway_name(name) or normalized_key in seen:
+                continue
+            seen.add(normalized_key)
+            extracted.append(
+                {
+                    "name": name,
+                    "context": _extract_context_window(text, match.start(), match.end()),
+                    "confidence": 0.72,
+                    "entity_type": "pathway",
+                    "chromosome": "",
+                }
+            )
+    return extracted
+
+
+def _dedupe_entities(entities: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    seen = set()
+    deduped: List[Dict[str, Any]] = []
+    for entity in entities:
+        name = str(entity.get("name", "")).strip()
+        if not name:
+            continue
+        key = name.lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append(entity)
+    return deduped
+
+
+def _scispacy_extract_entities(
+    paper_text: str,
+    sections: Optional[List[Dict[str, Any]]] = None,
+) -> Dict[str, List[Dict[str, Any]]]:
+    nlp = _get_scispacy_nlp()
+    if nlp is None:
+        return {
+            "genes": [],
+            "proteins": [],
+            "diseases": [],
+            "pathways": _extract_pathway_entities(paper_text),
+        }
+
+    chunk_size = int(os.getenv("PAPER_SCISPACY_CHUNK_SIZE", str(SCISPACY_DEFAULT_CHUNK_SIZE)) or SCISPACY_DEFAULT_CHUNK_SIZE)
+    texts_with_section = []
+    if sections:
+        for section in sections:
+            section_text = str(section.get("text", "")).strip()
+            if section_text:
+                texts_with_section.append((normalize_section_type(section.get("type", "")) or "other", section_text))
+    if not texts_with_section:
+        texts_with_section = [("full_text", paper_text)]
+
+    extracted = {"genes": [], "proteins": [], "diseases": [], "pathways": []}
+    for _, text in texts_with_section:
+        for _, chunk in _iter_text_chunks(text, chunk_size):
+            if not chunk.strip():
+                continue
+            doc = nlp(chunk)
+            for ent in doc.ents:
+                mapping = SCISPACY_ENTITY_LABEL_MAP.get(ent.label_)
+                if not mapping:
+                    continue
+                normalized_kind, base_confidence = mapping
+                name = re.sub(r"\s+", " ", ent.text).strip()
+                if not _is_valid_entity_mention(name):
+                    continue
+                entity_record = {
+                    "name": name,
+                    "context": _extract_context_window(chunk, ent.start_char, ent.end_char),
+                    "confidence": float(base_confidence),
+                    "chromosome": "",
+                }
+                if normalized_kind == "gene_or_protein":
+                    bucket = _infer_gene_or_protein_bucket(name, entity_record["context"])
+                    entity_record["entity_type"] = "protein" if bucket == "proteins" else "gene"
+                    extracted[bucket].append(entity_record)
+                elif normalized_kind == "disease":
+                    entity_record["entity_type"] = "disease"
+                    extracted["diseases"].append(entity_record)
+
+    extracted["pathways"].extend(_extract_pathway_entities(paper_text))
+    for bucket in ["genes", "proteins", "diseases", "pathways"]:
+        extracted[bucket] = _dedupe_entities(extracted[bucket])
+
+    logger.info(
+        "SciSpaCy extracted entities: genes=%s proteins=%s diseases=%s pathways=%s",
+        len(extracted["genes"]),
+        len(extracted["proteins"]),
+        len(extracted["diseases"]),
+        len(extracted["pathways"]),
+    )
+    return extracted
+
+
+def _infer_sentence_relationships(
+    paper_text: str,
+    entities_by_type: Dict[str, List[Dict[str, Any]]],
+) -> List[Dict[str, Any]]:
+    text = str(paper_text or "")
+    if not text:
+        return []
+
+    entity_lookup: Dict[str, Dict[str, str]] = {}
+    for bucket, values in entities_by_type.items():
+        type_name = {
+            "genes": "Gene",
+            "proteins": "Protein",
+            "diseases": "Disease",
+            "pathways": "Pathway",
+        }.get(bucket, "Entity")
+        for entity in values:
+            name = str(entity.get("name", "")).strip()
+            if len(name) < 2:
+                continue
+            entity_lookup[name.lower()] = {"name": name, "type": type_name}
+
+    if len(entity_lookup) < 2:
+        return []
+
+    sentence_pattern = re.compile(r"(?<=[\.\?\!])\s+")
+    relation_scores: Dict[Tuple[str, str, str], Dict[str, Any]] = {}
+    for sentence in sentence_pattern.split(text):
+        clean_sentence = re.sub(r"\s+", " ", sentence).strip()
+        if len(clean_sentence) < 25:
+            continue
+
+        found: List[Dict[str, str]] = []
+        lowered_sentence = clean_sentence.lower()
+        for key, record in entity_lookup.items():
+            if len(key) <= 4:
+                if not re.search(rf"\b{re.escape(key)}\b", lowered_sentence):
+                    continue
+            elif key not in lowered_sentence:
+                continue
+            found.append(record)
+
+        if len(found) < 2:
+            continue
+
+        unique_found = []
+        seen_names = set()
+        for record in found:
+            name_key = record["name"].lower()
+            if name_key in seen_names:
+                continue
+            seen_names.add(name_key)
+            unique_found.append(record)
+
+        for i in range(len(unique_found)):
+            for j in range(i + 1, len(unique_found)):
+                source = unique_found[i]
+                target = unique_found[j]
+                edge_type = canonicalize_edge_type(clean_sentence, source["type"], target["type"])
+                pair_key = (source["name"].lower(), target["name"].lower(), edge_type)
+                score_bonus = 0.12 if edge_type != "ASSOCIATES" else 0.0
+                score = min(0.92, 0.56 + score_bonus + (0.02 * min(len(unique_found), 4)))
+
+                current = relation_scores.get(pair_key)
+                if not current or score > float(current["edge_weight"]):
+                    relation_scores[pair_key] = {
+                        "source_name": source["name"],
+                        "source_type": source["type"],
+                        "target_name": target["name"],
+                        "target_type": target["type"],
+                        "edge_type": edge_type,
+                        "edge_weight": round(score, 3),
+                        "evidence": clean_sentence[:700],
+                        "extraction_method": "scispacy_sentence_cooccurrence",
+                    }
+
+    ordered = sorted(
+        relation_scores.values(),
+        key=lambda item: (float(item.get("edge_weight", 0.0)), len(str(item.get("evidence", "")))),
+        reverse=True,
+    )
+    return ordered[:80]
+
+
+def _merge_extraction_results(
+    primary: Dict[str, Any],
+    fallback: Dict[str, Any],
+) -> Dict[str, Any]:
+    merged = {
+        "genes": _dedupe_entities((primary.get("genes", []) or []) + (fallback.get("genes", []) or [])),
+        "proteins": _dedupe_entities((primary.get("proteins", []) or []) + (fallback.get("proteins", []) or [])),
+        "diseases": _dedupe_entities((primary.get("diseases", []) or []) + (fallback.get("diseases", []) or [])),
+        "pathways": _dedupe_entities((primary.get("pathways", []) or []) + (fallback.get("pathways", []) or [])),
+        "relationships": (primary.get("relationships", []) or []) + (fallback.get("relationships", []) or []),
+    }
+    return merged
 
 
 def build_entity_extraction_context(
@@ -304,41 +647,13 @@ Extract entities and relationships. Respond ONLY with valid JSON."""
     return system_prompt, user_message
 
 
-def extract_entities_from_text(
+def _extract_entities_with_llm(
     paper_text: str,
     title: str = "",
     abstract: str = "",
     sections: Optional[List[Dict[str, Any]]] = None,
-    existing_entities: Optional[Dict[str, List[str]]] = None
 ) -> Dict[str, Any]:
-    """
-    Extract entities from paper text using GPT-4.
-    
-    Args:
-        paper_text: Full or partial paper text
-        title: Paper title
-        abstract: Paper abstract
-        existing_entities: Dict with keys (genes, proteins, diseases, pathways) 
-                          containing lists of known entity names for boosting confidence
-    
-    Returns:
-        dict: Extracted entities with structure:
-            {
-                "genes": [...],
-                "proteins": [...],
-                "diseases": [...],
-                "pathways": [...],
-                "relationships": [...]
-            }
-    """
-    if not existing_entities:
-        existing_entities = {
-            "genes": [],
-            "proteins": [],
-            "diseases": [],
-            "pathways": []
-        }
-    
+    """LLM extraction path retained for compatibility and fallback."""
     try:
         client = get_llm_client()
     except ValueError as e:
@@ -352,7 +667,6 @@ def extract_entities_from_text(
             "error": str(e)
         }
     
-    # Build extraction prompt
     system_prompt, user_message = build_extraction_prompt(
         paper_text,
         title,
@@ -374,7 +688,6 @@ def extract_entities_from_text(
         response_text = response.text.strip()
         logger.info("LLM response received")
         
-        # Try to extract JSON from response
         json_start = response_text.find('{')
         json_end = response_text.rfind('}') + 1
         if json_start >= 0 and json_end > json_start:
@@ -383,15 +696,8 @@ def extract_entities_from_text(
         else:
             logger.warning("Could not find JSON in GPT response")
             return _parse_text_extraction(response_text)
-        
-        # Boost confidence scores for entities already in database
-        extracted_data = _boost_confidence_for_known_entities(
-            extracted_data, existing_entities
-        )
-        extracted_data = _normalize_extracted_payload(extracted_data, title=title)
-        
-        logger.info(f"Extracted {_count_entities(extracted_data)} entities total")
-        return extracted_data
+
+        return _normalize_extracted_payload(extracted_data, title=title)
         
     except json.JSONDecodeError as e:
         logger.error(f"JSON parsing error: {e}")
@@ -413,6 +719,99 @@ def extract_entities_from_text(
             "relationships": [],
             "error": str(e)
         }
+
+
+def _build_fulltext_from_sections_or_text(
+    paper_text: str,
+    sections: Optional[List[Dict[str, Any]]] = None,
+) -> str:
+    if sections:
+        section_texts = []
+        for section in sections:
+            section_type = normalize_section_type(section.get("type", ""))
+            if section_type == "metadata":
+                continue
+            value = str(section.get("text", "")).strip()
+            if value:
+                section_texts.append(value)
+        merged = "\n\n".join(section_texts).strip()
+        if merged:
+            return merged
+    return str(paper_text or "").strip()
+
+
+def extract_entities_from_text(
+    paper_text: str,
+    title: str = "",
+    abstract: str = "",
+    sections: Optional[List[Dict[str, Any]]] = None,
+    existing_entities: Optional[Dict[str, List[str]]] = None
+) -> Dict[str, Any]:
+    """
+    Extract entities from paper text.
+
+    Backends:
+    - llm: original LLM-only extraction over a section-aware excerpt
+    - scispacy: full-text SciSpaCy entities + full-text sentence relationships
+    - hybrid (default): SciSpaCy first; LLM fallback if SciSpaCy returns empty
+    """
+    if not existing_entities:
+        existing_entities = {
+            "genes": [],
+            "proteins": [],
+            "diseases": [],
+            "pathways": []
+        }
+
+    backend = _get_extraction_backend()
+    full_text = _build_fulltext_from_sections_or_text(paper_text, sections)
+    extracted_data: Dict[str, Any] = {
+        "genes": [],
+        "proteins": [],
+        "diseases": [],
+        "pathways": [],
+        "relationships": [],
+    }
+
+    if backend in {"scispacy", "hybrid"}:
+        scispacy_entities = _scispacy_extract_entities(full_text, sections=sections)
+        extracted_data = {
+            **scispacy_entities,
+            "relationships": _infer_sentence_relationships(full_text, scispacy_entities),
+            "extraction_backend": "scispacy",
+        }
+        if backend == "scispacy":
+            extracted_data = _boost_confidence_for_known_entities(extracted_data, existing_entities)
+            extracted_data = _normalize_extracted_payload(extracted_data, title=title)
+            logger.info("SciSpaCy-only extraction complete: %s entities", _count_entities(extracted_data))
+            return extracted_data
+
+        if _count_entities(extracted_data) == 0:
+            logger.info("Hybrid extraction: SciSpaCy returned no entities, falling back to LLM.")
+            llm_extracted = _extract_entities_with_llm(
+                paper_text=paper_text,
+                title=title,
+                abstract=abstract,
+                sections=sections,
+            )
+            extracted_data = _merge_extraction_results(extracted_data, llm_extracted)
+            extracted_data["extraction_backend"] = "hybrid"
+        else:
+            extracted_data["extraction_backend"] = "hybrid"
+
+    elif backend == "llm":
+        extracted_data = _extract_entities_with_llm(
+            paper_text=paper_text,
+            title=title,
+            abstract=abstract,
+            sections=sections,
+        )
+        extracted_data["extraction_backend"] = "llm"
+
+    extracted_data = _boost_confidence_for_known_entities(extracted_data, existing_entities)
+    extracted_data = _normalize_extracted_payload(extracted_data, title=title)
+    logger.info("Extraction complete via %s: %s entities", backend, _count_entities(extracted_data))
+    return extracted_data
 
 
 def extract_relationships_from_text(

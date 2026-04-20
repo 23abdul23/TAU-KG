@@ -1,0 +1,25 @@
+name: taukg-dev
+
+services:
+  streamlit-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: taukg-streamlit-dev
+    env_file:
+      - .env
+    ports:
+      - "8998:8998"
+    volumes:
+      - ./:/app
+      - taukg_dev_chroma_db:/app/chroma_db
+      - taukg_dev_uploaded_papers:/app/uploaded_papers
+      - taukg_dev_data:/app/data
+      - taukg_dev_model_cache:/root/.cache
+    restart: unless-stopped
+
+volumes:
+  taukg_dev_chroma_db:
+  taukg_dev_uploaded_papers:
+  taukg_dev_data:
+  taukg_dev_model_cache:
