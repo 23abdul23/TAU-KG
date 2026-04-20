@@ -7,130 +7,214 @@ from typing import Dict, List
 
 import requests
 import spacy
-from lxml import etree
+from lxml import etree, html
 
-
-METHOD = "scispacy"
+# ---------------- CONFIG ---------------- #
 MODEL_NAME = "en_ner_bionlp13cg_md"
-PMC_XML_URL = "https://pmc.ncbi.nlm.nih.gov/articles/{pmcid}/?format=xml"
 TARGET_LABELS = {"GENE_OR_GENE_PRODUCT", "DISEASE", "SIMPLE_CHEMICAL"}
+PMC_XML_URL = "https://pmc.ncbi.nlm.nih.gov/articles/{pmcid}/?format=xml"
+
+CHUNK_SIZE = 50000  # safe size for spacy
+USER_AGENT = "Mozilla/5.0 (compatible; PMC-NER/1.0)"
+
+# ---------------- LOAD MODEL ONCE ---------------- #
+nlp = spacy.load(MODEL_NAME)
 
 
+# ---------------- UTIL ---------------- #
 def normalize_pmcid(source: str) -> str:
     value = (source or "").strip()
-    if not value:
-        raise ValueError("PMC source is required.")
 
     match = re.search(r"PMC(\d+)", value, flags=re.IGNORECASE)
     if match:
         return f"PMC{match.group(1)}"
 
-    if not value.lower().startswith("http") and value.isdigit():
+    if value.isdigit():
         return f"PMC{value}"
 
-    raise ValueError(f"Could not extract PMCID from input: {source}")
+    raise ValueError(f"Invalid PMCID: {source}")
 
 
+# ---------------- FETCH ---------------- #
 def fetch_article_xml(pmcid: str) -> bytes:
+    pmcid_num = pmcid.replace("PMC", "")
+
+    url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
+
+    params = {
+        "db": "pmc",
+        "id": pmcid_num,
+        "retmode": "xml",
+    }
+
     response = requests.get(
-        PMC_XML_URL.format(pmcid=pmcid),
-        headers={"User-Agent": "TAU-KG-NER-Benchmark/1.0"},
-        timeout=60,
+        url,
+        params=params,
+        headers={"User-Agent": USER_AGENT},
+        timeout=30,
     )
+
     response.raise_for_status()
-    return response.content
+    content = response.content
+
+    # ✅ Much safer validation
+    if b"<article" not in content and b"<pmc-articleset" not in content:
+        print(content[:500])  # debug
+        raise ValueError("Invalid XML response from PMC")
+
+    return content
+
+# ---------------- PARSE ---------------- #
+def parse_xml(content: bytes):
+    try:
+        return etree.fromstring(content)
+    except Exception:
+        return html.fromstring(content)
 
 
+# ---------------- EXTRACTION ---------------- #
 def normalize_text(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip()
 
 
-def extract_section_text(root: etree._Element, xpath: str) -> List[str]:
-    sections: List[str] = []
-    for node in root.xpath(xpath):
-        paragraphs = node.xpath(".//*[local-name()='p']")
-        if paragraphs:
-            for paragraph in paragraphs:
-                text = normalize_text(" ".join(paragraph.itertext()))
-                if text:
-                    sections.append(text)
-            continue
+def extract_sections(root) -> List[Dict]:
+    sections = []
 
-        text = normalize_text(" ".join(node.itertext()))
-        if text:
-            sections.append(text)
+    sec_nodes = root.xpath(".//*[local-name()='sec']")
+
+    for sec in sec_nodes:
+        title_nodes = sec.xpath(".//*[local-name()='title']")
+        title = normalize_text(" ".join(
+            " ".join(node.itertext()) for node in title_nodes
+        )) if title_nodes else ""
+
+        paragraphs = sec.xpath(".//*[local-name()='p']")
+        texts = []
+
+        for p in paragraphs:
+            txt = normalize_text(" ".join(p.itertext()))
+            if txt:
+                texts.append(txt)
+
+        if texts:
+            sections.append({
+                "title": title,
+                "text": "\n".join(texts)
+            })
+
     return sections
 
 
-def extract_article_text(xml_content: bytes) -> str:
-    parser = etree.XMLParser(recover=True, huge_tree=True)
-    root = etree.fromstring(xml_content, parser=parser)
+def extract_fallback(root) -> List[Dict]:
+    texts = []
 
-    abstract_parts = extract_section_text(root, ".//*[local-name()='abstract']")
-    body_parts = [
-        normalize_text(" ".join(paragraph.itertext()))
-        for paragraph in root.xpath(".//*[local-name()='body']//*[local-name()='p']")
-    ]
-    body_parts = [paragraph for paragraph in body_parts if paragraph]
+    nodes = root.xpath("//*[local-name()='p']")
+    for n in nodes:
+        txt = normalize_text(" ".join(n.itertext()))
+        if txt:
+            texts.append(txt)
 
-    combined_parts = abstract_parts + body_parts
-    if not combined_parts:
-        raise ValueError("No abstract or body text found in PMC XML.")
-
-    return "\n\n".join(combined_parts)
+    return [{"title": "full_text", "text": "\n".join(texts)}]
 
 
-def run_scispacy(text: str) -> List[Dict[str, object]]:
-    nlp = spacy.load(MODEL_NAME)
-    nlp.max_length = max(nlp.max_length, len(text) + 1)
+def extract_article_text(content: bytes) -> List[Dict]:
+    root = parse_xml(content)
 
-    entities: List[Dict[str, object]] = []
-    for doc in nlp.pipe([text], batch_size=1):
-        for ent in doc.ents:
-            if ent.label_ not in TARGET_LABELS:
-                continue
-            entities.append(
-                {
+    sections = extract_sections(root)
+
+    if not sections:
+        sections = extract_fallback(root)
+
+    return sections
+
+
+# ---------------- NER ---------------- #
+def chunk_text(text: str, size: int = CHUNK_SIZE):
+    for i in range(0, len(text), size):
+        yield text[i:i + size]
+
+
+def run_scispacy(sections: List[Dict]) -> List[Dict]:
+    results = []
+
+    for sec in sections:
+        title = sec["title"]
+        text = sec["text"]
+
+        for chunk in chunk_text(text):
+            doc = nlp(chunk)
+
+            for ent in doc.ents:
+                if ent.label_ not in TARGET_LABELS:
+                    continue
+
+                results.append({
                     "text": ent.text,
                     "label": ent.label_,
-                    "start": int(ent.start_char),
-                    "end": int(ent.end_char),
-                }
-            )
-    return entities
+                    "section": title,
+                    "start": ent.start_char,
+                    "end": ent.end_char,
+                })
+
+    return results
+
+# ---------------- Duplication ---------------- #
+def deduplicate_global(entities):
+    seen = set()
+    unique = []
+
+    for e in entities:
+        key = (e["text"].lower(), e["label"])
+        if key not in seen:
+            seen.add(key)
+            unique.append(e)
+
+    return unique
+
+# ---------------- SAVE ---------------- #
+def save_output(data: Dict, pmcid: str) -> Path:
+    path = Path(f"output_{pmcid}.json")
+    path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+    return path
 
 
-def save_output(payload: Dict[str, object]) -> Path:
-    output_path = Path(__file__).with_name(f"output_{METHOD}.json")
-    output_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
-    return output_path
-
-
-def main() -> int:
-    parser = argparse.ArgumentParser(description="Benchmark SciSpaCy NER on a PMC article.")
-    parser.add_argument("source", help="PMCID (e.g. PMC12512994) or full PMC URL")
+# ---------------- MAIN ---------------- #
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("source", help="PMCID or PMC URL")
     args = parser.parse_args()
 
-    started_at = time.time()
+    start = time.time()
+
     pmcid = normalize_pmcid(args.source)
+
+    print(f"[INFO] Fetching {pmcid}...")
     xml_content = fetch_article_xml(pmcid)
-    article_text = extract_article_text(xml_content)
-    entities = run_scispacy(article_text)
-    runtime_seconds = round(time.time() - started_at, 4)
 
-    payload = {
+    print("[INFO] Extracting sections...")
+    sections = extract_article_text(xml_content)
+
+    print(f"[INFO] Sections found: {len(sections)}")
+
+    print("[INFO] Running NER...")
+    entities = deduplicate_global(run_scispacy(sections))
+
+    runtime = round(time.time() - start, 3)
+
+    output = {
         "pmcid": pmcid,
-        "method": METHOD,
+        "sections": sections,
         "entities": entities,
-        "runtime_seconds": runtime_seconds,
+        "total_entities": len(entities),
+        "runtime_seconds": runtime,
     }
-    output_path = save_output(payload)
 
-    print(f"Saved {output_path}")
-    print(f"Total entities: {len(entities)}")
-    print(f"Runtime: {runtime_seconds:.4f} seconds")
-    return 0
+    path = save_output(output, pmcid)
+
+    print(f"[DONE] Saved: {path}")
+    print(f"[DONE] Entities: {len(entities)}")
+    print(f"[DONE] Time: {runtime}s")
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    main()

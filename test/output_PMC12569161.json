@@ -1,0 +1,1093 @@
+{
+  "pmcid": "PMC12569161",
+  "sections": [
+    {
+      "title": "Supplementary Information",
+      "text": "The online version contains supplementary material available at 10.1038/s41598-025-25650-9."
+    },
+    {
+      "title": "Introduction",
+      "text": "FSGS is a renal lesion defined by the scarring of certain parts of some glomeruli, which are the kidney\u2019s filtration units. A significant aspect is the effacement of podocytes, which are specialized cells forming the slit diaphragm of the filtration barrier. Recent studies indicate that genetic factors contribute to the disease, with genetic variants identified in up to 60% of children suffering from steroid-resistant nephrotic syndrome (SRNS) 1 and in 30% of adults with FSGS 2 .\nVariants in over 40 genes have been associated with SRNS 3 . Many of these genes are essential for the podocyte phenotype and function, including the formation of the podocyte slit diaphragm, the structure of the actin cytoskeleton, and the adhesion to the glomerular basement membrane 1 , 4 . Some genetic variants may disrupt normal podocyte function through indirect effects on the actin cytoskeleton, leading to podocyte foot process effacement 3 , 5 \u2013 8 .\nOne common cause of autosomal dominant FSGS is heterozygous mutations in the INF2 gene 6 , 9 . However, the impact of patient-specific single nucleotide polymorphisms has not been studied as extensively as cases with complete INF2 knockout. Recent research in mice has demonstrated that knock-in models carrying INF2 mutations develop kidney disease spontaneously, indicating a direct pathogenic role of these mutations. In contrast, INF2 knockout mice do not typically develop kidney pathology on their own but exhibit kidney damage only when subjected to additional injury models. This suggests that the disease associated with INF2 mutations may result from a gain-of-function or dominant-negative effect of the mutant protein, leading to intrinsic cellular dysfunction. In contrast, complete loss of INF2 function requires an external insult to manifest kidney injury 10 . Additionally, the histological features of adult-onset genetic FSGS can vary significantly, even among individuals with the same genetic mutation 8 . This variability suggests that other factors, such as podocyte development, additional spontaneous genetic mutations, or environmental influences, may also shape the disease\u2019s characteristics. These complexities pose challenges for traditional research methods like animal studies and cell culture models, which often fail to account for the patient\u2019s genetic context. There is a pressing need for individualized disease models that reflect the patient\u2019s unique genetic background to address these challenges. Therefore, we generated podocytes in vitro via the combination and modification of already existing methods for episomal reprogramming of dermal fibroblasts obtained from skin biopsies into human induced pluripotent stem cells (hiPSCs), followed by their differentiation into podocytes 11 \u2013 13 . It has been demonstrated that these hiPSC-derived podocytes (hiPSC-Podocytes) more closely resemble natural podocyte morphology than human conditionally immortalized podocytes (ciPodocytes) 14 .\nHere, the protocol was applied to a patient with genetic FSGS carrying a mutation in the INF2 gene (c.217G > A; G73S), allowing for examining patient-specific podocytes in vitro. This included assessing diseased podocyte morphology, structure of the actin cytoskeleton, and expression of markers important for the podocyte phenotype. Furthermore, it facilitated testing of the patient-specific cellular response to potential therapeutic agents regarding their effects on the actin cytoskeleton and protrusion development. This personalized in vitro model aims to enhance our understanding of disease-specific alterations in podocytes, with the potential for more tailored therapeutic approaches."
+    },
+    {
+      "title": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "text": "A detailed step-by-step protocol for the generation of hiPSC-Podocytes was published previously 14 . HiPSC-Podocytes were derived from a patient and a healthy donor, both female and younger than 30 years old. The protocol was approved by the ethics committee of Friedrich-Alexander University Erlangen-Nuremberg (251_18B), and all probands and patients gave written informed consent. All experiments were performed according to the relevant guidelines and regulations. The quality of generated hiPSCs from the patient was analyzed for three individual clones. Seeding densities of nephron progenitor cells ranged from 8000 to 20,000 hiPSCs/cm 2 , depending on whether the specific experiment required single-cell analysis via imaging or more confluent cultures.\nHuman ciPodocytes (clone AB08) were cultured as previously described 15 .\nEmbryoid body formation was performed at 10,000 hiPSCs/cm 2 in a low-adhesive plate overnight on a shaking platform set to 60 rpm at 37 \u00b0C and 5% CO 2 . Differentiation into podocytes was performed using the same media as in 2D differentiation, with a media change achieved by allowing the spheres to sediment on agitated plates. 3D cultures were fixed with 4% PFA for 30 min, after washing with 1 \u00d7 PBS.\nUltrastructural analysis was performed via SEM. Samples were fixed with a combination of glutaraldehyde and formaldehyde. Fixation was performed as described earlier 16 .\nChromosomal stability of fibroblasts and hiPSCs was performed via the KaryoStat + \u2122 Genetic Stability Assay Service (#A52849, ThermoFisher Scientific).\n500 ng of RNA was reverse transcribed into cDNA and diluted to 5 ng/\u00b5L. 1 \u00b5L was used for qPCR, and primer sequences used are listed in Table 1 . The \u2206\u2206Ct method was used for calculation, and ACTB served as a housekeeping gene. Table1 Sequences of primers used for qPCR. Gene Forward sequence (5\u2032-3\u2032) Reverse sequence (5\u2032-3\u2032) NANOG AGATGCCTCACACGGAGACT TTGGGACTGGTGGAAGAATC OCT3/4 CAGGGCCCCATTTTGGTACC CTCAGTTTGAATGCATGGGAGAGC SOX2 TTCACATGTCCCAGCACTACCAGA ATGTGTGAGAGGGGCAGTGTGC REX1 ACGTTTCGTGTGTCCCTTTC TTAGGATGTGGGCTTTCAGG \u03b1SMA ACTGAGCGTGGCTATTCCTCCGTT GCAGTGGCCATCTCATTTTCA SYNPO TAAGCAACCT\u2026AACTGAGG TTCTGGGCTAAAGCTAAC MAFB TTGTAACCAGAATCACCCTGAGGTC CCAGGGTCAGGGATGGCTAA VIM AAATGGCTCGTCACCTTCGT TTGCGCTCCTGAAAAACTGC WT1 TCAGAGGCATTCAGGATGTG TTATTGCAGCCTGGGTAAGC INF2 CCCTAACCCTCAGCATGGCA GCGCTTCCTCCTGGTGGTTC CTSL TAGAGGCACAGTGGACCAAG CTCCATCCTTCTTCATTCATGCC GAPDH CAAGATCATCAGCAATGCCTCC ATGATGTTCTGGAGAGCCCC HPRT GACCAGTCAACAGGGGACAT AACACTTCGTGGGGTCCTTTTC ACTB ACCGAGCGTGGCTACAGCTTCACC AGCACCCGTGGCCATCTCTTTCTCG\nSequences of primers used for qPCR.\nPrimer flanking the INF2 mutation (c.217G > A) (forward: CCCTAACCCTCAGCATGGCA, reverse: GCGCTTCCTCCTGGTGGTTC) were used to amplify the sequence via PCR. Products were separated on a horizontal 1% agarose gel at 120 V for 60 min, cut out, and extracted from the gel. Sanger sequencing was performed via the Mix2Seq sequencing service (Eurofins Genomics) with 75 ng of total DNA.\nTranscriptomic analysis of hiPSCs, nephron progenitor cells, and hiPSC-Podocytes from a healthy donor and a FSGS patient carrying the INF2 mutation, as well as from ciPodocytes, was performed by bulk RNA sequencing analysis performed by the transcriptome sequencing service of Novogene. Analysis was performed as previously described 17 . Podocyte-associated marker genes are based on published GSEA lists from the molecular signatures database (MSigDB MENON_FETAL_KIDNEY_2_NEPHRON_PROGENITOR_CELLS, MENON_FETAL_KIDNEY_4_PODOCYTES, LAKE_ADULT_KIDNEY_ C2_PODOCYTES ) as well as from the original publication of the differentiation protocol 12 , 18 , 19 . Analysis of hiPSC, nephron progenitor cells and hiPSC-Podocytes was performed for two individual clones each and ciPodocytes in duplicates from the clone AB08.\nCells were fixed in paraformaldehyde and incubated with 0.5% Triton-X-100, 1% bovine serum albumin, and 10% normal goat serum (1 h, RT). Primary antibodies were diluted according to Table 2 in 1 \u00d7 PBS containing 1% bovine serum albumin and 3% normal goat serum and incubated overnight (4 \u00b0C). After washing 3 \u00d7 with 1 \u00d7 PBS for 5 min at RT, secondary antibodies were incubated for 1 h (RT). After washing, samples were mounted using Fluoromount-G containing DAPI. Table 2 Antibody dilutions used for Immunocyto- and histochemistry and Western Blot Analysis. Antibody Company Catalogue number Immuno-cytochemistry Immuno-histochemistry Western blot analysis Synaptopodin Progen 61094 1:200 1:200 1:100 INF2 C-terminal Proteintech 20466-1-AP 1:100 1:100 1:100 Podocin Proteintech 20384-1-AP 1:200 1:100 \u2013 Ki67 Abcam ab15580 1:500 \u2013 \u2013 OCT3/4 Stem cell technologies 60093.1 1:100 \u2013 \u2013 SSEA4 Stem cell technologies 60062FI.1 1:100 \u2013 \u2013 Tra-1-81 Invitrogen 12-8883-82 1:100 \u2013 \u2013 Cortactin Invitrogen PA527134 1:200 \u2013 1:300 Nephrin Progen GP-N2 \u2013 1:100 INF2 N-fragment Sigma Aldrich SAB1401801 \u2013 \u2013 1:100 RhoA Santa Cruz sc-418 \u2013 \u2013 1:25 Cathepsin L Invitrogen, BMS1032 \u2013 \u2013 1:500 GAPDH Proteintech 10494-1-AP \u2013 \u2013 1:5000 Phalloidin 647 Invitrogen A22287 1:400 1:200 \u2013 Alexa Fluor anti-mouse 488 Invitrogen A11001 1:1000 1:200 \u2013 Alexa Fluor anti-rabbit 555 Invitrogen A31572 1:1000 1:200 \u2013 Alexa Fluor guinea pig 488 Invitrogen A11073 1:1000 1:200 \u2013 Anti-mouse and HRP Agilent technologies P0447 \u2013 \u2013 1:10,000 Anti-rabbit HRP Agilent technologies P0448 \u2013 \u2013 1:10,000\nAntibody dilutions used for Immunocyto- and histochemistry and Western Blot Analysis.\nSamples were deparaffinized in xylol (3 \u00d7 5 min) and rehydrated in a descending ethanol series (5 min each: 2 \u00d7 100%, 2 \u00d7 96%, 1 \u00d7 80%, 1 \u00d7 70%, ddH 2 O). Samples were boiled in citric acid buffer for 15 min in a pressure cooker and rinsed in 1 \u00d7 PBS. Staining was performed with the dilutions according to Table 2 .\n30 \u00b5g of lysates was boiled in Laemmli buffer (70 \u00b0C for 10 min) and separated on SDS gels (8\u201312%) at 120 V for 1 h. Nitrocellulose membrane and 5% BSA were used and primary antibodies were diluted according to Table 2 in TBS and incubated overnight (4 \u00b0C). Membranes were washed 3 \u00d7 with TBS-T and then incubated in secondary antibody for 1 h (RT).\nTotal fluorescence of phalloidin was analyzed from confocal images using ImageJ. Classification of actin filaments was performed as previously described 20 , 21 . Type A represents actin bundles, type B actin filaments, and type C fragmented actin filaments. Evaluation was performed blinded. Quantification was performed on three individual experiments for all three clones, with more than 50 cells per replicate and more than 5 fields analyzed per well.\nActin Polymerization Biochem Kit (#BK003, Cytoskeleton) with non-muscle actin (#APHL99, Cytoskeleton) and muscle actin (#APHL95), mixed 10:1, was used to analyze actin polymerization and depolymerization of control and patient hiPSC-Podocyte lysates (30 \u00b5g). Increase or decrease of fluorescence was measured at 395\u2013440 nm over 60 min.\nHiPSC-Podocytes were treated for 1 h with Bis-T-23 (30 \u00b5M) (Aberjona Laboratories, Inc., Beverly, MA), tacrolimus (10 \u00b5g/mL) (Prograf, Astellas Pharma), and SDH (1 \u00b5g/mL) (Jenapharm) in 150 \u00b5L basic medium per well and subsequently fixed and stained with phalloidin and DAPI. Quantification was performed in a black 96-well plate in triplicate for all three clones using a GlowMax plate reader and was normalized to DAPI signal.\nImageJ was used for analyzing circularity, protrusion length and total fluorescence intensity. Dot plots were plotted as median plus range and statistical significance was calculated with GraphPad Prism using unpaired Welch\u2019s t-test or one-way ANOVA. Significance ( p -value) is indicated with asterisks."
+    },
+    {
+      "title": "Generation of hiPSC-Podocytes derived from skin biopsies",
+      "text": "A detailed step-by-step protocol for the generation of hiPSC-Podocytes was published previously 14 . HiPSC-Podocytes were derived from a patient and a healthy donor, both female and younger than 30 years old. The protocol was approved by the ethics committee of Friedrich-Alexander University Erlangen-Nuremberg (251_18B), and all probands and patients gave written informed consent. All experiments were performed according to the relevant guidelines and regulations. The quality of generated hiPSCs from the patient was analyzed for three individual clones. Seeding densities of nephron progenitor cells ranged from 8000 to 20,000 hiPSCs/cm 2 , depending on whether the specific experiment required single-cell analysis via imaging or more confluent cultures."
+    },
+    {
+      "title": "Culture of human ciPodocytes",
+      "text": "Human ciPodocytes (clone AB08) were cultured as previously described 15 ."
+    },
+    {
+      "title": "Differentiation in 3D",
+      "text": "Embryoid body formation was performed at 10,000 hiPSCs/cm 2 in a low-adhesive plate overnight on a shaking platform set to 60 rpm at 37 \u00b0C and 5% CO 2 . Differentiation into podocytes was performed using the same media as in 2D differentiation, with a media change achieved by allowing the spheres to sediment on agitated plates. 3D cultures were fixed with 4% PFA for 30 min, after washing with 1 \u00d7 PBS."
+    },
+    {
+      "title": "Sample preparation, SEM, and quantification",
+      "text": "Ultrastructural analysis was performed via SEM. Samples were fixed with a combination of glutaraldehyde and formaldehyde. Fixation was performed as described earlier 16 ."
+    },
+    {
+      "title": "Chromosomal microarray analysis",
+      "text": "Chromosomal stability of fibroblasts and hiPSCs was performed via the KaryoStat + \u2122 Genetic Stability Assay Service (#A52849, ThermoFisher Scientific)."
+    },
+    {
+      "title": "RNA isolation, cDNA synthesis, and quantitative PCR",
+      "text": "500 ng of RNA was reverse transcribed into cDNA and diluted to 5 ng/\u00b5L. 1 \u00b5L was used for qPCR, and primer sequences used are listed in Table 1 . The \u2206\u2206Ct method was used for calculation, and ACTB served as a housekeeping gene. Table1 Sequences of primers used for qPCR. Gene Forward sequence (5\u2032-3\u2032) Reverse sequence (5\u2032-3\u2032) NANOG AGATGCCTCACACGGAGACT TTGGGACTGGTGGAAGAATC OCT3/4 CAGGGCCCCATTTTGGTACC CTCAGTTTGAATGCATGGGAGAGC SOX2 TTCACATGTCCCAGCACTACCAGA ATGTGTGAGAGGGGCAGTGTGC REX1 ACGTTTCGTGTGTCCCTTTC TTAGGATGTGGGCTTTCAGG \u03b1SMA ACTGAGCGTGGCTATTCCTCCGTT GCAGTGGCCATCTCATTTTCA SYNPO TAAGCAACCT\u2026AACTGAGG TTCTGGGCTAAAGCTAAC MAFB TTGTAACCAGAATCACCCTGAGGTC CCAGGGTCAGGGATGGCTAA VIM AAATGGCTCGTCACCTTCGT TTGCGCTCCTGAAAAACTGC WT1 TCAGAGGCATTCAGGATGTG TTATTGCAGCCTGGGTAAGC INF2 CCCTAACCCTCAGCATGGCA GCGCTTCCTCCTGGTGGTTC CTSL TAGAGGCACAGTGGACCAAG CTCCATCCTTCTTCATTCATGCC GAPDH CAAGATCATCAGCAATGCCTCC ATGATGTTCTGGAGAGCCCC HPRT GACCAGTCAACAGGGGACAT AACACTTCGTGGGGTCCTTTTC ACTB ACCGAGCGTGGCTACAGCTTCACC AGCACCCGTGGCCATCTCTTTCTCG\nSequences of primers used for qPCR."
+    },
+    {
+      "title": "Sanger sequencing",
+      "text": "Primer flanking the INF2 mutation (c.217G > A) (forward: CCCTAACCCTCAGCATGGCA, reverse: GCGCTTCCTCCTGGTGGTTC) were used to amplify the sequence via PCR. Products were separated on a horizontal 1% agarose gel at 120 V for 60 min, cut out, and extracted from the gel. Sanger sequencing was performed via the Mix2Seq sequencing service (Eurofins Genomics) with 75 ng of total DNA."
+    },
+    {
+      "title": "Bulk RNA sequencing",
+      "text": "Transcriptomic analysis of hiPSCs, nephron progenitor cells, and hiPSC-Podocytes from a healthy donor and a FSGS patient carrying the INF2 mutation, as well as from ciPodocytes, was performed by bulk RNA sequencing analysis performed by the transcriptome sequencing service of Novogene. Analysis was performed as previously described 17 . Podocyte-associated marker genes are based on published GSEA lists from the molecular signatures database (MSigDB MENON_FETAL_KIDNEY_2_NEPHRON_PROGENITOR_CELLS, MENON_FETAL_KIDNEY_4_PODOCYTES, LAKE_ADULT_KIDNEY_ C2_PODOCYTES ) as well as from the original publication of the differentiation protocol 12 , 18 , 19 . Analysis of hiPSC, nephron progenitor cells and hiPSC-Podocytes was performed for two individual clones each and ciPodocytes in duplicates from the clone AB08."
+    },
+    {
+      "title": "Immunocytochemistry",
+      "text": "Cells were fixed in paraformaldehyde and incubated with 0.5% Triton-X-100, 1% bovine serum albumin, and 10% normal goat serum (1 h, RT). Primary antibodies were diluted according to Table 2 in 1 \u00d7 PBS containing 1% bovine serum albumin and 3% normal goat serum and incubated overnight (4 \u00b0C). After washing 3 \u00d7 with 1 \u00d7 PBS for 5 min at RT, secondary antibodies were incubated for 1 h (RT). After washing, samples were mounted using Fluoromount-G containing DAPI. Table 2 Antibody dilutions used for Immunocyto- and histochemistry and Western Blot Analysis. Antibody Company Catalogue number Immuno-cytochemistry Immuno-histochemistry Western blot analysis Synaptopodin Progen 61094 1:200 1:200 1:100 INF2 C-terminal Proteintech 20466-1-AP 1:100 1:100 1:100 Podocin Proteintech 20384-1-AP 1:200 1:100 \u2013 Ki67 Abcam ab15580 1:500 \u2013 \u2013 OCT3/4 Stem cell technologies 60093.1 1:100 \u2013 \u2013 SSEA4 Stem cell technologies 60062FI.1 1:100 \u2013 \u2013 Tra-1-81 Invitrogen 12-8883-82 1:100 \u2013 \u2013 Cortactin Invitrogen PA527134 1:200 \u2013 1:300 Nephrin Progen GP-N2 \u2013 1:100 INF2 N-fragment Sigma Aldrich SAB1401801 \u2013 \u2013 1:100 RhoA Santa Cruz sc-418 \u2013 \u2013 1:25 Cathepsin L Invitrogen, BMS1032 \u2013 \u2013 1:500 GAPDH Proteintech 10494-1-AP \u2013 \u2013 1:5000 Phalloidin 647 Invitrogen A22287 1:400 1:200 \u2013 Alexa Fluor anti-mouse 488 Invitrogen A11001 1:1000 1:200 \u2013 Alexa Fluor anti-rabbit 555 Invitrogen A31572 1:1000 1:200 \u2013 Alexa Fluor guinea pig 488 Invitrogen A11073 1:1000 1:200 \u2013 Anti-mouse and HRP Agilent technologies P0447 \u2013 \u2013 1:10,000 Anti-rabbit HRP Agilent technologies P0448 \u2013 \u2013 1:10,000\nAntibody dilutions used for Immunocyto- and histochemistry and Western Blot Analysis."
+    },
+    {
+      "title": "Immunohistochemistry",
+      "text": "Samples were deparaffinized in xylol (3 \u00d7 5 min) and rehydrated in a descending ethanol series (5 min each: 2 \u00d7 100%, 2 \u00d7 96%, 1 \u00d7 80%, 1 \u00d7 70%, ddH 2 O). Samples were boiled in citric acid buffer for 15 min in a pressure cooker and rinsed in 1 \u00d7 PBS. Staining was performed with the dilutions according to Table 2 ."
+    },
+    {
+      "title": "Western blot analysis",
+      "text": "30 \u00b5g of lysates was boiled in Laemmli buffer (70 \u00b0C for 10 min) and separated on SDS gels (8\u201312%) at 120 V for 1 h. Nitrocellulose membrane and 5% BSA were used and primary antibodies were diluted according to Table 2 in TBS and incubated overnight (4 \u00b0C). Membranes were washed 3 \u00d7 with TBS-T and then incubated in secondary antibody for 1 h (RT)."
+    },
+    {
+      "title": "Classification and quantification of actin filaments",
+      "text": "Total fluorescence of phalloidin was analyzed from confocal images using ImageJ. Classification of actin filaments was performed as previously described 20 , 21 . Type A represents actin bundles, type B actin filaments, and type C fragmented actin filaments. Evaluation was performed blinded. Quantification was performed on three individual experiments for all three clones, with more than 50 cells per replicate and more than 5 fields analyzed per well."
+    },
+    {
+      "title": "Actin polymerization and depolymerization assay",
+      "text": "Actin Polymerization Biochem Kit (#BK003, Cytoskeleton) with non-muscle actin (#APHL99, Cytoskeleton) and muscle actin (#APHL95), mixed 10:1, was used to analyze actin polymerization and depolymerization of control and patient hiPSC-Podocyte lysates (30 \u00b5g). Increase or decrease of fluorescence was measured at 395\u2013440 nm over 60 min."
+    },
+    {
+      "title": "Treatment of hiPSC-Podocytes",
+      "text": "HiPSC-Podocytes were treated for 1 h with Bis-T-23 (30 \u00b5M) (Aberjona Laboratories, Inc., Beverly, MA), tacrolimus (10 \u00b5g/mL) (Prograf, Astellas Pharma), and SDH (1 \u00b5g/mL) (Jenapharm) in 150 \u00b5L basic medium per well and subsequently fixed and stained with phalloidin and DAPI. Quantification was performed in a black 96-well plate in triplicate for all three clones using a GlowMax plate reader and was normalized to DAPI signal."
+    },
+    {
+      "title": "Statistical analysis",
+      "text": "ImageJ was used for analyzing circularity, protrusion length and total fluorescence intensity. Dot plots were plotted as median plus range and statistical significance was calculated with GraphPad Prism using unpaired Welch\u2019s t-test or one-way ANOVA. Significance ( p -value) is indicated with asterisks."
+    },
+    {
+      "title": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "text": "We generated hiPSC-Podocytes from a patient diagnosed with juvenile-onset FSGS at the age of 17. At the time of diagnosis, this patient exhibited chronic kidney disease (CKD stage G4A3). After starting steroid treatment, the urine protein-to-creatinine ratio (UPC-ratio) improved from 5.113 mg/g creatinine to 1.803 mg/g creatinine (Fig. 1 A). Histological examination of the renal biopsy revealed severe global glomerulosclerosis (29/35) and focal glomerulosclerosis (2/35). Additionally, there was 30\u201335% interstitial fibrosis and tubular atrophy (Fig. 1 B). Electron microscopy showed irregular, jagged podocyte morphology and segmental foot process effacement (Fig. 1 C). Genetic analysis identified a heterozygous autosomal dominant point mutation in exon 2 of the INF2 gene, characterized by a nucleotide exchange from guanine to adenine at position 217 (c.217G > A), which results in an amino acid substitution at position 73 of the protein sequence, changing glycine to serine (G73S). Immunosuppressive therapy was discontinued after identification of the genetic cause of FSGS. However, proteinuria increased again, and the patient progressed to end-stage renal disease one and a half years later, ultimately receiving a living donor kidney transplant. The biopsy of the transplanted kidney shows normal podocyte foot processes and was used as a reference (Fig. 1 B, C). Staining for common podocyte-associated marker proteins, such as synaptopodin, nephrin, and podocin, as well as the actin-associated protein INF2, displayed structural alterations and significant damage to the glomerular filtration barrier in the patient\u2019s kidney biopsy compared to the healthy transplant biopsy (Fig. 1 D, E). Fig. 1 Characterization of the patient\u2019s renal pathology. (A) Progression of proteinuria as mg/g creatinine over time (months) in the patient diagnosed with genetic FSGS. Timepoint of steroid treatment and dialysis is marked in blue on the x-axis. (B) Histological analysis of hematoxylin\u2013eosin (HE) and periodic acid\u2013Schiff (PAS) staining of a kidney biopsy from the FSGS patient compared to a biopsy of the transplanted kidney. Scale bars represent 100 \u00b5m for HE and 250 \u00b5m for PAS staining. (C) Transmission electron microscopy images from the FSGS biopsy, illustrating focally irregular, jagged podocyte morphology (black arrowheads) and segmental foot process effacement (black arrows). The healthy transplanted kidney biopsy serves as a control with regular podocyte foot processes (white arrows). Scale bars represent 10 \u00b5m. ( D\u2013E ) Immunofluorescence staining of podocyte-specific and actin-associated markers. The slit diaphragm protein nephrin is shown in green and podocin in red (D ). The actin-associated podocyte-specific marker synaptopodin is depicted in green, and INF2 protein in red (E) . Nuclei are in blue, stained with DAPI. Scale bars represent 100 \u00b5m.\nCharacterization of the patient\u2019s renal pathology. (A) Progression of proteinuria as mg/g creatinine over time (months) in the patient diagnosed with genetic FSGS. Timepoint of steroid treatment and dialysis is marked in blue on the x-axis. (B) Histological analysis of hematoxylin\u2013eosin (HE) and periodic acid\u2013Schiff (PAS) staining of a kidney biopsy from the FSGS patient compared to a biopsy of the transplanted kidney. Scale bars represent 100 \u00b5m for HE and 250 \u00b5m for PAS staining. (C) Transmission electron microscopy images from the FSGS biopsy, illustrating focally irregular, jagged podocyte morphology (black arrowheads) and segmental foot process effacement (black arrows). The healthy transplanted kidney biopsy serves as a control with regular podocyte foot processes (white arrows). Scale bars represent 10 \u00b5m. ( D\u2013E ) Immunofluorescence staining of podocyte-specific and actin-associated markers. The slit diaphragm protein nephrin is shown in green and podocin in red (D ). The actin-associated podocyte-specific marker synaptopodin is depicted in green, and INF2 protein in red (E) . Nuclei are in blue, stained with DAPI. Scale bars represent 100 \u00b5m.\nDermal fibroblasts were cultured from skin biopsies derived from a patient with genetic FSGS and an INF2 mutation (c.217G < A; G73S) and a healthy donor. These fibroblasts were episomal reprogrammed into hiPSCs and subsequently differentiated into hiPSC-Podocytes following our recently published protocol 14 . To ensure high quality of the generated hiPSCs, we characterized both the patient-specific and healthy control hiPSCs in terms of genomic stability (Fig. 2 A\u2013C), proliferation capacity, and expression of pluripotency markers (Fig. 2 D, E). The patient\u2019s point mutation in the INF2 gene was preserved during reprogramming and differentiation, being present both in patient-specific fibroblasts and hiPSCs (Fig. 2 A), as well as in the hiPSC-Podocytes (Fig. 2 B). In contrast, the mutation was absent in all cells derived from the healthy control. Moreover, no chromosomal aberrations were detected before or after reprogramming in either cell line (Fig. 2 C). The proliferation marker Ki67 and common pluripotency markers such as OCT3/4, SSEA4, and Tra-1-81 were expressed in all three individual clones of the patient-derived hiPSCs and in healthy control-derived hiPSC lines (Fig. 2 D, E). This essential control of the generated cells shows high quality of the generated stem cells, and additionally, the transformation of the cell types during reprogramming and differentiation was also monitored (Fig. S1). We compared terminally differentiated hiPSC-Podocytes from a healthy donor to commonly used ciPodocytes to confirm podocyte identity (Fig. S2). Here, hiPSC-Podocytes expressed marker genes important for the podocyte phenotype and exhibited a more developed morphology, characterized by a branched network of secondary protrusions. Fig. 2 Genomic stability and pluripotency assessment of control- and patient-derived hiPSCs. (A\u2013B) Sanger sequencing of fibroblasts and hiPSCs (A), alongside genomic data visualized using the Integrative Genomics Viewer for hiPSCs and terminally differentiated hiPSC-Podocytes (B) . These results illustrate the preservation of the patient\u2019s genetic INF2 variant (c.217G > A) throughout reprogramming and differentiation, with the variant absent in control cells. (C) Microarray analysis indicates no chromosomal aberrations before and after reprogramming in patient- and control-derived fibroblasts and hiPSCs. For patient-derived hiPSCs, three individual clones were analyzed. (D) Immunofluorescence staining for the proliferation marker Ki67 and pluripotency markers OCT3/4, SSEA4, and Tra-1-81 colocalized with nuclear staining in blue. All hiPSC clones showed equal expression of pluripotency markers. Scale bars represent 250 \u00b5m.\nGenomic stability and pluripotency assessment of control- and patient-derived hiPSCs. (A\u2013B) Sanger sequencing of fibroblasts and hiPSCs (A), alongside genomic data visualized using the Integrative Genomics Viewer for hiPSCs and terminally differentiated hiPSC-Podocytes (B) . These results illustrate the preservation of the patient\u2019s genetic INF2 variant (c.217G > A) throughout reprogramming and differentiation, with the variant absent in control cells. (C) Microarray analysis indicates no chromosomal aberrations before and after reprogramming in patient- and control-derived fibroblasts and hiPSCs. For patient-derived hiPSCs, three individual clones were analyzed. (D) Immunofluorescence staining for the proliferation marker Ki67 and pluripotency markers OCT3/4, SSEA4, and Tra-1-81 colocalized with nuclear staining in blue. All hiPSC clones showed equal expression of pluripotency markers. Scale bars represent 250 \u00b5m.\nScanning electron microscopy demonstrated significant morphological differences in the patient-specific hiPSC-Podocytes compared to hiPSC-Podocytes derived from a healthy donor (control) (Fig. 3 A). These cells exhibited a rounder cell body with shorter and fewer cellular protrusions, indicating reduced cell spreading (Fig. 3 B). Staining for common podocyte markers further confirmed the altered podocyte phenotype, showing reduced levels of podocin and synaptopodin, as well as INF2, which is associated with the cytoskeleton and is responsible for the regulation of linear actin filaments (Fig. 3 C). Inter-clonal differences were excluded by staining of key podocyte markers, such as podocin and synaptopodin (Fig. S3). Since typical podocyte markers were present but decreased in the patient-derived hiPSC-Podocytes in 2D culture, we also differentiated them in 3D to create conditions beneficial for the development and maintenance of slit diaphragm proteins. Here, the patient-specific 3D hiPSC-Podocyte cultures expressed podocyte markers similar to control 3D hiPSC-Podocyte cultures (Fig. S4). The substantial reduction in synaptopodin levels in 2D differentiated hiPSC-Podocytes was validated at both the mRNA (Fig. 3 D) and protein (Fig. 3 E) levels. Filamentous actin, stained with phalloidin, was altered in patient-specific cells with significantly lower levels of total phalloidin fluorescence (Fig. 3 F). In contrast, the protein level of cortactin, which also promotes actin rearrangement, was increased compared to the control (Fig. 3 G). Fig. 3 Phenotypic alterations of patient hiPSC-Podocytes. (A) Scanning electron microscopy images of control and patient hiPSC-Podocytes. Scale bars represent 25 \u00b5m. (B) Violin plots of quantified morphological features of individual cells (around 25 cells per cell line) from SEM imaging, including cell shape (circularity), protrusion length, and number. (C) Immunocytochemical staining of the podocyte-specific markers podocin and synaptopodin, the actin-associated protein INF2, as well as filamentous actin (F-actin) stained with phalloidin in control and patient hiPSC-Podocytes. Scale bars represent 100 \u00b5m. (D\u2013E) Decreased synaptopodin expression in patient hiPSC-Podocytes, demonstrated at mRNA level via qPCR (D) and at protein level via western blot analysis normalized to GAPDH (E) . (F) Quantification of filamentous actin (F-actin) stained with phalloidin, expressed as relative fluorescence units (RFU). (G) Increased cortactin level in patient hiPSC-Podocytes, analyzed by western blot analysis and normalized to GAPDH. Statistical analysis was performed using an unpaired Welch\u2019s t-test; * p < 0.05, ** p < 0.01, *** p < 0.001, **** p < 0.0001, n = 3.\nPhenotypic alterations of patient hiPSC-Podocytes. (A) Scanning electron microscopy images of control and patient hiPSC-Podocytes. Scale bars represent 25 \u00b5m. (B) Violin plots of quantified morphological features of individual cells (around 25 cells per cell line) from SEM imaging, including cell shape (circularity), protrusion length, and number. (C) Immunocytochemical staining of the podocyte-specific markers podocin and synaptopodin, the actin-associated protein INF2, as well as filamentous actin (F-actin) stained with phalloidin in control and patient hiPSC-Podocytes. Scale bars represent 100 \u00b5m. (D\u2013E) Decreased synaptopodin expression in patient hiPSC-Podocytes, demonstrated at mRNA level via qPCR (D) and at protein level via western blot analysis normalized to GAPDH (E) . (F) Quantification of filamentous actin (F-actin) stained with phalloidin, expressed as relative fluorescence units (RFU). (G) Increased cortactin level in patient hiPSC-Podocytes, analyzed by western blot analysis and normalized to GAPDH. Statistical analysis was performed using an unpaired Welch\u2019s t-test; * p < 0.05, ** p < 0.01, *** p < 0.001, **** p < 0.0001, n = 3.\nWhen analyzing large data from bulk RNA sequencing, we found that several markers important for maintaining the proper podocyte phenotype, such as CD2AP , VIM , SYNPO , FAT1 , MAFB , along with adhesion via integrins ( ITGA3 , ITGA5 , ITGB3 ) and extracellular matrix components ( LAMB2 , VIM ) were expressed in both control and patient hiPSC-Podocytes, although many of these were found to be decreased in the patient-specific cell (Fig. 4 A). Additionally, genes associated with actin-binding ( FLNB , MSN , MYO1C ) were also decreased, while genes related to microtubule formation ( TUBA1B , TUBB2B , KIF23 , CENPE ), actin dynamics ( ANLN ), cytoskeletal protein-membrane anchoring ( EPB41L3 ), and small GTPase activation ( DOCK1 , RACGAP1 ) were upregulated in patient hiPSC-Podocytes (Fig. 4 B). Consistent with these findings, gene set enrichment analysis revealed that gene sets associated with epithelial development, cell\u2013cell adhesion, actin cytoskeleton dynamics, microtubule cytoskeleton, and cell junctions were overrepresented in patient hiPSC-Podocytes compared to the control. In contrast, cell adhesion mediated by integrins was more active in control hiPSC-Podocytes (Fig. 4 C). Fig. 4 Comparative transcriptomic analysis of hiPSC-Podocytes from a FSGS patient and a healthy donor. (A\u2013B) Transcriptomic differences were assessed for marker genes related to the podocyte phenotype (A) and to the actin cytoskeleton (B) . Two clones were analyzed for each cell line. Heatmaps with transcript per million (TPM) values from bulk RNA sequencing data. (C) Gene set enrichment analysis with normalized enrichment scores (NES) and p -values for differentially expressed genes. A positive score indicates higher activity in the patient hiPSC-Podocytes, while a negative score indicates higher activity of the pathway in control cells.\nComparative transcriptomic analysis of hiPSC-Podocytes from a FSGS patient and a healthy donor. (A\u2013B) Transcriptomic differences were assessed for marker genes related to the podocyte phenotype (A) and to the actin cytoskeleton (B) . Two clones were analyzed for each cell line. Heatmaps with transcript per million (TPM) values from bulk RNA sequencing data. (C) Gene set enrichment analysis with normalized enrichment scores (NES) and p -values for differentially expressed genes. A positive score indicates higher activity in the patient hiPSC-Podocytes, while a negative score indicates higher activity of the pathway in control cells.\nThe formin INF2, which is involved in the polymerization and depolymerization of linear, unbranched actin filaments, can be cleaved into C- and N-terminal fragments by proteolytic cleavage at position 547 mediated by cathepsins 22 \u2013 25 . Western blot analysis was performed using anti-INF2 antibodies that bind to either the N-terminal or C-terminal region of the INF2 protein. This showed a decrease in both total INF2 protein and full-length, uncleaved protein in patient hiPSC-Podocytes (Fig. 5 A\u2013D). The ratio of full-length INF2 protein to cleaved INF2 fragments remained consistent in control cells (Fig. 5 E). In contrast, increased levels of INF2 fragments were detected in patient hiPSC-Podocytes, indicating a higher cleavage rate despite the low expression level of INF2 protein (Fig. 5 F). Fig. 5 INF2 and actin dynamics in patient hiPSC-Podocytes. (A\u2013F) Total and cleaved INF2 protein levels in patient hiPSC-Podocytes were compared to control using western blot analysis with antibodies targeting the C-terminus (A) and N-terminus (B) of INF2. The quantification of total INF2 protein levels (including both full-length and cleaved fragments) (C). Full-length protein was quantified in (D) and the distribution of uncleaved protein and cleaved C-terminal and N-terminal fragments relative to total INF2 levels is presented as a percentage for control (E) and patient (F) hiPSC-Podocytes. Data were normalized to GAPDH and analyzed using Welch\u2019s t-test or one-way ANOVA. ns: not significant, * p < 0.5, ** p < 0.01, n = 3. (G\u2013I) Cathepsin L expression was validated on mRNA level via qPCR with data normalized to ACTB (G) and confirmed decreased cathepsin L protein via western blot analysis, with normalization to GAPDH (H) . Welch\u2019s t-test, ** p < 0.01. n = 3. (I) Protein expression of the small GTPase RhoA was examined, with corresponding quantification normalized to GAPDH. Welch\u2019s t-test, * p < 0.5. n = 3. ( J ) Actin polymerization assay of protein lysates from control (grey) and patient (black) hiPSC-Podocytes with linear regression. The slope for control hiPSC-Podocytes is 10.5, while that for patient hiPSC-Podocytes is 8.8. This difference is not significant (n.s.). ( K ) Actin depolymerization assay of protein lysates from control (grey) and patient (black) hiPSC-Podocytes with linear regression. The slope for depolymerization in control hiPSC-Podocytes is \u2212 1.4, whereas for patient hiPSC-Podocytes it is \u2212 3.1, indicating a significant difference p < 0.0001. RFU: relative fluorescence units.\nINF2 and actin dynamics in patient hiPSC-Podocytes. (A\u2013F) Total and cleaved INF2 protein levels in patient hiPSC-Podocytes were compared to control using western blot analysis with antibodies targeting the C-terminus (A) and N-terminus (B) of INF2. The quantification of total INF2 protein levels (including both full-length and cleaved fragments) (C). Full-length protein was quantified in (D) and the distribution of uncleaved protein and cleaved C-terminal and N-terminal fragments relative to total INF2 levels is presented as a percentage for control (E) and patient (F) hiPSC-Podocytes. Data were normalized to GAPDH and analyzed using Welch\u2019s t-test or one-way ANOVA. ns: not significant, * p < 0.5, ** p < 0.01, n = 3. (G\u2013I) Cathepsin L expression was validated on mRNA level via qPCR with data normalized to ACTB (G) and confirmed decreased cathepsin L protein via western blot analysis, with normalization to GAPDH (H) . Welch\u2019s t-test, ** p < 0.01. n = 3. (I) Protein expression of the small GTPase RhoA was examined, with corresponding quantification normalized to GAPDH. Welch\u2019s t-test, * p < 0.5. n = 3. ( J ) Actin polymerization assay of protein lysates from control (grey) and patient (black) hiPSC-Podocytes with linear regression. The slope for control hiPSC-Podocytes is 10.5, while that for patient hiPSC-Podocytes is 8.8. This difference is not significant (n.s.). ( K ) Actin depolymerization assay of protein lysates from control (grey) and patient (black) hiPSC-Podocytes with linear regression. The slope for depolymerization in control hiPSC-Podocytes is \u2212 1.4, whereas for patient hiPSC-Podocytes it is \u2212 3.1, indicating a significant difference p < 0.0001. RFU: relative fluorescence units.\nCathepsins have been reported to be involved in the proteolytic cleavage of INF2 by proteolysis (Subramanian et al., 2020). Bulk RNA sequencing data revealed that several cathepsin isoforms, including L, B, D, Z, A, C, V, K, O, and H -predominantly cysteine proteases- were expressed in both patient and control hiPSC-Podocytes (Fig. S5). The downregulation of cathepsin L, which plays a crucial role in protein degradation and repair processes and is known to be important for podocytes, was confirmed at both mRNA (Fig. 5 G) and protein levels (Fig. 5 H). This indicates that the increased cleavage of the patient-specific INF2 protein in hiPSC-Podocytes is not directly linked to cathepsin L. The small GTPase RhoA plays a significant role in regulating actin dynamics and has previously been associated with the functionality of INF2. Western Blot analysis displayed a significant increase in RhoA levels in patient hiPSC-Podocytes, indicating a possible compensatory effect (Fig. 5 I). Notably, the patient\u2019s fibroblasts, which also carried the INF2 variant, exhibited no alterations in their cytoskeleton, INF2 expression, or cathepsin L expression (Fig. S6). These findings suggest that the observed effects are specific to the podocyte cell type in the patient carrying the INF2 mutation.\nINF2 is known to facilitate both the polymerization and depolymerization of actin filaments. Its depolymerization activity is regulated by an autoinhibitory interaction between its N-terminal diaphanous inhibitory domain (DID) and C-terminal diaphanous autoregulatory domain (DAD) domains, whereas actin polymerization is unaffected by the DID-DAD interaction 25 . Interestingly, most genetic variants in the INF2 gene associated with genetic FSGS, including the variant identified in the featured FSGS patient, are located in the DID, which mediates INF2\u2019s role in actin dynamics 9 , 26 . Therefore, we analyzed the ability of the patient\u2019s hiPSC-Podocytes to polymerize and depolymerize actin filaments. While actin polymerization activity remained unaltered in the patient-specific hiPSC-Podocytes (Fig. 5 J), actin depolymerization activity was significantly increased compared to the control (Fig. 5 K).\nThe actin cytoskeleton of the podocytes was analyzed using a scoring system previously published for the evaluation of filamentous actin 20 , 21 . Three types of actin filaments were classified: Type A, which features thick actin bundles covering more than 90% of the cytosol; Type B, characterized by thin and unbundled actin filaments; and Type C, which describes a disrupted cytoskeleton with only fragmented, short filaments. Notably, the patient hiPSC-Podocytes exhibited only type B and C filaments, while the control cells primarily demonstrated type A and some type B (Fig. 6 A). The disrupted actin filaments in the patient hiPSC-Podocytes align with the altered podocyte phenotype and the accelerated actin depolymerization rate. Fig. 6 Altered actin cytoskeleton with improvements in the actin cytoskeleton of hiPSC-Podocytes. (A) Classification of the actin cytoskeleton in control and patient hiPSC-Podocytes after phalloidin staining (red), co-stained with DAPI (blue). Percentages are quantified based on the following classifications: Type A (more than 90% of the cell area showing bundled actin filaments), type B (unbundled actin filaments), and type C (fragmented actin filaments). Welch\u2019s t-test, with significant differences indicated as * p < 0.05, ** p < 0.01, n = 3. Scale bars represent 100 \u00b5m. (B) Transcripts per million (TPM) from bulk RNA sequencing displaying the expression of genes essential for the response to treatment. (C) Representative images of untreated and treated hiPSC-Podocytes stained for F-actin with phalloidin in red and nuclei using DAPI in blue. Scale bars represent 100 \u00b5m. (D) Quantification of relative fluorescence units (RFU) of filamentous actin stained by phalloidin in control and patient hiPSC-Podocytes, both untreated and after 1 h of treatment with Bis-T-23 (30 \u00b5M), tacrolimus (10 \u00b5g/mL), and SDH (1 \u00b5g/mL). This analysis was performed in triplicate for each of the three clones using a plate reader. Values were normalized to the DAPI signal. One-way ANOVA, with significant differences indicated as * p < 0.05, ** p < 0.01, **** p < 0.0001, n = 3.\nAltered actin cytoskeleton with improvements in the actin cytoskeleton of hiPSC-Podocytes. (A) Classification of the actin cytoskeleton in control and patient hiPSC-Podocytes after phalloidin staining (red), co-stained with DAPI (blue). Percentages are quantified based on the following classifications: Type A (more than 90% of the cell area showing bundled actin filaments), type B (unbundled actin filaments), and type C (fragmented actin filaments). Welch\u2019s t-test, with significant differences indicated as * p < 0.05, ** p < 0.01, n = 3. Scale bars represent 100 \u00b5m. (B) Transcripts per million (TPM) from bulk RNA sequencing displaying the expression of genes essential for the response to treatment. (C) Representative images of untreated and treated hiPSC-Podocytes stained for F-actin with phalloidin in red and nuclei using DAPI in blue. Scale bars represent 100 \u00b5m. (D) Quantification of relative fluorescence units (RFU) of filamentous actin stained by phalloidin in control and patient hiPSC-Podocytes, both untreated and after 1 h of treatment with Bis-T-23 (30 \u00b5M), tacrolimus (10 \u00b5g/mL), and SDH (1 \u00b5g/mL). This analysis was performed in triplicate for each of the three clones using a plate reader. Values were normalized to the DAPI signal. One-way ANOVA, with significant differences indicated as * p < 0.05, ** p < 0.01, **** p < 0.0001, n = 3.\nGenetic FSGS has limited treatment options and usually does not respond to immunosuppressive therapy. However, prior to genetic diagnosis, the patient did respond to steroid treatment with a partial remission of proteinuria (Fig. 1 A). To analyze the cellular response to different immunosuppressants commonly used in clinical practice, as well as actin-reacting agents, we treated hiPSC-Podocytes derived from the patient and a healthy control with tacrolimus, SDH, and the actin stabilizing agent Bis-T-23. Bis-T-23 enhances the natural oligomerization of dynamin, promoting actin polymerization 27 , 28 .\nIn both patient and control hiPSC-Podocytes, genes related to pathways essential for treatment response were expressed (Fig. 6 B). Transcriptomic levels of DNM1 and DNM2 encoding dynamin, which is the primary target of Bis-T-23, FKBP1A encoding FK506 binding protein, which is the binding partner of the calcineurin inhibitor tacrolimus, PPP3CA and PPP3CC encoding the calcineurin isoforms and NR3C1 encoding the glucocorticoid receptor were all expressed, suggesting potential for direct effects of steroids and Bis-T-23 on podocytes.\nAfter treatment, we quantified changes in fluorescence intensity of phalloidin, which stains filamentous actin (Fig. 6 C, D). Following SDH treatment, we observed a significant increase in total F-actin fluorescence in both control and patient hiPSC-Podocytes. Moreover, treatment with Bis-T-23 resulted in an improvement of the filamentous actin cytoskeleton in patient hiPSC-Podocytes. In contrast, tacrolimus did not significantly alter F-actin levels in either group. To ensure equal cell numbers during treatment, DAPI signal alone was analyzed and showed no significant difference in the samples (Fig. S7).\nIn summary, we successfully generated podocytes from a patient with genetic FSGS in vitro, preserving the patient\u2019s genetic background and allowing us to study the disease phenotype individually. We hypothesize that some patients with genetic FSGS may benefit from immunosuppressive treatments due to their direct effects on podocytes. This model enables us to analyze patient-specific podocytes ex vivo in-depth and estimate the potential effects in a personalized manner."
+    },
+    {
+      "title": "Patient with adult-onset genetic FSGS with an INF2 mutation",
+      "text": "We generated hiPSC-Podocytes from a patient diagnosed with juvenile-onset FSGS at the age of 17. At the time of diagnosis, this patient exhibited chronic kidney disease (CKD stage G4A3). After starting steroid treatment, the urine protein-to-creatinine ratio (UPC-ratio) improved from 5.113 mg/g creatinine to 1.803 mg/g creatinine (Fig. 1 A). Histological examination of the renal biopsy revealed severe global glomerulosclerosis (29/35) and focal glomerulosclerosis (2/35). Additionally, there was 30\u201335% interstitial fibrosis and tubular atrophy (Fig. 1 B). Electron microscopy showed irregular, jagged podocyte morphology and segmental foot process effacement (Fig. 1 C). Genetic analysis identified a heterozygous autosomal dominant point mutation in exon 2 of the INF2 gene, characterized by a nucleotide exchange from guanine to adenine at position 217 (c.217G > A), which results in an amino acid substitution at position 73 of the protein sequence, changing glycine to serine (G73S). Immunosuppressive therapy was discontinued after identification of the genetic cause of FSGS. However, proteinuria increased again, and the patient progressed to end-stage renal disease one and a half years later, ultimately receiving a living donor kidney transplant. The biopsy of the transplanted kidney shows normal podocyte foot processes and was used as a reference (Fig. 1 B, C). Staining for common podocyte-associated marker proteins, such as synaptopodin, nephrin, and podocin, as well as the actin-associated protein INF2, displayed structural alterations and significant damage to the glomerular filtration barrier in the patient\u2019s kidney biopsy compared to the healthy transplant biopsy (Fig. 1 D, E). Fig. 1 Characterization of the patient\u2019s renal pathology. (A) Progression of proteinuria as mg/g creatinine over time (months) in the patient diagnosed with genetic FSGS. Timepoint of steroid treatment and dialysis is marked in blue on the x-axis. (B) Histological analysis of hematoxylin\u2013eosin (HE) and periodic acid\u2013Schiff (PAS) staining of a kidney biopsy from the FSGS patient compared to a biopsy of the transplanted kidney. Scale bars represent 100 \u00b5m for HE and 250 \u00b5m for PAS staining. (C) Transmission electron microscopy images from the FSGS biopsy, illustrating focally irregular, jagged podocyte morphology (black arrowheads) and segmental foot process effacement (black arrows). The healthy transplanted kidney biopsy serves as a control with regular podocyte foot processes (white arrows). Scale bars represent 10 \u00b5m. ( D\u2013E ) Immunofluorescence staining of podocyte-specific and actin-associated markers. The slit diaphragm protein nephrin is shown in green and podocin in red (D ). The actin-associated podocyte-specific marker synaptopodin is depicted in green, and INF2 protein in red (E) . Nuclei are in blue, stained with DAPI. Scale bars represent 100 \u00b5m.\nCharacterization of the patient\u2019s renal pathology. (A) Progression of proteinuria as mg/g creatinine over time (months) in the patient diagnosed with genetic FSGS. Timepoint of steroid treatment and dialysis is marked in blue on the x-axis. (B) Histological analysis of hematoxylin\u2013eosin (HE) and periodic acid\u2013Schiff (PAS) staining of a kidney biopsy from the FSGS patient compared to a biopsy of the transplanted kidney. Scale bars represent 100 \u00b5m for HE and 250 \u00b5m for PAS staining. (C) Transmission electron microscopy images from the FSGS biopsy, illustrating focally irregular, jagged podocyte morphology (black arrowheads) and segmental foot process effacement (black arrows). The healthy transplanted kidney biopsy serves as a control with regular podocyte foot processes (white arrows). Scale bars represent 10 \u00b5m. ( D\u2013E ) Immunofluorescence staining of podocyte-specific and actin-associated markers. The slit diaphragm protein nephrin is shown in green and podocin in red (D ). The actin-associated podocyte-specific marker synaptopodin is depicted in green, and INF2 protein in red (E) . Nuclei are in blue, stained with DAPI. Scale bars represent 100 \u00b5m."
+    },
+    {
+      "title": "Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability",
+      "text": "Dermal fibroblasts were cultured from skin biopsies derived from a patient with genetic FSGS and an INF2 mutation (c.217G < A; G73S) and a healthy donor. These fibroblasts were episomal reprogrammed into hiPSCs and subsequently differentiated into hiPSC-Podocytes following our recently published protocol 14 . To ensure high quality of the generated hiPSCs, we characterized both the patient-specific and healthy control hiPSCs in terms of genomic stability (Fig. 2 A\u2013C), proliferation capacity, and expression of pluripotency markers (Fig. 2 D, E). The patient\u2019s point mutation in the INF2 gene was preserved during reprogramming and differentiation, being present both in patient-specific fibroblasts and hiPSCs (Fig. 2 A), as well as in the hiPSC-Podocytes (Fig. 2 B). In contrast, the mutation was absent in all cells derived from the healthy control. Moreover, no chromosomal aberrations were detected before or after reprogramming in either cell line (Fig. 2 C). The proliferation marker Ki67 and common pluripotency markers such as OCT3/4, SSEA4, and Tra-1-81 were expressed in all three individual clones of the patient-derived hiPSCs and in healthy control-derived hiPSC lines (Fig. 2 D, E). This essential control of the generated cells shows high quality of the generated stem cells, and additionally, the transformation of the cell types during reprogramming and differentiation was also monitored (Fig. S1). We compared terminally differentiated hiPSC-Podocytes from a healthy donor to commonly used ciPodocytes to confirm podocyte identity (Fig. S2). Here, hiPSC-Podocytes expressed marker genes important for the podocyte phenotype and exhibited a more developed morphology, characterized by a branched network of secondary protrusions. Fig. 2 Genomic stability and pluripotency assessment of control- and patient-derived hiPSCs. (A\u2013B) Sanger sequencing of fibroblasts and hiPSCs (A), alongside genomic data visualized using the Integrative Genomics Viewer for hiPSCs and terminally differentiated hiPSC-Podocytes (B) . These results illustrate the preservation of the patient\u2019s genetic INF2 variant (c.217G > A) throughout reprogramming and differentiation, with the variant absent in control cells. (C) Microarray analysis indicates no chromosomal aberrations before and after reprogramming in patient- and control-derived fibroblasts and hiPSCs. For patient-derived hiPSCs, three individual clones were analyzed. (D) Immunofluorescence staining for the proliferation marker Ki67 and pluripotency markers OCT3/4, SSEA4, and Tra-1-81 colocalized with nuclear staining in blue. All hiPSC clones showed equal expression of pluripotency markers. Scale bars represent 250 \u00b5m.\nGenomic stability and pluripotency assessment of control- and patient-derived hiPSCs. (A\u2013B) Sanger sequencing of fibroblasts and hiPSCs (A), alongside genomic data visualized using the Integrative Genomics Viewer for hiPSCs and terminally differentiated hiPSC-Podocytes (B) . These results illustrate the preservation of the patient\u2019s genetic INF2 variant (c.217G > A) throughout reprogramming and differentiation, with the variant absent in control cells. (C) Microarray analysis indicates no chromosomal aberrations before and after reprogramming in patient- and control-derived fibroblasts and hiPSCs. For patient-derived hiPSCs, three individual clones were analyzed. (D) Immunofluorescence staining for the proliferation marker Ki67 and pluripotency markers OCT3/4, SSEA4, and Tra-1-81 colocalized with nuclear staining in blue. All hiPSC clones showed equal expression of pluripotency markers. Scale bars represent 250 \u00b5m."
+    },
+    {
+      "title": "Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS",
+      "text": "Scanning electron microscopy demonstrated significant morphological differences in the patient-specific hiPSC-Podocytes compared to hiPSC-Podocytes derived from a healthy donor (control) (Fig. 3 A). These cells exhibited a rounder cell body with shorter and fewer cellular protrusions, indicating reduced cell spreading (Fig. 3 B). Staining for common podocyte markers further confirmed the altered podocyte phenotype, showing reduced levels of podocin and synaptopodin, as well as INF2, which is associated with the cytoskeleton and is responsible for the regulation of linear actin filaments (Fig. 3 C). Inter-clonal differences were excluded by staining of key podocyte markers, such as podocin and synaptopodin (Fig. S3). Since typical podocyte markers were present but decreased in the patient-derived hiPSC-Podocytes in 2D culture, we also differentiated them in 3D to create conditions beneficial for the development and maintenance of slit diaphragm proteins. Here, the patient-specific 3D hiPSC-Podocyte cultures expressed podocyte markers similar to control 3D hiPSC-Podocyte cultures (Fig. S4). The substantial reduction in synaptopodin levels in 2D differentiated hiPSC-Podocytes was validated at both the mRNA (Fig. 3 D) and protein (Fig. 3 E) levels. Filamentous actin, stained with phalloidin, was altered in patient-specific cells with significantly lower levels of total phalloidin fluorescence (Fig. 3 F). In contrast, the protein level of cortactin, which also promotes actin rearrangement, was increased compared to the control (Fig. 3 G). Fig. 3 Phenotypic alterations of patient hiPSC-Podocytes. (A) Scanning electron microscopy images of control and patient hiPSC-Podocytes. Scale bars represent 25 \u00b5m. (B) Violin plots of quantified morphological features of individual cells (around 25 cells per cell line) from SEM imaging, including cell shape (circularity), protrusion length, and number. (C) Immunocytochemical staining of the podocyte-specific markers podocin and synaptopodin, the actin-associated protein INF2, as well as filamentous actin (F-actin) stained with phalloidin in control and patient hiPSC-Podocytes. Scale bars represent 100 \u00b5m. (D\u2013E) Decreased synaptopodin expression in patient hiPSC-Podocytes, demonstrated at mRNA level via qPCR (D) and at protein level via western blot analysis normalized to GAPDH (E) . (F) Quantification of filamentous actin (F-actin) stained with phalloidin, expressed as relative fluorescence units (RFU). (G) Increased cortactin level in patient hiPSC-Podocytes, analyzed by western blot analysis and normalized to GAPDH. Statistical analysis was performed using an unpaired Welch\u2019s t-test; * p < 0.05, ** p < 0.01, *** p < 0.001, **** p < 0.0001, n = 3.\nPhenotypic alterations of patient hiPSC-Podocytes. (A) Scanning electron microscopy images of control and patient hiPSC-Podocytes. Scale bars represent 25 \u00b5m. (B) Violin plots of quantified morphological features of individual cells (around 25 cells per cell line) from SEM imaging, including cell shape (circularity), protrusion length, and number. (C) Immunocytochemical staining of the podocyte-specific markers podocin and synaptopodin, the actin-associated protein INF2, as well as filamentous actin (F-actin) stained with phalloidin in control and patient hiPSC-Podocytes. Scale bars represent 100 \u00b5m. (D\u2013E) Decreased synaptopodin expression in patient hiPSC-Podocytes, demonstrated at mRNA level via qPCR (D) and at protein level via western blot analysis normalized to GAPDH (E) . (F) Quantification of filamentous actin (F-actin) stained with phalloidin, expressed as relative fluorescence units (RFU). (G) Increased cortactin level in patient hiPSC-Podocytes, analyzed by western blot analysis and normalized to GAPDH. Statistical analysis was performed using an unpaired Welch\u2019s t-test; * p < 0.05, ** p < 0.01, *** p < 0.001, **** p < 0.0001, n = 3.\nWhen analyzing large data from bulk RNA sequencing, we found that several markers important for maintaining the proper podocyte phenotype, such as CD2AP , VIM , SYNPO , FAT1 , MAFB , along with adhesion via integrins ( ITGA3 , ITGA5 , ITGB3 ) and extracellular matrix components ( LAMB2 , VIM ) were expressed in both control and patient hiPSC-Podocytes, although many of these were found to be decreased in the patient-specific cell (Fig. 4 A). Additionally, genes associated with actin-binding ( FLNB , MSN , MYO1C ) were also decreased, while genes related to microtubule formation ( TUBA1B , TUBB2B , KIF23 , CENPE ), actin dynamics ( ANLN ), cytoskeletal protein-membrane anchoring ( EPB41L3 ), and small GTPase activation ( DOCK1 , RACGAP1 ) were upregulated in patient hiPSC-Podocytes (Fig. 4 B). Consistent with these findings, gene set enrichment analysis revealed that gene sets associated with epithelial development, cell\u2013cell adhesion, actin cytoskeleton dynamics, microtubule cytoskeleton, and cell junctions were overrepresented in patient hiPSC-Podocytes compared to the control. In contrast, cell adhesion mediated by integrins was more active in control hiPSC-Podocytes (Fig. 4 C). Fig. 4 Comparative transcriptomic analysis of hiPSC-Podocytes from a FSGS patient and a healthy donor. (A\u2013B) Transcriptomic differences were assessed for marker genes related to the podocyte phenotype (A) and to the actin cytoskeleton (B) . Two clones were analyzed for each cell line. Heatmaps with transcript per million (TPM) values from bulk RNA sequencing data. (C) Gene set enrichment analysis with normalized enrichment scores (NES) and p -values for differentially expressed genes. A positive score indicates higher activity in the patient hiPSC-Podocytes, while a negative score indicates higher activity of the pathway in control cells.\nComparative transcriptomic analysis of hiPSC-Podocytes from a FSGS patient and a healthy donor. (A\u2013B) Transcriptomic differences were assessed for marker genes related to the podocyte phenotype (A) and to the actin cytoskeleton (B) . Two clones were analyzed for each cell line. Heatmaps with transcript per million (TPM) values from bulk RNA sequencing data. (C) Gene set enrichment analysis with normalized enrichment scores (NES) and p -values for differentially expressed genes. A positive score indicates higher activity in the patient hiPSC-Podocytes, while a negative score indicates higher activity of the pathway in control cells."
+    },
+    {
+      "title": "Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes",
+      "text": "The formin INF2, which is involved in the polymerization and depolymerization of linear, unbranched actin filaments, can be cleaved into C- and N-terminal fragments by proteolytic cleavage at position 547 mediated by cathepsins 22 \u2013 25 . Western blot analysis was performed using anti-INF2 antibodies that bind to either the N-terminal or C-terminal region of the INF2 protein. This showed a decrease in both total INF2 protein and full-length, uncleaved protein in patient hiPSC-Podocytes (Fig. 5 A\u2013D). The ratio of full-length INF2 protein to cleaved INF2 fragments remained consistent in control cells (Fig. 5 E). In contrast, increased levels of INF2 fragments were detected in patient hiPSC-Podocytes, indicating a higher cleavage rate despite the low expression level of INF2 protein (Fig. 5 F). Fig. 5 INF2 and actin dynamics in patient hiPSC-Podocytes. (A\u2013F) Total and cleaved INF2 protein levels in patient hiPSC-Podocytes were compared to control using western blot analysis with antibodies targeting the C-terminus (A) and N-terminus (B) of INF2. The quantification of total INF2 protein levels (including both full-length and cleaved fragments) (C). Full-length protein was quantified in (D) and the distribution of uncleaved protein and cleaved C-terminal and N-terminal fragments relative to total INF2 levels is presented as a percentage for control (E) and patient (F) hiPSC-Podocytes. Data were normalized to GAPDH and analyzed using Welch\u2019s t-test or one-way ANOVA. ns: not significant, * p < 0.5, ** p < 0.01, n = 3. (G\u2013I) Cathepsin L expression was validated on mRNA level via qPCR with data normalized to ACTB (G) and confirmed decreased cathepsin L protein via western blot analysis, with normalization to GAPDH (H) . Welch\u2019s t-test, ** p < 0.01. n = 3. (I) Protein expression of the small GTPase RhoA was examined, with corresponding quantification normalized to GAPDH. Welch\u2019s t-test, * p < 0.5. n = 3. ( J ) Actin polymerization assay of protein lysates from control (grey) and patient (black) hiPSC-Podocytes with linear regression. The slope for control hiPSC-Podocytes is 10.5, while that for patient hiPSC-Podocytes is 8.8. This difference is not significant (n.s.). ( K ) Actin depolymerization assay of protein lysates from control (grey) and patient (black) hiPSC-Podocytes with linear regression. The slope for depolymerization in control hiPSC-Podocytes is \u2212 1.4, whereas for patient hiPSC-Podocytes it is \u2212 3.1, indicating a significant difference p < 0.0001. RFU: relative fluorescence units.\nINF2 and actin dynamics in patient hiPSC-Podocytes. (A\u2013F) Total and cleaved INF2 protein levels in patient hiPSC-Podocytes were compared to control using western blot analysis with antibodies targeting the C-terminus (A) and N-terminus (B) of INF2. The quantification of total INF2 protein levels (including both full-length and cleaved fragments) (C). Full-length protein was quantified in (D) and the distribution of uncleaved protein and cleaved C-terminal and N-terminal fragments relative to total INF2 levels is presented as a percentage for control (E) and patient (F) hiPSC-Podocytes. Data were normalized to GAPDH and analyzed using Welch\u2019s t-test or one-way ANOVA. ns: not significant, * p < 0.5, ** p < 0.01, n = 3. (G\u2013I) Cathepsin L expression was validated on mRNA level via qPCR with data normalized to ACTB (G) and confirmed decreased cathepsin L protein via western blot analysis, with normalization to GAPDH (H) . Welch\u2019s t-test, ** p < 0.01. n = 3. (I) Protein expression of the small GTPase RhoA was examined, with corresponding quantification normalized to GAPDH. Welch\u2019s t-test, * p < 0.5. n = 3. ( J ) Actin polymerization assay of protein lysates from control (grey) and patient (black) hiPSC-Podocytes with linear regression. The slope for control hiPSC-Podocytes is 10.5, while that for patient hiPSC-Podocytes is 8.8. This difference is not significant (n.s.). ( K ) Actin depolymerization assay of protein lysates from control (grey) and patient (black) hiPSC-Podocytes with linear regression. The slope for depolymerization in control hiPSC-Podocytes is \u2212 1.4, whereas for patient hiPSC-Podocytes it is \u2212 3.1, indicating a significant difference p < 0.0001. RFU: relative fluorescence units.\nCathepsins have been reported to be involved in the proteolytic cleavage of INF2 by proteolysis (Subramanian et al., 2020). Bulk RNA sequencing data revealed that several cathepsin isoforms, including L, B, D, Z, A, C, V, K, O, and H -predominantly cysteine proteases- were expressed in both patient and control hiPSC-Podocytes (Fig. S5). The downregulation of cathepsin L, which plays a crucial role in protein degradation and repair processes and is known to be important for podocytes, was confirmed at both mRNA (Fig. 5 G) and protein levels (Fig. 5 H). This indicates that the increased cleavage of the patient-specific INF2 protein in hiPSC-Podocytes is not directly linked to cathepsin L. The small GTPase RhoA plays a significant role in regulating actin dynamics and has previously been associated with the functionality of INF2. Western Blot analysis displayed a significant increase in RhoA levels in patient hiPSC-Podocytes, indicating a possible compensatory effect (Fig. 5 I). Notably, the patient\u2019s fibroblasts, which also carried the INF2 variant, exhibited no alterations in their cytoskeleton, INF2 expression, or cathepsin L expression (Fig. S6). These findings suggest that the observed effects are specific to the podocyte cell type in the patient carrying the INF2 mutation.\nINF2 is known to facilitate both the polymerization and depolymerization of actin filaments. Its depolymerization activity is regulated by an autoinhibitory interaction between its N-terminal diaphanous inhibitory domain (DID) and C-terminal diaphanous autoregulatory domain (DAD) domains, whereas actin polymerization is unaffected by the DID-DAD interaction 25 . Interestingly, most genetic variants in the INF2 gene associated with genetic FSGS, including the variant identified in the featured FSGS patient, are located in the DID, which mediates INF2\u2019s role in actin dynamics 9 , 26 . Therefore, we analyzed the ability of the patient\u2019s hiPSC-Podocytes to polymerize and depolymerize actin filaments. While actin polymerization activity remained unaltered in the patient-specific hiPSC-Podocytes (Fig. 5 J), actin depolymerization activity was significantly increased compared to the control (Fig. 5 K)."
+    },
+    {
+      "title": "Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "text": "The actin cytoskeleton of the podocytes was analyzed using a scoring system previously published for the evaluation of filamentous actin 20 , 21 . Three types of actin filaments were classified: Type A, which features thick actin bundles covering more than 90% of the cytosol; Type B, characterized by thin and unbundled actin filaments; and Type C, which describes a disrupted cytoskeleton with only fragmented, short filaments. Notably, the patient hiPSC-Podocytes exhibited only type B and C filaments, while the control cells primarily demonstrated type A and some type B (Fig. 6 A). The disrupted actin filaments in the patient hiPSC-Podocytes align with the altered podocyte phenotype and the accelerated actin depolymerization rate. Fig. 6 Altered actin cytoskeleton with improvements in the actin cytoskeleton of hiPSC-Podocytes. (A) Classification of the actin cytoskeleton in control and patient hiPSC-Podocytes after phalloidin staining (red), co-stained with DAPI (blue). Percentages are quantified based on the following classifications: Type A (more than 90% of the cell area showing bundled actin filaments), type B (unbundled actin filaments), and type C (fragmented actin filaments). Welch\u2019s t-test, with significant differences indicated as * p < 0.05, ** p < 0.01, n = 3. Scale bars represent 100 \u00b5m. (B) Transcripts per million (TPM) from bulk RNA sequencing displaying the expression of genes essential for the response to treatment. (C) Representative images of untreated and treated hiPSC-Podocytes stained for F-actin with phalloidin in red and nuclei using DAPI in blue. Scale bars represent 100 \u00b5m. (D) Quantification of relative fluorescence units (RFU) of filamentous actin stained by phalloidin in control and patient hiPSC-Podocytes, both untreated and after 1 h of treatment with Bis-T-23 (30 \u00b5M), tacrolimus (10 \u00b5g/mL), and SDH (1 \u00b5g/mL). This analysis was performed in triplicate for each of the three clones using a plate reader. Values were normalized to the DAPI signal. One-way ANOVA, with significant differences indicated as * p < 0.05, ** p < 0.01, **** p < 0.0001, n = 3.\nAltered actin cytoskeleton with improvements in the actin cytoskeleton of hiPSC-Podocytes. (A) Classification of the actin cytoskeleton in control and patient hiPSC-Podocytes after phalloidin staining (red), co-stained with DAPI (blue). Percentages are quantified based on the following classifications: Type A (more than 90% of the cell area showing bundled actin filaments), type B (unbundled actin filaments), and type C (fragmented actin filaments). Welch\u2019s t-test, with significant differences indicated as * p < 0.05, ** p < 0.01, n = 3. Scale bars represent 100 \u00b5m. (B) Transcripts per million (TPM) from bulk RNA sequencing displaying the expression of genes essential for the response to treatment. (C) Representative images of untreated and treated hiPSC-Podocytes stained for F-actin with phalloidin in red and nuclei using DAPI in blue. Scale bars represent 100 \u00b5m. (D) Quantification of relative fluorescence units (RFU) of filamentous actin stained by phalloidin in control and patient hiPSC-Podocytes, both untreated and after 1 h of treatment with Bis-T-23 (30 \u00b5M), tacrolimus (10 \u00b5g/mL), and SDH (1 \u00b5g/mL). This analysis was performed in triplicate for each of the three clones using a plate reader. Values were normalized to the DAPI signal. One-way ANOVA, with significant differences indicated as * p < 0.05, ** p < 0.01, **** p < 0.0001, n = 3.\nGenetic FSGS has limited treatment options and usually does not respond to immunosuppressive therapy. However, prior to genetic diagnosis, the patient did respond to steroid treatment with a partial remission of proteinuria (Fig. 1 A). To analyze the cellular response to different immunosuppressants commonly used in clinical practice, as well as actin-reacting agents, we treated hiPSC-Podocytes derived from the patient and a healthy control with tacrolimus, SDH, and the actin stabilizing agent Bis-T-23. Bis-T-23 enhances the natural oligomerization of dynamin, promoting actin polymerization 27 , 28 .\nIn both patient and control hiPSC-Podocytes, genes related to pathways essential for treatment response were expressed (Fig. 6 B). Transcriptomic levels of DNM1 and DNM2 encoding dynamin, which is the primary target of Bis-T-23, FKBP1A encoding FK506 binding protein, which is the binding partner of the calcineurin inhibitor tacrolimus, PPP3CA and PPP3CC encoding the calcineurin isoforms and NR3C1 encoding the glucocorticoid receptor were all expressed, suggesting potential for direct effects of steroids and Bis-T-23 on podocytes.\nAfter treatment, we quantified changes in fluorescence intensity of phalloidin, which stains filamentous actin (Fig. 6 C, D). Following SDH treatment, we observed a significant increase in total F-actin fluorescence in both control and patient hiPSC-Podocytes. Moreover, treatment with Bis-T-23 resulted in an improvement of the filamentous actin cytoskeleton in patient hiPSC-Podocytes. In contrast, tacrolimus did not significantly alter F-actin levels in either group. To ensure equal cell numbers during treatment, DAPI signal alone was analyzed and showed no significant difference in the samples (Fig. S7).\nIn summary, we successfully generated podocytes from a patient with genetic FSGS in vitro, preserving the patient\u2019s genetic background and allowing us to study the disease phenotype individually. We hypothesize that some patients with genetic FSGS may benefit from immunosuppressive treatments due to their direct effects on podocytes. This model enables us to analyze patient-specific podocytes ex vivo in-depth and estimate the potential effects in a personalized manner."
+    },
+    {
+      "title": "Discussion",
+      "text": "Adult-onset genetic FSGS is typically inherited as an autosomal dominant disease with variable penetrance 29 . Patients with genetic FSGS often resist immunosuppression, although some may still benefit from specific therapies 30 \u2013 32 . However, the considerable toxicity associated with these therapies complicates empirical treatments for genetic FSGS, especially in the absence of evidence for their efficacy. Genetic variants may increase the vulnerability of podocytes to stress, potentially requiring modifier genes or additional metabolic, hypertensive, or other stressors for full development of the diseased phenotype 29 . For instance, genetic ACTN4 variants contribute to cytoskeletal disorganization, impairing podocyte resistance to mechanical stress 7 .\nPatient-specific ex vivo podocyte models are urgently needed to better understand the diseased podocyte phenotype and investigate individual responses of podocytes to treatments. This is crucial for identifying patients who may benefit from targeted therapies. Variants in the INF2 gene have been studied in various model organisms, including zebrafish 33 , mice 10 , 34 , and drosophila 35 , as well as in vitro using human primary urinary epithelial cells 35 , ciPodocytes 36 , HEK293 and HeLa cells 37 , 38 . In these studies, knockdown of INF2 was mediated by morpholinos, siRNA, or CRISPR/Cas9 technology to investigate the role of INF2 33 , 39 . However, caution is necessary because ciPodocytes are known to dedifferentiate in vitro and behave differently than podocytes in vivo 40 . Additionally, the transfection of siRNA and injection of morpholinos can lead to inconsistent knockdown efficiency, and CRISPR/Cas9 may induce unintended off-target effects 40 . These models also do not fully represent the genetic background of the individual patient.\nTo address this, we derived patient-specific podocytes from a patient with genetic FSGS using our previously published protocol 14 . We cultured dermal fibroblasts from a skin biopsy of the patient, who carries a mutation in the INF2 gene (c.217G > A; G73S), reprogrammed them into hiPSCs, and subsequently differentiated them into podocytes that maintained the patient\u2019s genetic background. This enabled detailed characterization of patient-specific phenotypic and functional alterations and facilitated investigation of the individual response of these podocytes to treatment. Considering the entire genetic background of the patient, this may enhance the potential for clinical translation. The diseased patient-specific hiPSC-Podocytes were compared to those generated from a healthy donor to identify any pathological changes. The control was age- and sex-matched to characterize phenotypical and functional alterations in podocyte biology related to FSGS. The generated hiPSC-Podocytes from both healthy controls and a patient carrying the INF2 variant (c.217G > A; G73S) displayed characteristic podocyte markers and morphological features, providing a robust platform for comparative analyses. While our hiPSC-Podocytes represent an improved model and personalized in vitro model over traditional podocyte cell lines, they have inherent limitations. Two-dimensional cultures do not fully recapitulate the complex in vivo microenvironment, particularly the interactions with other glomerular cell types. Future advancements involving three-dimensional glomerular models, such as spheroids and kidney organoids, are anticipated to provide more physiologically relevant conditions that support the development of complex podocyte architecture, such as interdigitating processes.\nTo ensure high-quality and reproducible hiPSC-Podocytes, we implemented rigorous quality control measures. Comparative analyses of fibroblasts and hiPSC clones\u2014before and after episomal reprogramming- focused on karyotypic stability and retention of the patient-specific INF2 mutation. We also evaluated hiPSC morphology, growth behavior, and pluripotency marker expression. To maintain consistency, we established working cell banks of well-characterized hiPSC clones for subsequent differentiation.\nIn this study, three individual hiPSC clones derived from the patient were differentiated into hiPSC-Podocytes. Differentiation efficiency was monitored via bulk RNA sequencing, immunofluorescence staining and qPCR and similar marker expression patterns were observed in all clones, suggesting minimal intra-clonal variability (Fig. S3).\nHowever, with this approach, the findings cannot be exclusively related to the specific INF2 gene variant as the sole cause of the findings. To isolate the impact of the genetic cause on the diseased phenotype, an isogenic control, generated by reversing the patient\u2019s single-nucleotide polymorphism in the patient-specific hiPSC line using CRISPR/Cas or introducing this mutation in a control hiPSC line, with subsequent functional studies, would be necessary to deepen the understanding of the relationship between gene mutations and disease pathogenesis.\nThe work presented here was limited to hiPSC-Podocytes derived from a single patient with genetic FSGS with an INF2 mutation in the DID as a proof of concept. Expanding this study to include a larger cohort of patients with different FSGS-related mutations would be desirable to increase the translational value of this model in the future. Comparative analyses across multiple mutations will help to identify potential common pathogenic mechanisms as well as individual differences in the disease presentation. Interestingly, podocytes harboring a patient-specific S186P INF2 mutation showed alterations in cell spreading and the actin cytoskeleton, which have been attributed to an INF2 gain-of-function effect 41 . However, some findings appear contradictory\u2014for example, decreased cortactin levels in podocytes with S186P mutation, whereas in the here described podocytes with G73S mutation, cortactin expression was increased. These discrepancies may stem from differences in the mutation sites (G73S and S186P), as well as in the different experimental setups. In our study, podocytes potentially compensated for cytoskeletal disruption by upregulating cortactin and microtubule components, while in the previous study, podocytes were grown out of organoids and seeded onto micropatterned surfaces, possibly inducing additional stress. Furthermore, there is limited clinical information about the disease history of the patient carrying the S186P mutation, which hampers correlations between INF2 mutations and disease progression. It is also important to note that the precise role of INF2 in FGSG remains incompletely understood, and the key pathogenic pathways are still being elucidated. For instance, INF2 knock-out mice do not develop FSGS 25 , whereas INF2 R218Q knock-in mice only show disease after additional injury with puromycin aminonucleoside (PAN) treatment 10 . Similarly, patient-derived kidney organoids with the S186P INF2 mutation displayed nephrin pattern alterations even without a second hit. Collectively, these findings highlight the necessity of employing models that encompass the patient\u2019s entire genetic background, as done in our study, rather than focusing solely on the specific INF2 mutation. Future studies are necessary to investigate multiple INF2 mutations within the DID using human models to better understand their pathogenic roles and improve disease modelling in vitro.\nThe INF2 protein consists of multiple domains: The N-terminal DID, dimerization domain (DD), formin homology (FH) 1 and FH2 domains, and the C-terminal DAD 22 , 42 , 43 . The FH2 domain accelerates actin filament assembly, while the C-terminal region promotes depolymerization 44 . DID binds to DAD of other formins, such as mDia, and inhibits depolymerization. In contrast, this interaction does not affect INF2-mediated polymerization 22 , 45 . Here, patient hiPSC-Podocytes exhibited predominantly fragmented actin and increased actin depolymerization. This indicates that the patient-specific INF2 mutation disrupts autoinhibition.\nThe small GTPases RhoA, Rac1, and Cdc42 have been reported to modulate INF2 function 46 . While wildtype INF2 likely functions through direct competition with mDia protein rather than by activation via RhoA, many disease-causing INF2 mutants appear to increase interactions between INF2-active Cdc42 in HEK293 cells 26 , 37 . Increased RhoA protein levels were found in patient hiPSC-Podocytes, indicating that actin reorganization may be modulated by this GTPase in conjunction with the INF2 mutation. Additionally, cortactin levels were elevated, likely as another compensatory response for cytoskeletal stabilization 47 .\nProteolytic cleavage of INF2 by cathepsins occurs at position 547, resulting in the accumulation of the N-terminal DID fragment at the cell edges, where it interacts with mDIA formins 25 . Consistent with previous studies, the patient\u2019s INF2 mutation did not impede cleavage of the full-length INF2 protein 25 . However, lower levels of total INF2 protein were found. Here, more INF2 fragments were found than the uncleaved INF2 protein in patient hiPSC-Podocytes. Most cathepsins, including cathepsin L, were downregulated, suggesting that the imbalance between full-length INF2 protein and INF2 fragments could arise from decreased stability or cleavage by other proteases. This downregulation of cathepsin L and INF2 levels and altered actin cytoskeleton were not observed in patient-specific fibroblasts, despite an identical genetic background. This indicates that the impact of the patient-specific INF2 mutation only affects the specialized podocyte phenotype. Future studies might include comparative analyses of actin-regulatory protein networks and assessment of podocyte-specific stress response pathways to elucidate mechanisms underlying this cell type-specific vulnerability.\nWhile some immunosuppressive agents can impact the cytoskeleton independently of immune modulation, the clinical response of certain genetic variants of FSGS remains largely trial-and-error 30 , 48 , 49 . Most patients with genetic FSGS are steroid-resistant, but direct effects of steroids on podocytes have been described 50 . Furthermore, dexamethasone treatment protected podocytes from PAN injury by inhibiting actin filament disruption and apoptosis 51 , 52 . Carriers of WT1 variants were more likely to respond to calcineurin inhibitors (CNI) compared to carriers of other mutations. However, decisions regarding the continuation of CNI treatment in responsive monogenic SRNS should be made on a case-by-case basis 32 , 53 . Bis-T-23 has been shown to increase actin polymerization in injured podocytes in diverse kidney disease models 28 , 49 . Here, Bis-T-23 increased F-actin levels in the patient-specific hiPSC-Podocytes carrying the INF2 mutation. SDH treatment helped stabilize the cytoskeleton, paralleling the patient\u2019s positive response to steroid treatment in the clinic. Dynamin and glucocorticoid receptors were expressed in patient hiPSC-Podocytes, allowing for direct effects of Bis-T-23 and SDH on these cells. Unlike what has been described for patients with WT1 mutation, tacrolimus did not remodel the control or patient hiPSC-Podocytes 54 . This underscores the importance of patient-specific in vitro models in understanding individual alterations and both short-term and long-term treatment responses at the cellular level. Linking in vitro findings with detailed clinical phenotypes is crucial to advance personalized medicine. Including basic clinical data of the index patient highlights the importance of integrating more detailed longitudinal patient data in future studies. Future studies should extend the treatment duration to assess sustained efficacy, possible toxicity, and off-target effects. This will be particularly important to bridge the gap between in vitro findings and clinical applicability.\nIn summary, patient-specific hiPSC-Podocytes offer multiple advantages for investigating genetic FSGS in vitro. Here, the patients\u2019 diseased cells can be analyzed without gene manipulation methods like CRISPR/Cas or siRNAs, which carry risks of off-target effects and do not fully represent the patient\u2019s genetic background."
+    },
+    {
+      "title": "Supplementary Information",
+      "text": "Below is the link to the electronic supplementary material.\nSupplementary Material 1\nSupplementary Material 1\nSupplementary Material 2\nSupplementary Material 2"
+    }
+  ],
+  "entities": [
+    {
+      "text": "actin cytoskeleton",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Introduction",
+      "start": 698,
+      "end": 716
+    },
+    {
+      "text": "INF2",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Introduction",
+      "start": 1023,
+      "end": 1027
+    },
+    {
+      "text": "podocytes 11 \u2013 13",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Introduction",
+      "start": 2759,
+      "end": 2776
+    },
+    {
+      "text": "G73S",
+      "label": "SIMPLE_CHEMICAL",
+      "section": "Introduction",
+      "start": 3086,
+      "end": 3090
+    },
+    {
+      "text": "CO 2",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 982,
+      "end": 986
+    },
+    {
+      "text": "glutaraldehyde",
+      "label": "SIMPLE_CHEMICAL",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 1330,
+      "end": 1344
+    },
+    {
+      "text": "ACTB",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 1756,
+      "end": 1760
+    },
+    {
+      "text": "OCT3/4",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 1938,
+      "end": 1944
+    },
+    {
+      "text": "SOX2",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 1991,
+      "end": 1995
+    },
+    {
+      "text": "REX1",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 2044,
+      "end": 2048
+    },
+    {
+      "text": "ACTGAGCGTGGCTATTCCTCCGTT",
+      "label": "SIMPLE_CHEMICAL",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 2096,
+      "end": 2120
+    },
+    {
+      "text": "SYNPO",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 2143,
+      "end": 2148
+    },
+    {
+      "text": "MAFB",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 2188,
+      "end": 2192
+    },
+    {
+      "text": "VIM",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 2240,
+      "end": 2243
+    },
+    {
+      "text": "TTGCGCTCCTGAAAAACTGC WT1 TCAGAGGCATTCAGGATGTG TTATTGCAGCCTGGGTAAGC INF2",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 2265,
+      "end": 2336
+    },
+    {
+      "text": "CTSL TAGAGGCACAGTGGACCAAG",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 2379,
+      "end": 2404
+    },
+    {
+      "text": "GAPDH",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 2429,
+      "end": 2434
+    },
+    {
+      "text": "HPRT",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 2479,
+      "end": 2483
+    },
+    {
+      "text": "AGCACCCGTGGCCATCTCTTTCTCG",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 2558,
+      "end": 2583
+    },
+    {
+      "text": "agarose",
+      "label": "SIMPLE_CHEMICAL",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 2816,
+      "end": 2823
+    },
+    {
+      "text": "MENON_FETAL_KIDNEY_4_PODOCYTES",
+      "label": "SIMPLE_CHEMICAL",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 3498,
+      "end": 3528
+    },
+    {
+      "text": "Triton-X-100",
+      "label": "SIMPLE_CHEMICAL",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 3873,
+      "end": 3885
+    },
+    {
+      "text": "DAPI",
+      "label": "SIMPLE_CHEMICAL",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 4270,
+      "end": 4274
+    },
+    {
+      "text": "Immunocyto-",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 4312,
+      "end": 4323
+    },
+    {
+      "text": "Synaptopodin Progen",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 4469,
+      "end": 4488
+    },
+    {
+      "text": "Podocin Proteintech",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 4570,
+      "end": 4589
+    },
+    {
+      "text": "20384-1-AP 1:200",
+      "label": "SIMPLE_CHEMICAL",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 4590,
+      "end": 4606
+    },
+    {
+      "text": "Ki67",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 4615,
+      "end": 4619
+    },
+    {
+      "text": "SSEA4",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 4692,
+      "end": 4697
+    },
+    {
+      "text": "Cortactin",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 4782,
+      "end": 4791
+    },
+    {
+      "text": "PA527134 1:200",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 4803,
+      "end": 4817
+    },
+    {
+      "text": "Nephrin Progen",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 4826,
+      "end": 4840
+    },
+    {
+      "text": "RhoA",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 4906,
+      "end": 4910
+    },
+    {
+      "text": "Cruz sc-418",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 4917,
+      "end": 4928
+    },
+    {
+      "text": "10494-1-AP",
+      "label": "SIMPLE_CHEMICAL",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 4998,
+      "end": 5008
+    },
+    {
+      "text": "Phalloidin 647",
+      "label": "SIMPLE_CHEMICAL",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 5020,
+      "end": 5034
+    },
+    {
+      "text": "anti-rabbit 555 Invitrogen A31572 1:1000",
+      "label": "SIMPLE_CHEMICAL",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 5139,
+      "end": 5179
+    },
+    {
+      "text": "HRP",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 5263,
+      "end": 5266
+    },
+    {
+      "text": "xylol",
+      "label": "SIMPLE_CHEMICAL",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 5480,
+      "end": 5485
+    },
+    {
+      "text": "ethanol",
+      "label": "SIMPLE_CHEMICAL",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 5529,
+      "end": 5536
+    },
+    {
+      "text": "ddH 2 O",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 5594,
+      "end": 5601
+    },
+    {
+      "text": "citric acid",
+      "label": "SIMPLE_CHEMICAL",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 5627,
+      "end": 5638
+    },
+    {
+      "text": "TBS",
+      "label": "SIMPLE_CHEMICAL",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 5988,
+      "end": 5991
+    },
+    {
+      "text": "Membranes",
+      "label": "SIMPLE_CHEMICAL",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 6024,
+      "end": 6033
+    },
+    {
+      "text": "phalloidin",
+      "label": "SIMPLE_CHEMICAL",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 6138,
+      "end": 6148
+    },
+    {
+      "text": "actin filaments",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 6215,
+      "end": 6230
+    },
+    {
+      "text": "actin bundles",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 6297,
+      "end": 6310
+    },
+    {
+      "text": "B actin",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 6317,
+      "end": 6324
+    },
+    {
+      "text": "Actin Polymerization",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 6572,
+      "end": 6592
+    },
+    {
+      "text": "Cytoskeleton",
+      "label": "SIMPLE_CHEMICAL",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 6614,
+      "end": 6626
+    },
+    {
+      "text": "APHL99",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 6652,
+      "end": 6658
+    },
+    {
+      "text": "Bis-T-23",
+      "label": "SIMPLE_CHEMICAL",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 6950,
+      "end": 6958
+    },
+    {
+      "text": "MA",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 7006,
+      "end": 7008
+    },
+    {
+      "text": "tacrolimus",
+      "label": "SIMPLE_CHEMICAL",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 7011,
+      "end": 7021
+    },
+    {
+      "text": "Prograf",
+      "label": "SIMPLE_CHEMICAL",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 7034,
+      "end": 7041
+    },
+    {
+      "text": "SDH (1 \u00b5g/mL",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Materials and methods Generation of hiPSC-Podocytes derived from skin biopsies Culture of human ciPodocytes Differentiation in 3D Sample preparation, SEM, and quantification Chromosomal microarray analysis RNA isolation, cDNA synthesis, and quantitative PCR Sanger sequencing Bulk RNA sequencing Immunocytochemistry Immunohistochemistry Western blot analysis Classification and quantification of actin filaments Actin polymerization and depolymerization assay Treatment of hiPSC-Podocytes Statistical analysis",
+      "start": 7065,
+      "end": 7077
+    },
+    {
+      "text": "creatinine",
+      "label": "SIMPLE_CHEMICAL",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 296,
+      "end": 306
+    },
+    {
+      "text": "nucleotide",
+      "label": "SIMPLE_CHEMICAL",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 800,
+      "end": 810
+    },
+    {
+      "text": "guanine",
+      "label": "SIMPLE_CHEMICAL",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 825,
+      "end": 832
+    },
+    {
+      "text": "adenine",
+      "label": "SIMPLE_CHEMICAL",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 836,
+      "end": 843
+    },
+    {
+      "text": "glycine",
+      "label": "SIMPLE_CHEMICAL",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 967,
+      "end": 974
+    },
+    {
+      "text": "synaptopodin",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 1445,
+      "end": 1457
+    },
+    {
+      "text": "nephrin",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 1459,
+      "end": 1466
+    },
+    {
+      "text": "podocin",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 1472,
+      "end": 1479
+    },
+    {
+      "text": "hematoxylin",
+      "label": "SIMPLE_CHEMICAL",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 1985,
+      "end": 1996
+    },
+    {
+      "text": "PAS",
+      "label": "SIMPLE_CHEMICAL",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 2034,
+      "end": 2037
+    },
+    {
+      "text": "podocyte-specific",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 2579,
+      "end": 2596
+    },
+    {
+      "text": "actin-associated",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 2601,
+      "end": 2617
+    },
+    {
+      "text": "Tra-1",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 5112,
+      "end": 5117
+    },
+    {
+      "text": "synaptopodin (Fig. S3",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 8373,
+      "end": 8394
+    },
+    {
+      "text": "Filamentous actin",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 8936,
+      "end": 8953
+    },
+    {
+      "text": "actin",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 9160,
+      "end": 9165
+    },
+    {
+      "text": "SEM",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 9508,
+      "end": 9511
+    },
+    {
+      "text": "F-actin",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 9744,
+      "end": 9751
+    },
+    {
+      "text": "CD2AP",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 11709,
+      "end": 11714
+    },
+    {
+      "text": "FAT1",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 11731,
+      "end": 11735
+    },
+    {
+      "text": "ITGA3",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 11781,
+      "end": 11786
+    },
+    {
+      "text": "ITGA5",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 11789,
+      "end": 11794
+    },
+    {
+      "text": "ITGB3",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 11797,
+      "end": 11802
+    },
+    {
+      "text": "FLNB",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 12060,
+      "end": 12064
+    },
+    {
+      "text": "MSN",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 12067,
+      "end": 12070
+    },
+    {
+      "text": "MYO1C",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 12073,
+      "end": 12078
+    },
+    {
+      "text": "TUBA1B",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 12149,
+      "end": 12155
+    },
+    {
+      "text": "TUBB2B",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 12158,
+      "end": 12164
+    },
+    {
+      "text": "KIF23",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 12167,
+      "end": 12172
+    },
+    {
+      "text": "CENPE",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 12175,
+      "end": 12180
+    },
+    {
+      "text": "ANLN",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 12201,
+      "end": 12205
+    },
+    {
+      "text": "EPB41L3",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 12251,
+      "end": 12258
+    },
+    {
+      "text": "DOCK1",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 12292,
+      "end": 12297
+    },
+    {
+      "text": "RACGAP1",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 12300,
+      "end": 12307
+    },
+    {
+      "text": "integrins",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 12697,
+      "end": 12706
+    },
+    {
+      "text": "cathepsins",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 14266,
+      "end": 14276
+    },
+    {
+      "text": "anti-INF2 antibodies",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 14329,
+      "end": 14349
+    },
+    {
+      "text": "G\u2013I) Cathepsin L",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 15586,
+      "end": 15602
+    },
+    {
+      "text": "cathepsin L protein",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 15708,
+      "end": 15727
+    },
+    {
+      "text": "B",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 18502,
+      "end": 18503
+    },
+    {
+      "text": "C, V,",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 18514,
+      "end": 18519
+    },
+    {
+      "text": "K",
+      "label": "SIMPLE_CHEMICAL",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 18520,
+      "end": 18521
+    },
+    {
+      "text": "O",
+      "label": "SIMPLE_CHEMICAL",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 18523,
+      "end": 18524
+    },
+    {
+      "text": "cathepsin L",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 18659,
+      "end": 18670
+    },
+    {
+      "text": "DID-DAD",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 19935,
+      "end": 19942
+    },
+    {
+      "text": "actin dynamics 9",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 20161,
+      "end": 20177
+    },
+    {
+      "text": "Type B",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 20781,
+      "end": 20787
+    },
+    {
+      "text": "Type C",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 20846,
+      "end": 20852
+    },
+    {
+      "text": "C",
+      "label": "SIMPLE_CHEMICAL",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 20997,
+      "end": 20998
+    },
+    {
+      "text": "proteinuria (Fig. 1 A",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 24195,
+      "end": 24216
+    },
+    {
+      "text": "SDH",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 24445,
+      "end": 24448
+    },
+    {
+      "text": "dynamin",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 24541,
+      "end": 24548
+    },
+    {
+      "text": "actin polymerization 27",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 24560,
+      "end": 24583
+    },
+    {
+      "text": "DNM1",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 24747,
+      "end": 24751
+    },
+    {
+      "text": "DNM2",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 24756,
+      "end": 24760
+    },
+    {
+      "text": "FKBP1A",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 24820,
+      "end": 24826
+    },
+    {
+      "text": "FK506",
+      "label": "SIMPLE_CHEMICAL",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 24836,
+      "end": 24841
+    },
+    {
+      "text": "calcineurin",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 24895,
+      "end": 24906
+    },
+    {
+      "text": "PPP3CA",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 24929,
+      "end": 24935
+    },
+    {
+      "text": "PPP3CC",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 24940,
+      "end": 24946
+    },
+    {
+      "text": "glucocorticoid receptor",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 25004,
+      "end": 25027
+    },
+    {
+      "text": "steroids",
+      "label": "SIMPLE_CHEMICAL",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 25091,
+      "end": 25099
+    },
+    {
+      "text": "actin (Fig. 6 C",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 25232,
+      "end": 25247
+    },
+    {
+      "text": "filamentous actin cytoskeleton",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Results Patient with adult-onset genetic FSGS with an INF2 mutation Quality control of patient- and healthy donor-derived hiPSCs regarding pluripotency and genomic stability Phenotypic differences of hiPSC-Podocytes derived from a patient with genetic FSGS Altered INF2 dynamics and actin regulation in patient-specific hiPSC-Podocytes Exploring treatment responses in patient-specific hiPSC-Podocytes to immunosuppressive drugs and actin-targeting agents",
+      "start": 25456,
+      "end": 25486
+    },
+    {
+      "text": "ACTN4",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Discussion",
+      "start": 653,
+      "end": 658
+    },
+    {
+      "text": "CRISPR/Cas9",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Discussion",
+      "start": 1678,
+      "end": 1689
+    },
+    {
+      "text": "microtubule",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Discussion",
+      "start": 6181,
+      "end": 6192
+    },
+    {
+      "text": "puromycin aminonucleoside",
+      "label": "SIMPLE_CHEMICAL",
+      "section": "Discussion",
+      "start": 6845,
+      "end": 6870
+    },
+    {
+      "text": "formin",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Discussion",
+      "start": 7519,
+      "end": 7525
+    },
+    {
+      "text": "FH2",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Discussion",
+      "start": 7546,
+      "end": 7549
+    },
+    {
+      "text": "actin filament",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Discussion",
+      "start": 7624,
+      "end": 7638
+    },
+    {
+      "text": "formins",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Discussion",
+      "start": 7734,
+      "end": 7741
+    },
+    {
+      "text": "mDia",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Discussion",
+      "start": 7751,
+      "end": 7755
+    },
+    {
+      "text": "GTPases RhoA",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Discussion",
+      "start": 8072,
+      "end": 8084
+    },
+    {
+      "text": "Rac1",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Discussion",
+      "start": 8086,
+      "end": 8090
+    },
+    {
+      "text": "Cdc42",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Discussion",
+      "start": 8096,
+      "end": 8101
+    },
+    {
+      "text": "GTPase",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Discussion",
+      "start": 8519,
+      "end": 8525
+    },
+    {
+      "text": "mDIA formins",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Discussion",
+      "start": 8858,
+      "end": 8870
+    },
+    {
+      "text": "actin-regulatory protein networks",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Discussion",
+      "start": 9708,
+      "end": 9741
+    },
+    {
+      "text": "dexamethasone",
+      "label": "SIMPLE_CHEMICAL",
+      "section": "Discussion",
+      "start": 10219,
+      "end": 10232
+    },
+    {
+      "text": "WT1",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Discussion",
+      "start": 10355,
+      "end": 10358
+    },
+    {
+      "text": "CNI",
+      "label": "SIMPLE_CHEMICAL",
+      "section": "Discussion",
+      "start": 10423,
+      "end": 10426
+    },
+    {
+      "text": "glucocorticoid receptors",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Discussion",
+      "start": 10980,
+      "end": 11004
+    },
+    {
+      "text": "Material 2",
+      "label": "GENE_OR_GENE_PRODUCT",
+      "section": "Supplementary Information",
+      "start": 124,
+      "end": 134
+    }
+  ],
+  "total_entities": 140,
+  "runtime_seconds": 2.641
+}
