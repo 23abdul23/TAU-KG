@@ -1,5 +1,6 @@
 import re
 from typing import Any, Dict, Iterable, List, Optional
+import unicodedata
 
 
 RELATION_EDGE_TYPE_RULES = [
@@ -30,10 +31,13 @@ RELATION_EDGE_TYPE_RULES = [
 ]
 
 ENTITY_TYPE_CANONICAL = {
-    "gene": "gene",
-    "genes": "gene",
-    "protein": "protein",
-    "proteins": "protein",
+    "gene": "gene/protein",
+    "genes": "gene/protein",
+    "protein": "gene/protein",
+    "proteins": "gene/protein",
+    "geneprotein": "gene/protein",
+    "gene-protein": "gene/protein",
+    "gene/protein": "gene/protein",
     "disease": "disease",
     "diseases": "disease",
     "pathway": "pathway",
@@ -47,8 +51,7 @@ ENTITY_TYPE_CANONICAL = {
 }
 
 ENTITY_TYPE_TITLE = {
-    "gene": "Gene",
-    "protein": "Protein",
+    "gene/protein": "Gene/Protein",
     "disease": "Disease",
     "pathway": "Pathway",
     "drug": "Drug",
@@ -58,8 +61,7 @@ ENTITY_TYPE_TITLE = {
 }
 
 ENTITY_TYPE_BUCKETS = {
-    "gene": "genes",
-    "protein": "proteins",
+    "gene/protein": "genes",
     "disease": "diseases",
     "pathway": "pathways",
 }
@@ -110,12 +112,102 @@ def canonicalize_edge_type(raw_relation: Any, source_type: Any = "", target_type
 
     normalized_source = normalize_entity_type(source_type)
     normalized_target = normalize_entity_type(target_type)
-    if normalized_source == "gene" and normalized_target == "protein":
-        return "ENCODES"
     if normalized_target == "pathway":
         return "PARTICIPATES"
     return "ASSOCIATES"
 
+def normalize_edge_text(edge: Any) -> str:
+    edge = str(edge or "")
+
+    # normalize unicode (Α vs A)
+    edge = unicodedata.normalize("NFKD", edge)
+
+    # lowercase
+    edge = edge.lower()
+
+    # unify separators
+    edge = edge.replace("-", "_").replace(" ", "_")
+
+    # remove noise
+    edge = re.sub(r"[^a-z0-9_]", "", edge)
+
+    return edge
+
+def map_edge_type(edge: Any) -> str:
+    edge = normalize_edge_text(edge)
+
+    # ---------------- REGULATION ---------------- #
+    if any(k in edge for k in [
+        "activate", "inhibit", "regulate", "modulate",
+        "phosphorylate", "suppress", "stimulate", "control"
+    ]):
+        return "REGULATION"
+
+    # ---------------- INTERACTION ---------------- #
+    if any(k in edge for k in [
+        "interact", "associate", "bind", "complex", "component"
+    ]):
+        return "INTERACTION"
+
+    # ---------------- CAUSAL EFFECT ---------------- #
+    if any(k in edge for k in [
+        "cause", "drive", "induce", "lead", "result",
+        "formation", "aggregation", "accumulation",
+        "toxicity", "defect", "dysfunction", "imbalance",
+        "impair", "loss", "damage"
+    ]):
+        return "CAUSAL_EFFECT"
+
+    # ---------------- FUNCTIONAL ROLE ---------------- #
+    if any(k in edge for k in [
+        "autophagy", "lysosomal", "proteasome", "mitochondrial",
+        "trafficking", "transport", "clearance", "degradation",
+        "homeostasis", "quality_control"
+    ]):
+        return "FUNCTIONAL_ROLE"
+
+    # ---------------- PATHWAY ---------------- #
+    if any(k in edge for k in [
+        "pathway", "cleavage", "metabolism", "signaling",
+        "cascade"
+    ]):
+        return "PATHWAY_INVOLVEMENT"
+
+    # ---------------- EXPRESSION ---------------- #
+    if any(k in edge for k in [
+        "encode", "express", "transcription", "chromatin",
+        "splicing"
+    ]):
+        return "EXPRESSION"
+
+    # ---------------- DISEASE ---------------- #
+    if any(k in edge for k in [
+        "disease", "risk", "pathology", "neurodegeneration",
+        "degeneration"
+    ]):
+        return "DISEASE_ASSOCIATION"
+
+    # ---------------- THERAPEUTIC ---------------- #
+    if any(k in edge for k in [
+        "treat", "therapy", "drug", "protect", "rescue"
+    ]):
+        return "THERAPEUTIC"
+
+    # ---------------- FALLBACK RULES ---------------- #
+
+    if edge.endswith("formation"):
+        return "CAUSAL_EFFECT"
+
+    if "transport" in edge:
+        return "FUNCTIONAL_ROLE"
+
+    if "phosphorylation" in edge:
+        return "REGULATION"
+
+    if "aggregation" in edge:
+        return "CAUSAL_EFFECT"
+
+    return "OTHER"
 
 def build_entity_lookup(entities_by_type: Dict[str, List[Dict[str, Any]]]) -> Dict[str, Dict[str, str]]:
     lookup: Dict[str, Dict[str, str]] = {}
@@ -220,11 +312,12 @@ def normalize_paper_relationship(
     original_relation = str(
         relationship.get("original_relation", relationship.get("relation", relationship.get("edge_type", "")))
     ).strip()
-    edge_type = str(relationship.get("edge_type", "")).strip() or canonicalize_edge_type(
+    edge_type_raw = str(relationship.get("edge_type", "")).strip() or canonicalize_edge_type(
         original_relation,
         source_type,
         target_type,
     )
+    edge_type = map_edge_type(edge_type_raw or original_relation)
 
     source_id = infer_relationship_entity_id(
         source_name,
@@ -253,7 +346,7 @@ def normalize_paper_relationship(
         "target_id": target_id,
         "target_name": target_name,
         "target_type": target_type,
-        "edge_type": edge_type or "ASSOCIATES",
+        "edge_type": edge_type or "OTHER",
         "edge_weight": float(relationship.get("edge_weight", relationship.get("confidence", 0.5)) or 0.5),
         "evidence": str(relationship.get("evidence", "")).strip(),
         "source_chromosome": source_chromosome,
@@ -268,8 +361,22 @@ def normalize_entities_for_paper(
     paper_id: str,
     entities_by_type: Dict[str, List[Dict[str, Any]]],
 ) -> Dict[str, List[Dict[str, Any]]]:
-    normalized: Dict[str, List[Dict[str, Any]]] = {bucket: [] for bucket in ENTITY_TYPE_BUCKETS.values()}
-    for bucket in normalized:
+    normalized: Dict[str, List[Dict[str, Any]]] = {
+        "genes": [],
+        "proteins": [],
+        "diseases": [],
+        "pathways": [],
+    }
+    merged_gene_like = []
+    merged_gene_like.extend((entities_by_type or {}).get("genes", []))
+    merged_gene_like.extend((entities_by_type or {}).get("proteins", []))
+
+    for index, entity in enumerate(merged_gene_like):
+        if not isinstance(entity, dict):
+            continue
+        normalized["genes"].append(normalize_paper_entity(entity, "genes", paper_id, index))
+
+    for bucket in ("diseases", "pathways"):
         for index, entity in enumerate((entities_by_type or {}).get(bucket, [])):
             if not isinstance(entity, dict):
                 continue

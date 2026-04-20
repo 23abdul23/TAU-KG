@@ -16,6 +16,7 @@ from __future__ import annotations
 import copy
 import json
 import os
+import re
 import threading
 from datetime import datetime
 from typing import Any, Dict, List, Optional
@@ -256,6 +257,7 @@ def add_paper(
     source="user_uploaded",
     source_url="",
     sections=None,
+    pmcid: str = "",
 ):
     """
     Add or update a paper record.
@@ -294,6 +296,7 @@ def add_paper(
                     "source": source,
                     "source_url": source_url,
                     "sections": sections or [],
+                    "pmcid": str(pmcid or "").strip().upper(),
                 }
             )
             paper = existing
@@ -310,6 +313,7 @@ def add_paper(
                 "source": source,
                 "source_url": source_url,
                 "sections": sections or [],
+                "pmcid": str(pmcid or "").strip().upper(),
                 "upload_date": datetime.now().isoformat(),
                 "extraction_status": "pending",
                 "notes": "",
@@ -450,6 +454,7 @@ def upsert_extracted_paper(
     source_url: str = "",
     sections: Optional[List[Dict[str, Any]]] = None,
     extraction_status: str = "extracted",
+    pmcid: str = "",
 ) -> Dict[str, Any]:
     """Atomically upsert a paper, its entities, and relationships in one disk write."""
     with _STORE_LOCK:
@@ -472,6 +477,7 @@ def upsert_extracted_paper(
                     "source_url": source_url,
                     "sections": sections or [],
                     "extraction_status": extraction_status,
+                    "pmcid": str(pmcid or "").strip().upper(),
                 }
             )
             paper = existing
@@ -488,6 +494,7 @@ def upsert_extracted_paper(
                 "source": source,
                 "source_url": source_url,
                 "sections": sections or [],
+                "pmcid": str(pmcid or "").strip().upper(),
                 "upload_date": datetime.now().isoformat(),
                 "extraction_status": extraction_status,
                 "notes": "",
@@ -530,6 +537,47 @@ def get_paper_by_id(paper_id):
         if paper.get("paper_id") == paper_id:
             return copy.deepcopy(paper)
     return None
+
+
+def _extract_pmcid_candidate(value: Any) -> str:
+    match = re.search(r"(PMC\d+)", str(value or ""), flags=re.IGNORECASE)
+    return match.group(1).upper() if match else ""
+
+
+def find_paper_by_pmcid(pmcid: str) -> Optional[Dict[str, Any]]:
+    """Find a paper record by PMCID across explicit field, paper_id, or source_url."""
+    ensure_loaded()
+    normalized = _extract_pmcid_candidate(pmcid)
+    if not normalized:
+        return None
+
+    for paper in papers_data:
+        explicit = _extract_pmcid_candidate(paper.get("pmcid", ""))
+        pid = _extract_pmcid_candidate(paper.get("paper_id", ""))
+        source_url = _extract_pmcid_candidate(paper.get("source_url", ""))
+        if normalized in {explicit, pid, source_url}:
+            return copy.deepcopy(paper)
+    return None
+
+
+def delete_paper(paper_id: str) -> bool:
+    """Delete one paper and all of its entities/relationships from the store."""
+    with _STORE_LOCK:
+        ensure_loaded()
+        normalized = str(paper_id or "").strip()
+        if not normalized:
+            return False
+
+        before = len(papers_data)
+        papers_data[:] = [paper for paper in papers_data if str(paper.get("paper_id", "")).strip() != normalized]
+        paper_entities.pop(normalized, None)
+        paper_edges[:] = [edge for edge in paper_edges if str(edge.get("paper_id", "")).strip() != normalized]
+
+        if len(papers_data) == before:
+            return False
+
+        _save_store_locked()
+        return True
 
 
 def get_paper_entities(paper_id):

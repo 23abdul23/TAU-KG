@@ -50,3 +50,16 @@ docker compose -f compose.dev.yml down
 
 - Standard app: http://localhost:8778
 - Development app: http://localhost:8998
+
+## Paper save mode
+
+Set `PAPER_SAVE_MODE` in `.env`:
+
+- `UPSERT` (default): keep existing paper entries and merge in newly extracted entities/relationships
+- `OVERWRITE`: replace any existing paper data for the same paper ID/PMCID
+
+## Chroma DB path
+
+If you see `attempt to write a readonly database` in Docker, set a writable path in `.env`:
+
+- `CHROMA_DB_PATH=/tmp/chroma_db`

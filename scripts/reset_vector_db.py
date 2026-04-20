@@ -18,6 +18,7 @@ from chromadb.config import Settings
 
 
 DEFAULT_DB_PATH = "./chroma_db"
+DEFAULT_CHAT_STATE_PATH = "./data/chat_sessions"
 DEFAULT_COLLECTIONS = ("gene_proteins", "papers", "paper_entities")
 
 
@@ -51,13 +52,30 @@ def _best_effort_directory_remove(target_path: Path, retries: int = 3, delay_sec
     return (False, last_error)
 
 
-def reset_vector_db(db_path: str, collection_names: tuple[str, ...]) -> dict[str, object]:
-    """Delete Chroma collections and remove the on-disk persistence directory."""
+def _clear_chat_sessions(chat_state_path: Path) -> tuple[bool, str]:
+    """
+    Remove all persisted chat session files so the app starts with fresh chat state.
+    The directory is recreated empty to keep app startup behavior unchanged.
+    """
+    try:
+        if chat_state_path.exists():
+            shutil.rmtree(chat_state_path, ignore_errors=False)
+        chat_state_path.mkdir(parents=True, exist_ok=True)
+        return (True, "")
+    except Exception as exc:
+        return (False, str(exc))
+
+
+def reset_vector_db(db_path: str, collection_names: tuple[str, ...], chat_state_path: str) -> dict[str, object]:
+    """Delete Chroma persistence and clear persisted chat session state."""
     target_path = Path(db_path).resolve()
+    chat_state_target = Path(chat_state_path).resolve()
     deleted_collections: list[str] = []
     reset_used = False
     reset_error = ""
     directory_remove_error = ""
+    chat_sessions_cleared = False
+    chat_sessions_clear_error = ""
 
     if target_path.exists():
         client = None
@@ -84,13 +102,18 @@ def reset_vector_db(db_path: str, collection_names: tuple[str, ...]) -> dict[str
     else:
         directory_removed = True
 
+    chat_sessions_cleared, chat_sessions_clear_error = _clear_chat_sessions(chat_state_target)
+
     return {
         "db_path": str(target_path),
+        "chat_state_path": str(chat_state_target),
         "deleted_collections": deleted_collections,
         "directory_removed": directory_removed,
         "reset_used": reset_used,
         "reset_error": reset_error,
         "directory_remove_error": directory_remove_error,
+        "chat_sessions_cleared": chat_sessions_cleared,
+        "chat_sessions_clear_error": chat_sessions_clear_error,
     }
 
 
@@ -100,6 +123,11 @@ def parse_args() -> argparse.Namespace:
         "--db-path",
         default=DEFAULT_DB_PATH,
         help=f"Path to the Chroma persistence directory. Default: {DEFAULT_DB_PATH}",
+    )
+    parser.add_argument(
+        "--chat-state-path",
+        default=DEFAULT_CHAT_STATE_PATH,
+        help=f"Path to persisted chat session files. Default: {DEFAULT_CHAT_STATE_PATH}",
     )
     parser.add_argument(
         "--yes",
@@ -115,17 +143,23 @@ def main() -> int:
 
     if not args.yes:
         confirmation = input(
-            f"This will permanently delete the vector DB at '{target_path}'. Type 'yes' to continue: "
+            (
+                "This will permanently delete the vector DB at "
+                f"'{target_path}' and clear persisted chat sessions at "
+                f"'{Path(args.chat_state_path).resolve()}'. Type 'yes' to continue: "
+            )
         ).strip().lower()
         if confirmation != "yes":
             print("Reset cancelled.")
             return 1
 
-    result = reset_vector_db(args.db_path, DEFAULT_COLLECTIONS)
+    result = reset_vector_db(args.db_path, DEFAULT_COLLECTIONS, args.chat_state_path)
     print(f"Vector DB path: {result['db_path']}")
+    print(f"Chat state path: {result['chat_state_path']}")
     print(f"Reset API used: {result['reset_used']}")
     print(f"Deleted collections: {', '.join(result['deleted_collections']) or 'none found'}")
     print(f"Persistence directory removed: {result['directory_removed']}")
+    print(f"Chat sessions cleared: {result['chat_sessions_cleared']}")
     if result["reset_error"]:
         print(f"Reset note: {result['reset_error']}")
     if result["directory_remove_error"]:
@@ -133,6 +167,10 @@ def main() -> int:
         print(result["directory_remove_error"])
         print("Close Streamlit, Python shells, or any running app using Chroma, then rerun the script.")
         return 2
+    if result["chat_sessions_clear_error"]:
+        print("Chat session cleanup note:")
+        print(result["chat_sessions_clear_error"])
+        return 3
     return 0
 
 

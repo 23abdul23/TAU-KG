@@ -54,6 +54,23 @@ color_scheme = {
     "type": "#c7c7c7"      # Default gray
 }
 
+EDGE_STYLE_MAP = {
+    "ENCODES": {"color": "#1f77b4", "width_factor": 1.25, "dashes": False},
+    "EXPRESSES": {"color": "#17becf", "width_factor": 1.15, "dashes": False},
+    "INTERACTS": {"color": "#7f7f7f", "width_factor": 1.0, "dashes": True},
+    "TREATS": {"color": "#2ca02c", "width_factor": 1.2, "dashes": False},
+    "PARTICIPATES": {"color": "#9467bd", "width_factor": 1.1, "dashes": False},
+    "ACTIVATES": {"color": "#ff7f0e", "width_factor": 1.35, "dashes": False},
+    "INHIBITS": {"color": "#d62728", "width_factor": 1.35, "dashes": True},
+    "REGULATES": {"color": "#8c564b", "width_factor": 1.15, "dashes": False},
+    "ASSOCIATES": {"color": "#6b7280", "width_factor": 0.95, "dashes": True},
+}
+
+EDGE_FALLBACK_PALETTE = [
+    "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd",
+    "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf",
+]
+
 # Utility functions
 def hex_to_rgb(hex_color):
     """Convert hex color to RGB tuple."""
@@ -63,6 +80,41 @@ def hex_to_rgb(hex_color):
 def rgb_to_rgba(rgb, alpha):
     """Convert RGB tuple to RGBA string."""
     return f"rgba{rgb + (alpha,)}"
+
+
+def normalize_relation_label(relation):
+    """Normalize relation labels for consistent styling."""
+    normalized = str(relation or "ASSOCIATES").strip().upper()
+    return normalized or "ASSOCIATES"
+
+
+def _fallback_edge_color(relation_label):
+    idx = abs(hash(relation_label)) % len(EDGE_FALLBACK_PALETTE)
+    return EDGE_FALLBACK_PALETTE[idx]
+
+
+def get_edge_style(relation, score=1.0):
+    """Return style attributes for an edge relation."""
+    relation_label = normalize_relation_label(relation)
+    base_style = EDGE_STYLE_MAP.get(
+        relation_label,
+        {"color": _fallback_edge_color(relation_label), "width_factor": 1.0, "dashes": False},
+    )
+    safe_score = max(0.1, float(score or 0.1))
+    width = max(1.0, safe_score * 3 * base_style["width_factor"])
+    return {
+        "relation": relation_label,
+        "color": base_style["color"],
+        "width": width,
+        "dashes": bool(base_style["dashes"]),
+    }
+
+
+def apply_alpha_to_color(color, alpha):
+    """Apply alpha to a hex color, fallback unchanged for non-hex input."""
+    if isinstance(color, str) and color.startswith("#") and len(color) == 7:
+        return rgb_to_rgba(hex_to_rgb(color), alpha)
+    return color
 
 def safe_read_file(filename):
     """Safely read file with error handling."""
@@ -175,8 +227,10 @@ def create_network(selected_cluster=None):
 
         # Add edges
         for edge in edges_data:
-            edge_color = "#666666"
-            edge_width = edge["score"] * 3
+            edge_style = get_edge_style(edge.get("relation", "ASSOCIATES"), edge.get("score", 1.0))
+            edge_color = edge_style["color"]
+            edge_width = edge_style["width"]
+            edge_dashes = edge_style["dashes"]
 
             if selected_cluster:
                 source_node = next((n for n in nodes_data if n["id"] == edge["source"]), None)
@@ -187,18 +241,18 @@ def create_network(selected_cluster=None):
                     target_in_cluster = target_node["cluster"] == selected_cluster
 
                     if source_in_cluster or target_in_cluster:
-                        edge_color = "#000000"
-                        edge_width = edge["score"] * 4
+                        edge_width = edge_width * 1.2
                     else:
-                        edge_color = "rgba(102, 102, 102, 0.15)"
-                        edge_width = edge["score"] * 2
+                        edge_color = apply_alpha_to_color(edge_color, 0.16)
+                        edge_width = max(1.0, edge_width * 0.7)
 
             net.add_edge(
                 edge["source"],
                 edge["target"],
                 title=f"Relation: {edge['relation']}<br>Score: {edge['score']:.2f}",
                 width=edge_width,
-                color=edge_color
+                color=edge_color,
+                dashes=edge_dashes
             )
 
         # Physics options
@@ -369,12 +423,14 @@ def handle_selected_nodes():
                 
                 # Add edges between selected nodes
                 for edge in selected_relationships:
+                    edge_style = get_edge_style(edge.get("relation", "ASSOCIATES"), edge.get("score", 1.0))
                     subnet.add_edge(
                         edge["source"],
                         edge["target"],
                         title=f"Relation: {edge['relation']}<br>Score: {edge['score']:.2f}",
-                        width=edge["score"] * 3,
-                        color="#666666"
+                        width=edge_style["width"],
+                        color=edge_style["color"],
+                        dashes=edge_style["dashes"]
                     )
                 
                 subnet.save_graph("selected_network.html")
@@ -614,6 +670,26 @@ def main():
                             f'margin-right: 10px; border-radius: 50%;"></div>'
                             f'<span style="font-weight: 500;">{node_type.capitalize()}</span></div>',
                             unsafe_allow_html=True
+                        )
+
+                st.write("\n### Edge Type Legend")
+                edge_type_counts = Counter(
+                    normalize_relation_label(edge.get("relation", "ASSOCIATES"))
+                    for edge in edges_data
+                )
+                edge_types = sorted(edge_type_counts.keys())
+                edge_cols = st.columns(3)
+                for i, edge_type in enumerate(edge_types):
+                    style = get_edge_style(edge_type, score=1.0)
+                    dash_css = "2px dashed" if style["dashes"] else "3px solid"
+                    with edge_cols[i % 3]:
+                        st.markdown(
+                            f'<div style="display: flex; align-items: center; margin: 6px 0;">'
+                            f'<div style="width: 36px; border-top: {dash_css} {style["color"]}; margin-right: 10px;"></div>'
+                            f'<span style="font-weight: 500;">{edge_type}</span>'
+                            f'<span style="margin-left: 6px; color: #6b7280;">({edge_type_counts[edge_type]})</span>'
+                            f'</div>',
+                            unsafe_allow_html=True,
                         )
 
         # with stats_tab:

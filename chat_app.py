@@ -3,16 +3,20 @@ import os
 import random
 import re
 import time
+import gc
+import shutil
 from collections import defaultdict
 from copy import deepcopy
 from contextlib import nullcontext
 from pathlib import Path
 from uuid import uuid4
 
+import chromadb
 import networkx as nx
 import pandas as pd
 import streamlit as st
 import streamlit.components.v1 as components
+from chromadb.config import Settings
 from pyvis.network import Network
 from typing import List, Dict, Any, Optional, Set, Tuple
 
@@ -288,8 +292,6 @@ QUERY_COLOR_PALETTE = [
 ]
 
 NODE_TYPE_COLORS = {
-    "gene": "#1f77b4",
-    "protein": "#2ca02c",
     "gene/protein": "#ff7f0e",
     "disease": "#d62728",
     "pathway": "#8c564b",
@@ -298,14 +300,30 @@ NODE_TYPE_COLORS = {
 }
 
 NODE_TYPE_SHAPES = {
-    "gene": "dot",
-    "protein": "square",
     "gene/protein": "hexagon",
     "disease": "diamond",
     "pathway": "triangle",
     "paper": "database",
     "entity": "dot",
 }
+
+EDGE_RELATION_STYLE_MAP = {
+    "ENCODES": {"color": "#1f77b4", "width_factor": 1.20, "dashes": False},
+    "EXPRESSES": {"color": "#17becf", "width_factor": 1.15, "dashes": False},
+    "INTERACTS": {"color": "#7f7f7f", "width_factor": 1.00, "dashes": True},
+    "TREATS": {"color": "#2ca02c", "width_factor": 1.25, "dashes": False},
+    "PARTICIPATES": {"color": "#9467bd", "width_factor": 1.10, "dashes": False},
+    "ACTIVATES": {"color": "#ff7f0e", "width_factor": 1.35, "dashes": False},
+    "INHIBITS": {"color": "#d62728", "width_factor": 1.35, "dashes": True},
+    "REGULATES": {"color": "#8c564b", "width_factor": 1.15, "dashes": False},
+    "ASSOCIATES": {"color": "#6b7280", "width_factor": 0.95, "dashes": True},
+    "RELATED": {"color": "#6b7280", "width_factor": 0.95, "dashes": True},
+}
+
+EDGE_RELATION_FALLBACK_PALETTE = [
+    "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd",
+    "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf",
+]
 
 
 def schedule_next_query_input_clear() -> None:
@@ -339,14 +357,93 @@ def reset_chat_state() -> None:
     persist_chat_state()
 
 
+def _clear_all_chat_sessions() -> tuple[bool, str]:
+    """Delete every persisted chat session file and recreate the session directory."""
+    try:
+        if CHAT_STATE_DIR.exists():
+            shutil.rmtree(CHAT_STATE_DIR, ignore_errors=False)
+        CHAT_STATE_DIR.mkdir(parents=True, exist_ok=True)
+        return True, ""
+    except Exception as exc:
+        return False, str(exc)
+
+
+def _reset_vector_db_storage() -> tuple[bool, str]:
+    """Delete the persisted Chroma DB directory used by the app."""
+    db_path = Path("./chroma_db").resolve()
+    db_manager = st.session_state.get("db_manager")
+    if db_manager is not None and getattr(db_manager, "db_path", ""):
+        db_path = Path(str(getattr(db_manager, "db_path"))).resolve()
+
+    try:
+        if db_path.exists():
+            reset_client = chromadb.PersistentClient(path=str(db_path), settings=Settings(allow_reset=True))
+            try:
+                reset_client.reset()
+            except Exception:
+                pass
+            reset_client = None
+            gc.collect()
+            time.sleep(0.2)
+            shutil.rmtree(db_path, ignore_errors=False)
+        return True, ""
+    except Exception as exc:
+        return False, str(exc)
+
+
+def run_full_application_reset() -> tuple[bool, str]:
+    """
+    Perform a full in-app reset:
+    - clears vector DB persistence
+    - clears all persisted chat sessions
+    - resets in-memory Streamlit state and cached DB handles
+    """
+    st.session_state.db_manager = None
+    st.session_state.db_loaded = False
+    st.session_state.db_error = ""
+
+    try:
+        get_cached_db_manager.clear()
+    except Exception:
+        pass
+
+    vector_ok, vector_err = _reset_vector_db_storage()
+    sessions_ok, sessions_err = _clear_all_chat_sessions()
+
+    st.session_state.chat_history = []
+    st.session_state.chat_citations = {}
+    st.session_state.chat_papers = {}
+    st.session_state.chat_knowledge_results = {}
+    st.session_state.query_genes = []
+    st.session_state.selected_chat_turn_index = 0
+    st.session_state.next_query_input = ""
+    st.session_state.persisted_state_loaded = False
+    clear_stored_search_results()
+    schedule_next_query_input_clear()
+
+    new_session_id = uuid4().hex
+    st.session_state.browser_session_id = new_session_id
+    st.query_params["session_id"] = new_session_id
+
+    errors = []
+    if not vector_ok and vector_err:
+        errors.append(f"Vector DB reset failed: {vector_err}")
+    if not sessions_ok and sessions_err:
+        errors.append(f"Chat session reset failed: {sessions_err}")
+
+    if errors:
+        return False, " | ".join(errors)
+    return True, ""
+
+
 def normalize_node_type(node_type: Optional[str], default: str = "entity") -> str:
     """Canonicalize node type labels across curated, vector, and paper-derived sources."""
     raw = re.sub(r"\s+", "", str(node_type or "")).strip().lower()
     mapping = {
-        "gene": "gene",
-        "genes": "gene",
-        "protein": "protein",
-        "proteins": "protein",
+        "gene": "gene/protein",
+        "genes": "gene/protein",
+        "protein": "gene/protein",
+        "proteins": "gene/protein",
         "disease": "disease",
         "diseases": "disease",
         "pathway": "pathway",
@@ -356,6 +453,42 @@ def normalize_node_type(node_type: Optional[str], default: str = "entity") -> st
         "gene-protein": "gene/protein",
     }
     return mapping.get(raw, str(node_type or default).strip() or default)
+
+
+def normalize_relation_type(relation: Optional[str], default: str = "RELATED") -> str:
+    """Normalize edge relation labels for consistent styling and legend rendering."""
+    raw = re.sub(r"\s+", "_", str(relation or "").strip()).upper().strip("_")
+    return raw or default
+
+
+def _fallback_relation_color(relation: str) -> str:
+    index = abs(hash(relation)) % len(EDGE_RELATION_FALLBACK_PALETTE)
+    return EDGE_RELATION_FALLBACK_PALETTE[index]
+
+
+def get_edge_relation_style(relation: Optional[str], score: float = 0.5) -> Dict[str, Any]:
+    """Resolve edge color/line style/width scaling for a relation type."""
+    relation_label = normalize_relation_type(relation)
+    style = EDGE_RELATION_STYLE_MAP.get(
+        relation_label,
+        {"color": _fallback_relation_color(relation_label), "width_factor": 1.0, "dashes": False},
+    )
+    return {
+        "relation": relation_label,
+        "color": style["color"],
+        "dashes": bool(style["dashes"]),
+        "width_factor": max(0.5, float(style["width_factor"])),
+        "score": max(0.0, safe_float(score, 0.5)),
+    }
+
+
+def build_edge_relation_counts(edges: List[Dict[str, Any]]) -> Dict[str, int]:
+    """Count edge relation categories present in the currently rendered graph."""
+    counts: Dict[str, int] = {}
+    for edge in edges or []:
+        relation_label = normalize_relation_type(edge.get("relation", "RELATED"))
+        counts[relation_label] = counts.get(relation_label, 0) + 1
+    return counts
 
 
 def distance_to_similarity_percent(distance) -> float:
@@ -543,8 +676,8 @@ def normalize_node_key(name: str) -> str:
 
 def singularize_entity_type(entity_type: str) -> str:
     mapping = {
-        "genes": "gene",
-        "proteins": "protein",
+        "genes": "gene/protein",
+        "proteins": "gene/protein",
         "diseases": "disease",
         "pathways": "pathway",
     }
@@ -1640,6 +1773,16 @@ def build_pyvis_network_graph(network_payload: Dict[str, Any], query_order: List
 
     edges = network_payload.get("edges", [])
     node_map = {node["key"]: node for node in nodes}
+    node_degree_counts: Dict[str, int] = {node["key"]: 0 for node in nodes}
+    for edge in edges:
+        source_key = str(edge.get("source_key", "")).strip()
+        target_key = str(edge.get("target_key", "")).strip()
+        if source_key in node_degree_counts:
+            node_degree_counts[source_key] += 1
+        if target_key in node_degree_counts:
+            node_degree_counts[target_key] += 1
+    max_degree = max(node_degree_counts.values()) if node_degree_counts else 0
+
     net = Network(height=f"{height_px}px", width="100%", bgcolor="#ffffff", font_color="black")
     net.force_atlas_2based()
 
@@ -1668,13 +1811,19 @@ def build_pyvis_network_graph(network_payload: Dict[str, Any], query_order: List
             border_color = "#444444"
 
         similarity = node.get("similarity_score", 0.0)
-        size = max(16, min(40, 10 + (similarity / 6)))
+        degree_count = node_degree_counts.get(node["key"], 0)
+        if max_degree <= 0:
+            size = 18
+        else:
+            degree_ratio = degree_count / max_degree
+            size = 14 + (degree_ratio * 28)
         tooltip = "\n".join([
             f"Name: {metadata.get('node_name')}",
             f"ID: {metadata.get('node_id')}",
             f"Type: {node_type}",
             f"Source: {metadata.get('node_source')}",
             f"Similarity: {similarity:.1f}%",
+            f"Connected edges: {degree_count}",
             f"Role: {node_role}",
             f"Queries: {', '.join(query_membership) if query_membership else 'N/A'}",
         ])
@@ -1703,30 +1852,33 @@ def build_pyvis_network_graph(network_payload: Dict[str, Any], query_order: List
         if not source or not target:
             continue
 
-        query_membership = sorted(edge.get("queries", set()))
-        if len(query_membership) > 1:
-            color = "#FFD700"
-        elif query_membership:
-            color = QUERY_COLOR_PALETTE[query_order.index(query_membership[0]) % len(QUERY_COLOR_PALETTE)]
-        else:
-            color = "#666666"
+        relation_style = get_edge_relation_style(
+            edge.get("relation", "related"),
+            edge.get("score", 0.0),
+        )
+        relation_label = relation_style["relation"]
 
         provenance = ", ".join(sorted(edge.get("provenance", set())))
+        query_membership = sorted(edge.get("queries", set()))
         tooltip = "\n".join([
             f"{source['metadata']['node_name']} -> {target['metadata']['node_name']}",
-            f"Relation: {edge.get('relation', 'related')}",
+            f"Relation: {relation_label}",
             f"Confidence/Score: {edge.get('score', 0.0):.2f}",
             f"Source: {provenance}",
             f"Queries: {', '.join(query_membership) if query_membership else 'N/A'}",
         ])
 
+        edge_width = max(
+            1.5,
+            min(8.5, edge.get("score", 0.0) * 6.0 * relation_style["width_factor"]),
+        )
         net.add_edge(
             edge["source_key"],
             edge["target_key"],
             title=tooltip,
-            width=max(1.5, min(8.0, edge.get("score", 0.0) * 6.0)),
-            color=color,
-            dashes="PAPER_INGEST" in edge.get("provenance", set()),
+            width=edge_width,
+            color=relation_style["color"],
+            dashes=relation_style["dashes"] or ("PAPER_INGEST" in edge.get("provenance", set())),
             arrows="to",
         )
 
@@ -1759,14 +1911,12 @@ def build_pyvis_network_graph(network_payload: Dict[str, Any], query_order: List
     return net
 
 
-def render_network_legend() -> None:
+def render_network_legend(edge_relation_counts: Optional[Dict[str, int]] = None) -> None:
     """Render a compact legend beside the graph."""
     st.markdown("**Legend**")
     st.markdown("**Node Types**")
 
     type_rows = [
-        ("gene", "Gene"),
-        ("protein", "Protein"),
         ("gene/protein", "Gene/Protein"),
         ("pathway", "Pathway"),
         ("disease", "Disease"),
@@ -1798,14 +1948,63 @@ def render_network_legend() -> None:
     )
     st.caption("Node fill color shows biological type. Border color shows query membership.")
 
+    st.markdown("**Edge Types**")
+    relation_counts = edge_relation_counts or {}
+    relation_labels = sorted(relation_counts.keys()) if relation_counts else sorted(EDGE_RELATION_STYLE_MAP.keys())
+    for relation_label in relation_labels:
+        style = get_edge_relation_style(relation_label, score=1.0)
+        border_style = "2px dashed" if style["dashes"] else "3px solid"
+        count_suffix = f" ({relation_counts[relation_label]})" if relation_label in relation_counts else ""
+        st.markdown(
+            f"<div style='display:flex;align-items:center;gap:8px;margin:4px 0;'>"
+            f"<span style='display:inline-block;width:30px;border-top:{border_style} {style['color']};'></span>"
+            f"<span>{relation_label}{count_suffix}</span>"
+            f"</div>",
+            unsafe_allow_html=True,
+        )
+    st.caption("Edge color/line style shows relation category. Dashed edges indicate inhibitory or literature-derived links.")
 
-def render_network_with_legend(net: Network, height: int) -> None:
-    """Render the graph with a right-side legend."""
-    graph_col, legend_col = st.columns([5, 2])
-    with graph_col:
-        render_pyvis_network(net, height=height)
-    with legend_col:
-        render_network_legend()
+
+def render_network_with_legend(
+    net: Network,
+    height: int,
+    edge_relation_counts: Optional[Dict[str, int]] = None,
+    view_key: str = "network_graph",
+) -> None:
+    """Render the graph with fullscreen and collapsible right-side legend controls."""
+    fullscreen_key = f"{view_key}_fullscreen"
+    show_legend_key = f"{view_key}_show_legend"
+
+    if fullscreen_key not in st.session_state:
+        st.session_state[fullscreen_key] = False
+    if show_legend_key not in st.session_state:
+        st.session_state[show_legend_key] = True
+
+    control_col1, control_col2, control_col3 = st.columns([1, 1, 8])
+    with control_col1:
+        fullscreen_label = "🗕" if st.session_state[fullscreen_key] else "🗖"
+        if st.button(fullscreen_label, key=f"{view_key}_toggle_fullscreen", help="Toggle fullscreen graph mode"):
+            st.session_state[fullscreen_key] = not st.session_state[fullscreen_key]
+            st.rerun()
+    with control_col2:
+        legend_label = "🙈" if st.session_state[show_legend_key] else "👁️"
+        if st.button(legend_label, key=f"{view_key}_toggle_legend", help="Hide/show right-side legend"):
+            st.session_state[show_legend_key] = not st.session_state[show_legend_key]
+            st.rerun()
+    with control_col3:
+        mode_text = "Fullscreen" if st.session_state[fullscreen_key] else "Standard"
+        legend_text = "Visible" if st.session_state[show_legend_key] else "Hidden"
+        st.caption(f"View: {mode_text} | Legend: {legend_text}")
+
+    effective_height = max(height, 920) if st.session_state[fullscreen_key] else height
+    if st.session_state[show_legend_key]:
+        graph_col, legend_col = st.columns([8, 2] if st.session_state[fullscreen_key] else [5, 2])
+        with graph_col:
+            render_pyvis_network(net, height=effective_height)
+        with legend_col:
+            render_network_legend(edge_relation_counts=edge_relation_counts)
+    else:
+        render_pyvis_network(net, height=effective_height)
 
 
 def build_single_query_network_graph(query_entry: Dict[str, Any], settings: Dict[str, Any]) -> Tuple[Optional[Network], Dict[str, Any]]:
@@ -2013,11 +2212,11 @@ def display_stored_knowledge_graph_tab() -> None:
 
     col1, col2, col3 = st.columns(3)
     with col1:
-        max_nodes = st.slider("Max Nodes", min_value=20, max_value=300, value=120, step=10, key="stored_kg_max_nodes")
+        max_nodes = st.slider("Max Nodes", min_value=20, max_value=5000, value=1200, step=20, key="stored_kg_max_nodes")
     with col2:
-        max_edges = st.slider("Max Edges", min_value=20, max_value=600, value=220, step=20, key="stored_kg_max_edges")
+        max_edges = st.slider("Max Edges", min_value=20, max_value=5000, value=1800, step=20, key="stored_kg_max_edges")
     with col3:
-        min_edge_score = st.slider("Min Edge Score", min_value=0.0, max_value=1.0, value=0.2, step=0.05, key="stored_kg_min_edge_score")
+        min_edge_score = st.slider("Min Edge Score", min_value=0.0, max_value=1.0, value=0.0, step=0.05, key="stored_kg_min_edge_score")
 
     allowed_types = set(
         st.multiselect(
@@ -2046,13 +2245,69 @@ def display_stored_knowledge_graph_tab() -> None:
         approved_only=not include_pending,
     )
 
+    adjacency = build_graph_adjacency(approved_only=not include_pending)
+    total_unique_nodes_available = len(
+        {
+            normalize_node_key(node.get("name", ""))
+            for node in node_lookup.values()
+            if node.get("name")
+            and (scope == "all" or normalize_source_name(node.get("source"), "UNKNOWN") == "PAPER_INGEST")
+            and (not allowed_types or normalize_node_type(node.get("type", "entity")) in allowed_types)
+            and (not allowed_sources or normalize_source_name(node.get("source"), "UNKNOWN") in allowed_sources)
+        }
+    )
+    total_edges_available = 0
+    for source_key, edge_list in adjacency.items():
+        source_node = node_lookup.get(source_key)
+        if not source_node:
+            continue
+        source_type = normalize_node_type(source_node.get("type", "entity"))
+        source_origin = normalize_source_name(source_node.get("source"), "UNKNOWN")
+        if scope != "all" and source_origin != "PAPER_INGEST":
+            continue
+        if allowed_types and source_type not in allowed_types:
+            continue
+        if allowed_sources and source_origin not in allowed_sources:
+            continue
+        for edge in edge_list:
+            target_node = node_lookup.get(edge.get("neighbor_key", ""))
+            if not target_node:
+                continue
+            target_type = normalize_node_type(target_node.get("type", "entity"))
+            target_origin = normalize_source_name(target_node.get("source"), edge.get("provenance", "UNKNOWN"))
+            if scope != "all" and target_origin != "PAPER_INGEST":
+                continue
+            if allowed_types and target_type not in allowed_types:
+                continue
+            if allowed_sources and target_origin not in allowed_sources:
+                continue
+            if safe_float(edge.get("score", 0.0), 0.0) < min_edge_score:
+                continue
+            total_edges_available += 1
+    total_edges_available = total_edges_available // 2
+
+    st.info(
+        "Graph is condensed by design: duplicate entity names are merged, then filters apply, "
+        "then top-N node/edge caps are applied, and nodes disconnected after edge capping are removed."
+    )
+    st.caption(
+        f"Available after current filters: ~{total_unique_nodes_available} unique nodes, "
+        f"~{total_edges_available} edges. Current caps: max_nodes={max_nodes}, max_edges={max_edges}, "
+        f"min_edge_score={min_edge_score:.2f}."
+    )
+
     if not payload.get("nodes"):
         st.info("No graph could be built with the current scope and filters.")
         return
 
     graph = build_pyvis_network_graph(payload, [], height_px=760)
     if graph:
-        render_network_with_legend(graph, height=760)
+        render_network_with_legend(
+            graph,
+            height=760,
+            edge_relation_counts=build_edge_relation_counts(payload.get("edges", [])),
+            view_key="stored_knowledge_graph",
+        )
 
     metric_col1, metric_col2, metric_col3, metric_col4 = st.columns(4)
     metric_col1.metric("Displayed Nodes", len(payload.get("nodes", [])))
@@ -2318,7 +2573,12 @@ def display_gene_network_tab_v2():
         if query_entry:
             graph, payload = build_single_query_network_graph(query_entry, settings)
             if graph:
-                render_network_with_legend(graph, height=650)
+                render_network_with_legend(
+                    graph,
+                    height=650,
+                    edge_relation_counts=build_edge_relation_counts(payload.get("edges", [])),
+                    view_key="single_query_graph",
+                )
                 st.info(payload.get("graph_note", "This graph includes a 2nd-order expansion."))
 
                 stats_cols = st.columns(4)
@@ -2366,7 +2626,12 @@ def display_gene_network_tab_v2():
         else:
             graph, payload = build_compound_query_network_graph(selected_queries, st.session_state.query_genes, settings)
             if graph:
-                render_network_with_legend(graph, height=700)
+                render_network_with_legend(
+                    graph,
+                    height=700,
+                    edge_relation_counts=build_edge_relation_counts(payload.get("edges", [])),
+                    view_key="compound_query_graph",
+                )
                 st.info(payload.get("graph_note", "This graph includes a 2nd-order expansion."))
 
                 col1, col2, col3, col4 = st.columns(4)
@@ -2739,6 +3004,25 @@ def main():
         if st.button("Clear Chat History"):
             reset_chat_state()
             st.rerun()
+
+        st.markdown("---")
+        st.subheader("Danger Zone")
+        st.caption("Reset everything: vector database and all chat sessions.")
+        st.checkbox(
+            "I understand this permanently deletes all saved chats and vector data",
+            key="confirm_full_reset",
+        )
+        if st.button("Reset Everything", type="secondary"):
+            if not st.session_state.get("confirm_full_reset", False):
+                st.warning("Enable the confirmation checkbox before resetting everything.")
+            else:
+                with st.spinner("Resetting vector database and chat sessions..."):
+                    reset_ok, reset_error = run_full_application_reset()
+                if reset_ok:
+                    st.success("Full reset complete. Reloading with a fresh session.")
+                    st.rerun()
+                else:
+                    st.error(f"Full reset finished with errors: {reset_error}")
     
     # Tab 1: Chat Interface
     with tab1:

@@ -36,10 +36,10 @@ except ImportError:
 
 class VectorDBManager:
     def __init__(self, db_path: str = "./chroma_db", collection_name: str = "knowledge"):
-        self.db_path = db_path
+        self.db_path = self._resolve_db_path(db_path)
         self.collection_name = collection_name or "knowledge"
 
-        self.client = chromadb.PersistentClient(path=db_path)
+        self.client = chromadb.PersistentClient(path=self.db_path)
 
         hf_token = os.getenv("HF_TOKEN")
         if hf_token:
@@ -57,6 +57,48 @@ class VectorDBManager:
             print(f"Warning: LLM client unavailable ({self.llm_client.unavailable_reason}). Enhanced responses disabled.")
 
         self.create_knowledge_collection(self.collection_name)
+
+    @staticmethod
+    def _is_readonly_error(exc: Exception) -> bool:
+        message = str(exc or "").lower()
+        return "readonly" in message or "read-only" in message
+
+    @classmethod
+    def _path_is_writable(cls, path: str) -> bool:
+        try:
+            os.makedirs(path, exist_ok=True)
+            probe_path = os.path.join(path, ".write_probe")
+            with open(probe_path, "w", encoding="utf-8") as handle:
+                handle.write("ok")
+            os.remove(probe_path)
+            return True
+        except Exception:
+            return False
+
+    @classmethod
+    def _resolve_db_path(cls, requested_path: str) -> str:
+        """
+        Resolve a writable Chroma persistence path.
+        Priority:
+        1) CHROMA_DB_PATH env var
+        2) requested path (default ./chroma_db)
+        3) /tmp/chroma_db fallback
+        """
+        env_path = str(os.getenv("CHROMA_DB_PATH", "")).strip()
+        candidates: List[str] = []
+        if env_path:
+            candidates.append(env_path)
+        candidates.append(str(requested_path or "./chroma_db"))
+        candidates.append("/tmp/chroma_db")
+
+        for candidate in candidates:
+            if cls._path_is_writable(candidate):
+                if candidate != candidates[0]:
+                    print(f"Chroma path fallback selected: {candidate}")
+                return candidate
+
+        # Last-resort return requested path; downstream error will include details.
+        return str(requested_path or "./chroma_db")
 
     def refresh_llm_client(self, provider: Optional[str] = None) -> None:
         """Refresh the active LLM client after runtime provider changes."""
@@ -91,6 +133,15 @@ class VectorDBManager:
 
     @staticmethod
     def _normalize_entity_label(value: Any) -> str:
+        type_key = VectorDBManager._normalize_entity_type_key(value)
+        if type_key == "gene/protein":
+            return "Gene/Protein"
+        if type_key == "disease":
+            return "Disease"
+        if type_key == "pathway":
+            return "Pathway"
+        if type_key == "paper":
+            return "Paper"
         raw = re.sub(r"\s+", " ", str(value or "").strip())
         if not raw:
             return "Entity"
@@ -98,6 +149,17 @@ class VectorDBManager:
 
     @staticmethod
     def _normalize_entity_type_key(value: Any) -> str:
+        raw = re.sub(r"[\s_\-]+", "", str(value or "").strip().lower())
+        if raw in {"gene", "genes", "protein", "proteins", "geneprotein", "gene/protein"}:
+            return "gene/protein"
+        if raw in {"disease", "diseases"}:
+            return "disease"
+        if raw in {"pathway", "pathways"}:
+            return "pathway"
+        if raw == "paper":
+            return "paper"
+        if raw == "entity":
+            return "entity"
         return re.sub(r"\s+", "", str(value or "").strip().lower())
 
     @staticmethod
@@ -206,7 +268,7 @@ class VectorDBManager:
     def _build_curated_entity_metadata(self, row: Dict[str, Any]) -> Dict[str, Any]:
         node_name = str(row.get("node_name", "")).strip()
         node_source = str(row.get("node_source", "CURATED_GRAPH")).strip() or "CURATED_GRAPH"
-        node_type = str(row.get("node_type", "entity")).strip() or "entity"
+        node_type = self._normalize_entity_type_key(row.get("node_type", "entity")) or "entity"
         record_id = f"curated_{slugify_identifier(str(row.get('node_index', node_name)))}"
         return {
             "record_kind": "entity",
@@ -248,8 +310,8 @@ class VectorDBManager:
     def _build_paper_entity_metadata(self, paper_id: str, entity_bucket: str, entity: Dict[str, Any]) -> Dict[str, Any]:
         entity_name = str(entity.get("name", "")).strip()
         entity_id = str(entity.get("id", "")).strip() or f"entity_{slugify_identifier(entity_name)}"
-        entity_type = self._normalize_entity_label(entity.get("entity_type", entity_bucket))
-        legacy_node_type = str(entity_type).strip().lower()
+        legacy_node_type = self._normalize_entity_type_key(entity.get("entity_type", entity_bucket))
+        entity_type = self._normalize_entity_label(legacy_node_type)
         record_id = entity_id
         return {
             "record_kind": "entity",
@@ -324,8 +386,28 @@ class VectorDBManager:
             self.collection = self.client.get_collection(name=self.collection_name)
             print(f"Loaded existing collection: {self.collection_name}")
         except Exception:
-            self.collection = self.client.create_collection(name=self.collection_name)
-            print(f"Created new collection: {self.collection_name}")
+            try:
+                self.collection = self.client.create_collection(name=self.collection_name)
+                print(f"Created new collection: {self.collection_name}")
+            except Exception as exc:
+                if self._is_readonly_error(exc):
+                    fallback_path = self._resolve_db_path("/tmp/chroma_db")
+                    if fallback_path != self.db_path:
+                        print(
+                            f"Primary Chroma path '{self.db_path}' is read-only; "
+                            f"retrying with writable fallback '{fallback_path}'."
+                        )
+                        self.db_path = fallback_path
+                        self.client = chromadb.PersistentClient(path=self.db_path)
+                        try:
+                            self.collection = self.client.get_collection(name=self.collection_name)
+                            print(f"Loaded existing collection from fallback path: {self.collection_name}")
+                            return
+                        except Exception:
+                            self.collection = self.client.create_collection(name=self.collection_name)
+                            print(f"Created new collection at fallback path: {self.collection_name}")
+                            return
+                raise
 
     def upsert_curated_nodes_to_knowledge(self, csv_path: str = "nodes_main.csv", batch_size: int = 500) -> Dict[str, int]:
         if not os.path.exists(csv_path):

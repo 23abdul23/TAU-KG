@@ -42,12 +42,17 @@ from src.paper_schema import normalize_entities_for_paper, normalize_relationshi
 from vector_db_manager import VectorDBManager
 import deb_data_papers as papers_db
 from logger_config import setup_logger
+from dotenv import load_dotenv
+
+load_dotenv()
 
 logger = setup_logger(__name__)
 
 PMC_FETCH_WORKERS = PMC_FETCH_WORKER_RECOMMENDATION
 AI_EXTRACT_WORKERS = 4
 ACTIVE_JOB_REFRESH_SECONDS = 2.0
+DEFAULT_PAPER_SAVE_MODE = "UPSERT"
+PAPER_SAVE_MODE_ENV_KEYS = ("PAPER_SAVE_MODE", "PAPER_SAVE_CONFIG", "CONFIG")
 
 
 def _build_paper_entity_summary_rows():
@@ -149,6 +154,14 @@ def _get_vector_db_manager():
     return VectorDBManager()
 
 
+def _get_vector_db_manager_safe() -> tuple[Optional[VectorDBManager], str]:
+    """Best-effort vector DB manager accessor that does not break paper autosave."""
+    try:
+        return _get_vector_db_manager(), ""
+    except Exception as exc:
+        return None, str(exc)
+
+
 def _flush_pending_toasts():
     """Show queued toast notifications once per rerun."""
     pending_toasts = st.session_state.get("pending_toasts", [])
@@ -161,6 +174,7 @@ def _flush_pending_toasts():
 
 
 def _build_stable_paper_id(
+    pmcid: str,
     source_key: str,
     pmid: str,
     doi: str,
@@ -169,6 +183,10 @@ def _build_stable_paper_id(
     source_url: str,
 ) -> str:
     """Generate a deterministic paper ID so autosave stays idempotent."""
+    normalized_pmcid = _extract_pmcid(pmcid)
+    if normalized_pmcid:
+        return normalized_pmcid
+
     normalized_pmid = str(pmid or "").strip()
     if normalized_pmid:
         return normalized_pmid
@@ -184,6 +202,90 @@ def _build_stable_paper_id(
         str(title or ""),
     ])
     return f"paper_{hashlib.sha1(seed.encode('utf-8')).hexdigest()[:16]}"
+
+
+def _extract_pmcid(value: Any) -> str:
+    match = re.search(r"(PMC\d+)", str(value or ""), flags=re.IGNORECASE)
+    return match.group(1).upper() if match else ""
+
+
+def _resolve_paper_save_mode() -> str:
+    """Return paper save mode from env: UPSERT (default) or OVERWRITE."""
+    raw_value = ""
+    for env_key in PAPER_SAVE_MODE_ENV_KEYS:
+        candidate = str(os.getenv(env_key, "") or "").strip()
+        if candidate:
+            raw_value = candidate
+            break
+
+    normalized = raw_value.upper()
+    if normalized in {"OVERWRITE", "OVERWITE"}:
+        return "OVERWRITE"
+    if normalized == "UPSERT":
+        return "UPSERT"
+    return DEFAULT_PAPER_SAVE_MODE
+
+
+def _merge_entities_for_upsert(
+    paper_id: str,
+    existing_entities: Optional[Dict[str, List[Dict[str, Any]]]],
+    new_entities: Dict[str, List[Dict[str, Any]]],
+) -> Dict[str, List[Dict[str, Any]]]:
+    """Merge entities by stable entity id so UPSERT adds/refreshes without dropping unmatched rows."""
+    merged = {"genes": [], "proteins": [], "diseases": [], "pathways": []}
+    existing_normalized = normalize_entities_for_paper(paper_id, existing_entities or {})
+    new_normalized = normalize_entities_for_paper(paper_id, new_entities or {})
+
+    for bucket in ("genes", "proteins", "diseases", "pathways"):
+        by_id: Dict[str, Dict[str, Any]] = {}
+        for entity in existing_normalized.get(bucket, []):
+            entity_id = str((entity or {}).get("id", "")).strip()
+            if entity_id:
+                by_id[entity_id] = dict(entity)
+        for entity in new_normalized.get(bucket, []):
+            entity_id = str((entity or {}).get("id", "")).strip()
+            if entity_id:
+                by_id[entity_id] = dict(entity)
+        merged[bucket] = list(by_id.values())
+    return merged
+
+
+def _merge_relationships_for_upsert(
+    paper_id: str,
+    existing_relationships: Optional[List[Dict[str, Any]]],
+    new_relationships: List[Dict[str, Any]],
+    entities_for_lookup: Dict[str, List[Dict[str, Any]]],
+) -> List[Dict[str, Any]]:
+    """Merge relationships by semantic key so UPSERT keeps old + new without duplicates."""
+    existing_normalized = normalize_relationships_for_paper(
+        paper_id,
+        existing_relationships or [],
+        entities_for_lookup,
+    )
+    new_normalized = normalize_relationships_for_paper(
+        paper_id,
+        new_relationships or [],
+        entities_for_lookup,
+    )
+
+    merged_map: Dict[str, Dict[str, Any]] = {}
+
+    def _edge_key(edge: Dict[str, Any]) -> str:
+        return "|".join(
+            [
+                str(edge.get("source_id", "")).strip().lower(),
+                str(edge.get("target_id", "")).strip().lower(),
+                str(edge.get("edge_type", "")).strip().upper(),
+                str(edge.get("evidence", "")).strip().lower(),
+            ]
+        )
+
+    for edge in existing_normalized:
+        merged_map[_edge_key(edge)] = dict(edge)
+    for edge in new_normalized:
+        merged_map[_edge_key(edge)] = dict(edge)
+
+    return list(merged_map.values())
 
 
 def _prepare_entities_for_storage(extracted_entities: Dict[str, Any]) -> Dict[str, Any]:
@@ -235,8 +337,11 @@ def _auto_save_paper_and_index(
     if source_key in autosaved_papers:
         return autosaved_papers[source_key]
 
+    save_mode = _resolve_paper_save_mode()
+    pmcid = _extract_pmcid(metadata.get("pmcid") or source_url)
     extracted_entities = st.session_state[extraction_state_key]["extracted_entities"]
     paper_id = _build_stable_paper_id(
+        pmcid=pmcid,
         source_key=source_key,
         pmid=pmid_input,
         doi=doi_input,
@@ -250,6 +355,33 @@ def _auto_save_paper_and_index(
         extracted_entities.get("relationships", []),
         prepared_entities,
     )
+
+    manager, manager_error = _get_vector_db_manager_safe()
+    existing_same_pmc = papers_db.find_paper_by_pmcid(pmcid) if pmcid else None
+    existing_same_pmc_id = str((existing_same_pmc or {}).get("paper_id", "")).strip()
+    existing_same_id = papers_db.get_paper_by_id(paper_id)
+
+    # Ensure PMCID becomes canonical paper_id when available.
+    if existing_same_pmc_id and existing_same_pmc_id != paper_id:
+        legacy_entities = papers_db.get_paper_entities(existing_same_pmc_id) or {}
+        legacy_relationships = papers_db.get_paper_relationships(existing_same_pmc_id) or []
+        if save_mode == "UPSERT":
+            prepared_entities = _merge_entities_for_upsert(paper_id, legacy_entities, prepared_entities)
+            relationships = _merge_relationships_for_upsert(paper_id, legacy_relationships, relationships, prepared_entities)
+        papers_db.delete_paper(existing_same_pmc_id)
+        if manager is not None:
+            manager.delete_paper_records_from_knowledge(existing_same_pmc_id)
+
+    if existing_same_id:
+        if save_mode == "UPSERT":
+            existing_entities = papers_db.get_paper_entities(paper_id) or {}
+            existing_relationships = papers_db.get_paper_relationships(paper_id) or []
+            prepared_entities = _merge_entities_for_upsert(paper_id, existing_entities, prepared_entities)
+            relationships = _merge_relationships_for_upsert(paper_id, existing_relationships, relationships, prepared_entities)
+        else:
+            papers_db.delete_paper(paper_id)
+            if manager is not None:
+                manager.delete_paper_records_from_knowledge(paper_id)
 
     stored_paper = papers_db.upsert_extracted_paper(
         paper_id=paper_id,
@@ -266,10 +398,12 @@ def _auto_save_paper_and_index(
         source_url=source_url,
         sections=metadata.get("sections", []),
         extraction_status="extracted",
+        pmcid=pmcid,
     )
 
-    manager = _get_vector_db_manager()
-    sync_stats = manager.upsert_paper_records_to_knowledge(paper_id, include_pending=False)
+    sync_stats = {"papers": 0, "entities": 0, "relationships": 0}
+    if manager is not None:
+        sync_stats = manager.upsert_paper_records_to_knowledge(paper_id, include_pending=False)
 
     save_result = {
         "paper_id": paper_id,
@@ -283,12 +417,21 @@ def _auto_save_paper_and_index(
         },
         "sync_stats": sync_stats,
         "saved_at": datetime.now().isoformat(),
+        "save_mode": save_mode,
+        "indexing_error": manager_error if manager is None else "",
     }
     autosaved_papers[source_key] = save_result
     st.session_state.paper_save_status[source_key] = {"status": "saved", "details": save_result}
     st.session_state.pending_toasts.append({
         "icon": "✅",
-        "message": _build_autosave_toast_message(title, prepared_entities, relationships, sync_stats),
+        "message": (
+            _build_autosave_toast_message(title, prepared_entities, relationships, sync_stats)
+            if manager is not None
+            else (
+                f"Saved '{title[:60] or 'Untitled paper'}' to paper store, "
+                "but vector indexing is temporarily unavailable (read-only DB path)."
+            )
+        ),
     })
 
     if paper_id not in st.session_state.uploaded_papers:
@@ -768,12 +911,22 @@ def process_extracted_paper(metadata, clean_text: str, source_label: str, file_p
         details = save_state.get("details", {})
         entity_counts = details.get("entity_counts", {})
         sync_stats = details.get("sync_stats", {})
+        indexing_error = str(details.get("indexing_error", "")).strip()
         st.success(
-            "Auto-saved to paper store and unified knowledge index. "
-            f"Paper ID: `{details.get('paper_id', '')}` | "
-            f"Indexed approved entities: {sync_stats.get('entities', 0)} | "
-            f"Indexed approved relationships: {sync_stats.get('relationships', 0)}"
+            (
+                "Auto-saved to paper store and unified knowledge index. "
+                if not indexing_error
+                else "Auto-saved to paper store (indexing pending). "
+            )
+            + f"Paper ID: `{details.get('paper_id', '')}` | "
+            + f"Indexed approved entities: {sync_stats.get('entities', 0)} | "
+            + f"Indexed approved relationships: {sync_stats.get('relationships', 0)}"
         )
+        if indexing_error:
+            st.warning(
+                "Paper was saved, but vector indexing failed due to DB write access. "
+                f"Details: {indexing_error}"
+            )
         st.caption(
             "Entities indexed: "
             f"genes {entity_counts.get('genes', 0)}, "
@@ -795,9 +948,58 @@ def process_extracted_paper(metadata, clean_text: str, source_label: str, file_p
     if extraction_state_key in st.session_state:
         if st.button("💾 Save Paper & Entities to Database", key=f"save_btn_{source_key}"):
             try:
-                paper_id = pmid_input if pmid_input else str(uuid.uuid4())
+                save_mode = _resolve_paper_save_mode()
+                pmcid = _extract_pmcid(metadata.get("pmcid") or source_url)
+                extracted_entities = st.session_state[extraction_state_key]["extracted_entities"]
+                paper_id = _build_stable_paper_id(
+                    pmcid=pmcid,
+                    source_key=source_key,
+                    pmid=pmid_input,
+                    doi=doi_input,
+                    title=title,
+                    file_path=file_path,
+                    source_url=source_url,
+                )
 
-                paper = papers_db.add_paper(
+                prepared_entities = normalize_entities_for_paper(paper_id, extracted_entities)
+                relationships = normalize_relationships_for_paper(
+                    paper_id,
+                    extracted_entities.get("relationships", []),
+                    prepared_entities,
+                )
+
+                manager, manager_error = _get_vector_db_manager_safe()
+                existing_same_pmc = papers_db.find_paper_by_pmcid(pmcid) if pmcid else None
+                existing_same_pmc_id = str((existing_same_pmc or {}).get("paper_id", "")).strip()
+                existing_same_id = papers_db.get_paper_by_id(paper_id)
+
+                if existing_same_pmc_id and existing_same_pmc_id != paper_id:
+                    legacy_entities = papers_db.get_paper_entities(existing_same_pmc_id) or {}
+                    legacy_relationships = papers_db.get_paper_relationships(existing_same_pmc_id) or []
+                    if save_mode == "UPSERT":
+                        prepared_entities = _merge_entities_for_upsert(paper_id, legacy_entities, prepared_entities)
+                        relationships = _merge_relationships_for_upsert(paper_id, legacy_relationships, relationships, prepared_entities)
+                    papers_db.delete_paper(existing_same_pmc_id)
+                    if manager is not None:
+                        manager.delete_paper_records_from_knowledge(existing_same_pmc_id)
+
+                if existing_same_id:
+                    if save_mode == "UPSERT":
+                        existing_entities = papers_db.get_paper_entities(paper_id) or {}
+                        existing_relationships = papers_db.get_paper_relationships(paper_id) or []
+                        prepared_entities = _merge_entities_for_upsert(paper_id, existing_entities, prepared_entities)
+                        relationships = _merge_relationships_for_upsert(
+                            paper_id,
+                            existing_relationships,
+                            relationships,
+                            prepared_entities,
+                        )
+                    else:
+                        papers_db.delete_paper(paper_id)
+                        if manager is not None:
+                            manager.delete_paper_records_from_knowledge(paper_id)
+
+                papers_db.upsert_extracted_paper(
                     paper_id=paper_id,
                     title=title,
                     authors=authors,
@@ -806,29 +1008,25 @@ def process_extracted_paper(metadata, clean_text: str, source_label: str, file_p
                     abstract=metadata.get("abstract", ""),
                     pdf_path=file_path,
                     publication_date=publication_date.isoformat(),
+                    entities_by_type=prepared_entities,
+                    relationships=relationships,
                     source="pmc_link" if source_url else "user_uploaded",
                     source_url=source_url,
-                    sections=metadata.get("sections", [])
+                    sections=metadata.get("sections", []),
+                    extraction_status="extracted",
+                    pmcid=pmcid,
                 )
-
-                for entity_type in ["genes", "proteins", "diseases", "pathways"]:
-                    if entity_type in st.session_state[extraction_state_key]["extracted_entities"]:
-                        entities = st.session_state[extraction_state_key]["extracted_entities"][entity_type]
-                        for entity in entities:
-                            entity["approved"] = True
-                            entity["mapped_to_existing"] = ""
-                        papers_db.add_entities(paper_id, entity_type, entities)
-
-                relationships = st.session_state[extraction_state_key]["extracted_entities"].get("relationships", [])
-                if relationships:
-                    for rel in relationships:
-                        rel["approved"] = True
-                    papers_db.add_edges(paper_id, relationships)
-
-                papers_db.update_paper_status(paper_id, "extracted")
+                if manager is not None:
+                    manager.upsert_paper_records_to_knowledge(paper_id, include_pending=False)
 
                 st.success(f"✅ Paper saved successfully! Paper ID: `{paper_id}`")
-                st.session_state.uploaded_papers.append(paper_id)
+                if manager is None and manager_error:
+                    st.warning(
+                        "Paper was saved to the JSON store, but vector indexing is currently unavailable: "
+                        f"{manager_error}"
+                    )
+                if paper_id not in st.session_state.uploaded_papers:
+                    st.session_state.uploaded_papers.append(paper_id)
                 st.session_state.pop(extraction_state_key, None)
 
                 logger.info(f"Paper saved: {paper_id}")
