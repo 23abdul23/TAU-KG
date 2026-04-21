@@ -5,7 +5,9 @@ import re
 import time
 import gc
 import shutil
+from datetime import datetime
 from collections import defaultdict
+import textwrap
 from copy import deepcopy
 from contextlib import nullcontext
 from pathlib import Path
@@ -21,6 +23,8 @@ from pyvis.network import Network
 from typing import List, Dict, Any, Optional, Set, Tuple
 
 from vector_db_manager import VectorDBManager
+
+from src.kg_json_download import *
 
 # Paper integration imports
 try:
@@ -696,6 +700,68 @@ def normalize_source_name(value: Optional[str], default: str = "CURATED_GRAPH") 
     return text or default
 
 
+def truncate_for_tooltip(value: str, max_len: int = 240) -> str:
+    text = str(value or "").strip()
+    if not text:
+        return "N/A"
+    if len(text) <= max_len:
+        return text
+    return f"{text[:max_len]} ..."
+
+
+def format_values_for_tooltip(values: List[str], max_items: int = 5) -> str:
+    cleaned = [str(item).strip() for item in values if str(item).strip()]
+    if not cleaned:
+        return "N/A"
+    deduped = list(dict.fromkeys(cleaned))
+    text = ", ".join(deduped[:max_items])
+    if len(deduped) > max_items:
+        text = f"{text} ..."
+    return text
+
+
+def build_paper_entity_details_index() -> Dict[str, Dict[str, List[str]]]:
+    """Index paper IDs and contexts for quick node tooltip enrichment."""
+    details_index: Dict[str, Dict[str, Set[str]]] = defaultdict(
+        lambda: {"paper_ids": set(), "contexts": set()}
+    )
+
+    if not PAPERS_AVAILABLE:
+        return {}
+
+    for paper_id, entities_by_type in getattr(papers_db, "paper_entities", {}).items():
+        if not isinstance(entities_by_type, dict):
+            continue
+        for values in entities_by_type.values():
+            if not isinstance(values, list):
+                continue
+            for entity in values:
+                if not isinstance(entity, dict):
+                    continue
+                name = str(entity.get("name", "")).strip()
+                if not name:
+                    continue
+
+                key = normalize_node_key(name)
+                entity_paper_id = str(entity.get("paper_id", "")).strip()
+                if paper_id:
+                    details_index[key]["paper_ids"].add(str(paper_id))
+                if entity_paper_id:
+                    details_index[key]["paper_ids"].add(entity_paper_id)
+
+                context_text = str(entity.get("context", "")).strip()
+                if context_text:
+                    details_index[key]["contexts"].add(context_text)
+
+    return {
+        key: {
+            "paper_ids": sorted(list(value["paper_ids"])),
+            "contexts": sorted(list(value["contexts"])),
+        }
+        for key, value in details_index.items()
+    }
+
+
 def build_graph_node_lookup() -> Dict[str, Dict[str, Any]]:
     """Create a unified lookup for curated and paper-derived graph nodes."""
     node_lookup: Dict[str, Dict[str, Any]] = {}
@@ -773,6 +839,7 @@ def build_graph_adjacency(approved_only: bool = True) -> Dict[str, List[Dict[str
                 "score": safe_float(edge.get("edge_weight", edge.get("confidence", edge.get("score", 0.5))), 0.5),
                 "provenance": "PAPER_INGEST",
                 "paper_id": str(edge.get("paper_id", "")),
+                "evidence": str(edge.get("evidence", "")),
             }
             source_key = normalize_node_key(source)
             target_key = normalize_node_key(target)
@@ -935,6 +1002,8 @@ def build_network_payload(query_entries: List[Dict[str, Any]], settings: Dict[st
     def _upsert_edge(source_key: str, target_key: str, edge: Dict[str, Any], query: str) -> bool:
         edge_key = tuple(sorted([source_key, target_key])) + (str(edge.get("relation", "related")),)
         existing_edge = edge_registry.get(edge_key)
+        edge_paper_id = str(edge.get("paper_id", "")).strip()
+        edge_evidence = str(edge.get("evidence", "")).strip()
         edge_payload = {
             "source_key": source_key,
             "target_key": target_key,
@@ -942,12 +1011,16 @@ def build_network_payload(query_entries: List[Dict[str, Any]], settings: Dict[st
             "relation": str(edge.get("relation", "related")),
             "provenance": {str(edge.get("provenance", "CURATED_GRAPH"))},
             "queries": {query},
+            "paper_ids": {edge_paper_id} if edge_paper_id else set(),
+            "evidence": {edge_evidence} if edge_evidence else set(),
         }
 
         if existing_edge:
             existing_edge["score"] = max(existing_edge["score"], edge_payload["score"])
             existing_edge["queries"].update(edge_payload["queries"])
             existing_edge["provenance"].update(edge_payload["provenance"])
+            existing_edge["paper_ids"].update(edge_payload["paper_ids"])
+            existing_edge["evidence"].update(edge_payload["evidence"])
             return False
 
         edge_registry[edge_key] = edge_payload
@@ -1142,6 +1215,8 @@ def merge_network_payloads(payloads: List[Dict[str, Any]], max_nodes: int, max_e
                 current["score"] = max(current.get("score", 0.0), edge.get("score", 0.0))
                 current["queries"].update(edge.get("queries", set()))
                 current["provenance"].update(edge.get("provenance", set()))
+                current["paper_ids"].update(edge.get("paper_ids", set()))
+                current["evidence"].update(edge.get("evidence", set()))
             else:
                 edge_registry[edge_key] = {
                     "source_key": source_key,
@@ -1150,6 +1225,8 @@ def merge_network_payloads(payloads: List[Dict[str, Any]], max_nodes: int, max_e
                     "relation": relation,
                     "provenance": set(edge.get("provenance", set())),
                     "queries": set(edge.get("queries", set())),
+                    "paper_ids": set(edge.get("paper_ids", set())),
+                    "evidence": set(edge.get("evidence", set())),
                 }
 
     edges = list(edge_registry.values())
@@ -1764,6 +1841,8 @@ def create_compound_gene_network_graph(selected_queries: List[str], query_genes_
     
     return net
 
+def wrap_text(text, width=60):
+    return "\n".join(textwrap.wrap(text, width=width))
 
 def build_pyvis_network_graph(network_payload: Dict[str, Any], query_order: List[str], height_px: int) -> Optional[Network]:
     """Render a real graph network from retrieved seeds plus actual graph edges."""
@@ -1772,6 +1851,7 @@ def build_pyvis_network_graph(network_payload: Dict[str, Any], query_order: List
         return None
 
     edges = network_payload.get("edges", [])
+    paper_entity_details = build_paper_entity_details_index()
     node_map = {node["key"]: node for node in nodes}
     node_degree_counts: Dict[str, int] = {node["key"]: 0 for node in nodes}
     for edge in edges:
@@ -1788,20 +1868,10 @@ def build_pyvis_network_graph(network_payload: Dict[str, Any], query_order: List
 
     for node in nodes:
         metadata = node["metadata"]
-        query_membership = sorted(node.get("queries", set()))
         node_type = normalize_node_type(metadata.get("node_type", "entity"))
         base_color = NODE_TYPE_COLORS.get(node_type, NODE_TYPE_COLORS["entity"])
         node_shape = NODE_TYPE_SHAPES.get(node_type, NODE_TYPE_SHAPES["entity"])
-        hop_distance = int(node.get("hop_distance", 0))
-
-        if node.get("is_seed"):
-            node_role = "Seed match"
-        elif hop_distance == 1:
-            node_role = "1-hop neighbor"
-        elif hop_distance >= 2:
-            node_role = "2-hop neighbor"
-        else:
-            node_role = "Expanded neighbor"
+        query_membership = sorted(node.get("queries", set()))
 
         if len(query_membership) > 1:
             border_color = "#FFD700"
@@ -1810,22 +1880,38 @@ def build_pyvis_network_graph(network_payload: Dict[str, Any], query_order: List
         else:
             border_color = "#444444"
 
-        similarity = node.get("similarity_score", 0.0)
         degree_count = node_degree_counts.get(node["key"], 0)
         if max_degree <= 0:
             size = 18
         else:
             degree_ratio = degree_count / max_degree
             size = 14 + (degree_ratio * 28)
+
+        node_name = metadata.get("node_name", node["name"])
+        node_key = normalize_node_key(node_name)
+        details = paper_entity_details.get(node_key, {})
+
+        metadata_paper_id = str(metadata.get("paper_id", "")).strip()
+        paper_ids = list(details.get("paper_ids", []))
+        if metadata_paper_id:
+            paper_ids = [metadata_paper_id] + paper_ids
+        paper_id_text = format_values_for_tooltip(paper_ids, max_items=5)
+
+        metadata_context = str(metadata.get("context", "")).strip()
+        contexts = list(details.get("contexts", []))
+        if metadata_context:
+            contexts = [metadata_context] + contexts
+
+
+        context_text = wrap_text(contexts[0] if contexts else "", width=60) 
+        
         tooltip = "\n".join([
-            f"Name: {metadata.get('node_name')}",
+            f"Name: {node_name}",
             f"ID: {metadata.get('node_id')}",
             f"Type: {node_type}",
-            f"Source: {metadata.get('node_source')}",
-            f"Similarity: {similarity:.1f}%",
             f"Connected edges: {degree_count}",
-            f"Role: {node_role}",
-            f"Queries: {', '.join(query_membership) if query_membership else 'N/A'}",
+            f"Paper ID: {paper_id_text}",
+            f"Context: {context_text}",
         ])
 
         net.add_node(
@@ -1858,14 +1944,22 @@ def build_pyvis_network_graph(network_payload: Dict[str, Any], query_order: List
         )
         relation_label = relation_style["relation"]
 
-        provenance = ", ".join(sorted(edge.get("provenance", set())))
-        query_membership = sorted(edge.get("queries", set()))
+        edge_paper_ids = sorted(str(item).strip() for item in edge.get("paper_ids", set()) if str(item).strip())
+        single_paper_id = str(edge.get("paper_id", "")).strip()
+        if single_paper_id:
+            edge_paper_ids = [single_paper_id] + edge_paper_ids
+        edge_evidence = sorted(str(item).strip() for item in edge.get("evidence", set()) if str(item).strip())
+        if not edge_evidence:
+            single_evidence = str(edge.get("evidence", "")).strip()
+            if single_evidence:
+                edge_evidence = [single_evidence]
+
         tooltip = "\n".join([
             f"{source['metadata']['node_name']} -> {target['metadata']['node_name']}",
             f"Relation: {relation_label}",
             f"Confidence/Score: {edge.get('score', 0.0):.2f}",
-            f"Source: {provenance}",
-            f"Queries: {', '.join(query_membership) if query_membership else 'N/A'}",
+            f"Paper ID: {format_values_for_tooltip(edge_paper_ids, max_items=5)}",
+            f"Evidence: {wrap_text(truncate_for_tooltip(edge_evidence[0] if edge_evidence else ''), width = 60)}",
         ])
 
         edge_width = max(
@@ -2094,6 +2188,10 @@ def build_stored_graph_payload(
             if current:
                 current["score"] = max(current["score"], score)
                 current["provenance"].add(str(edge.get("provenance", "UNKNOWN")))
+                if str(edge.get("paper_id", "")).strip():
+                    current["paper_ids"].add(str(edge.get("paper_id", "")).strip())
+                if str(edge.get("evidence", "")).strip():
+                    current["evidence"].add(str(edge.get("evidence", "")).strip())
             else:
                 edge_registry[edge_key] = {
                     "source_key": source_key,
@@ -2103,6 +2201,8 @@ def build_stored_graph_payload(
                     "provenance": {str(edge.get("provenance", "UNKNOWN"))},
                     "queries": set(),
                     "paper_id": str(edge.get("paper_id", "")),
+                    "paper_ids": {str(edge.get("paper_id", "")).strip()} if str(edge.get("paper_id", "")).strip() else set(),
+                    "evidence": {str(edge.get("evidence", "")).strip()} if str(edge.get("evidence", "")).strip() else set(),
                 }
 
             candidate_node_keys.add(source_key)
@@ -2299,6 +2399,19 @@ def display_stored_knowledge_graph_tab() -> None:
     if not payload.get("nodes"):
         st.info("No graph could be built with the current scope and filters.")
         return
+
+    kg_export_data = build_kg_export_from_current_store()
+    kg_export_filename = f"KG_{datetime.now().strftime('%Y%m%d')}.json"
+    _, export_col = st.columns([8, 2])
+    with export_col:
+        st.download_button(
+            " Download KG Json",
+            data=json.dumps(kg_export_data, indent=2, ensure_ascii=False),
+            file_name=kg_export_filename,
+            mime="application/json",
+            key="download_stored_kg_json",
+            use_container_width=True,
+        )
 
     graph = build_pyvis_network_graph(payload, [], height_px=760)
     if graph:
