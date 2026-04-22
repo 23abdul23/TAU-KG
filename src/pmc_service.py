@@ -10,6 +10,7 @@ PMCID -> E-utilities metadata -> HTML full text -> BioC fallback -> section pars
 import gzip
 import json
 import logging
+import os
 import random
 import re
 import subprocess
@@ -293,6 +294,18 @@ def _should_rate_limit(url: str) -> bool:
     return any(marker in lowered for marker in _NCBI_HOST_MARKERS)
 
 
+def _ncbi_common_query_params() -> Dict[str, str]:
+    """Attach optional NCBI identification/query parameters when configured."""
+    params: Dict[str, str] = {"tool": os.getenv("NCBI_TOOL", "TAU-KG")}
+    email = str(os.getenv("NCBI_EMAIL", "") or "").strip()
+    api_key = str(os.getenv("NCBI_API_KEY", "") or "").strip()
+    if email:
+        params["email"] = email
+    if api_key:
+        params["api_key"] = api_key
+    return params
+
+
 def _retry_delay_seconds(attempt: int, exc: Exception, base_delay: float = 0.6) -> float:
     if isinstance(exc, HTTPError):
         retry_after = exc.headers.get("Retry-After")
@@ -302,7 +315,14 @@ def _retry_delay_seconds(attempt: int, exc: Exception, base_delay: float = 0.6) 
             except ValueError:
                 pass
 
-    return (base_delay * (2 ** attempt)) + random.uniform(0.05, 0.25)
+        if exc.code == 502:
+            base_delay = max(base_delay, 1.2)
+        elif exc.code >= 500:
+            base_delay = max(base_delay, 1.0)
+        elif exc.code == 429:
+            base_delay = max(base_delay, 1.0)
+
+    return (base_delay * (2 ** attempt)) + random.uniform(0.10, 0.35)
 
 
 def _is_retryable_http_error(exc: Exception) -> bool:
@@ -435,11 +455,17 @@ def extract_pmcid(source: str) -> str:
 def fetch_metadata_eutils(pmcid: str, retries: int = DEFAULT_HTTP_RETRIES) -> Dict[str, Any]:
     """Fetch article metadata using NCBI E-utilities esummary endpoint."""
     numeric_id = pmcid.replace("PMC", "")
+    query_params = {
+        "db": "pmc",
+        "id": numeric_id,
+        "retmode": "json",
+        **_ncbi_common_query_params(),
+    }
 
     def _fetch() -> Dict[str, Any]:
         body = _http_get_text(
             EUTILS_SUMMARY_URL,
-            params={"db": "pmc", "id": numeric_id, "retmode": "json"},
+            params=query_params,
             timeout=20,
             retries=0,
         )
@@ -467,9 +493,10 @@ def fetch_metadata_eutils(pmcid: str, retries: int = DEFAULT_HTTP_RETRIES) -> Di
 
 def check_open_access(pmcid: str, retries: int = DEFAULT_HTTP_RETRIES) -> bool:
     """Check if PMCID is in Open Access / author manuscript set via OA API."""
+    query_params = {"id": pmcid, **_ncbi_common_query_params()}
 
     def _fetch() -> bool:
-        body = _http_get_text(PMC_OA_URL, params={"id": pmcid}, timeout=20, retries=0)
+        body = _http_get_text(PMC_OA_URL, params=query_params, timeout=20, retries=0)
         if 'status="ok"' in body:
             return True
 

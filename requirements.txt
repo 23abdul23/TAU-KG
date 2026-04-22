@@ -20,9 +20,17 @@ httpx>=0.27.0
 tqdm>=4.64.0
 pdfplumber>=0.9.0
 pypdf>=3.0.0
+
 spacy>=3.7,<3.8
 scispacy>=0.5.4,<0.6
+gliner>=0.2.16,<0.3
+
+# SciSpaCy model packages required by the unified GLiNER + SciSpaCy pipeline
+https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.5.4/en_ner_bc5cdr_md-0.5.4.tar.gz
 https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.5.4/en_ner_bionlp13cg_md-0.5.4.tar.gz
+https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.5.4/en_ner_jnlpba_md-0.5.4.tar.gz
+https://s3-us-west-2.amazonaws.com/ai2-s2-scispacy/releases/v0.5.4/en_ner_craft_md-0.5.4.tar.gz
+
 lxml>=4.9,<6.0
 torch>=2.1,<3.0
 transformers>=4.38,<5.0

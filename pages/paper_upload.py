@@ -37,7 +37,11 @@ from src.pmc_service import (
     process_pmc_url_advanced,
     process_pmc_url_html_fallback,
 )
-from src.paper_entity_extractor import extract_entities_from_text, format_extraction_for_review
+from src.paper_entity_extractor import (
+    extract_entities_from_text,
+    format_extraction_for_review,
+    warmup_entity_extraction_models,
+)
 from src.paper_schema import normalize_entities_for_paper, normalize_relationships_for_paper
 from vector_db_manager import VectorDBManager
 import deb_data_papers as papers_db
@@ -447,9 +451,14 @@ def _make_streamlit_key(prefix: str, source_key: str) -> str:
 
 
 def _make_pmc_source_key(pmc_url: str, index: int) -> str:
-    """Build stable source keys so Streamlit widgets survive reruns."""
-    digest = hashlib.sha1(pmc_url.encode("utf-8")).hexdigest()[:12]
-    return f"pmc_{index}_{digest}"
+    """Build stable source keys so retries and re-submissions map to the same job."""
+    normalized = str(pmc_url or "").strip().lower().rstrip("/")
+    pmcid = _extract_pmcid(normalized)
+    if pmcid:
+        return f"pmc_{pmcid.lower()}"
+
+    digest = hashlib.sha1(normalized.encode("utf-8")).hexdigest()[:12]
+    return f"pmc_{digest}"
 
 
 def _make_uploaded_file_source_key(uploaded_file) -> str:
@@ -530,10 +539,17 @@ def _submit_pmc_jobs(pmc_urls):
         if existing and existing.get("status") in {"running", "done"}:
             continue
 
+        # Reset any stale extraction/saving state before retrying this same source key.
+        st.session_state.ai_jobs.pop(source_key, None)
+        st.session_state.autosaved_papers.pop(source_key, None)
+        st.session_state.paper_save_status.pop(source_key, None)
+        st.session_state.pop(f"current_extraction_{source_key}", None)
+
         future = st.session_state.pmc_executor.submit(_fetch_pmc_payload, pmc_url)
         st.session_state.pmc_jobs[source_key] = {
             "url": pmc_url,
             "status": "running",
+            "stage": "fetch",
             "future": future,
             "metadata": None,
             "clean_text": "",
@@ -621,28 +637,96 @@ def _poll_ai_jobs():
 
 
 def _poll_pmc_jobs():
-    """Update finished background jobs and cache results into session state."""
+    """Track PMC jobs across fetch -> extraction -> done lifecycle."""
     for source_key, job in st.session_state.pmc_jobs.items():
         if job.get("status") != "running":
             continue
-        future = job.get("future")
-        if future and future.done():
+
+        stage = str(job.get("stage", "fetch"))
+        if stage == "fetch":
+            future = job.get("future")
+            if future is None and job.get("clean_text"):
+                job["stage"] = "extract"
+                metadata = job.get("metadata", {}) or {}
+                _submit_ai_job(
+                    source_key,
+                    str(job.get("clean_text", "")),
+                    str(metadata.get("title", "")),
+                    str(metadata.get("abstract", "")),
+                    metadata.get("sections", []),
+                )
+                continue
+
+            if not future or not future.done():
+                continue
             try:
                 metadata, clean_text = future.result()
                 job["metadata"] = metadata
                 job["clean_text"] = clean_text
-                job["status"] = "done"
                 job["future"] = None
+                job["stage"] = "extract"
+                _submit_ai_job(
+                    source_key,
+                    clean_text,
+                    str((metadata or {}).get("title", "")),
+                    str((metadata or {}).get("abstract", "")),
+                    (metadata or {}).get("sections", []),
+                )
             except Exception as e:
                 job["status"] = "error"
+                job["stage"] = "failed"
                 job["error"] = str(e)
                 job["future"] = None
+            continue
+
+        if stage == "extract":
+            ai_job = st.session_state.ai_jobs.get(source_key, {})
+            ai_status = ai_job.get("status")
+            if ai_status == "done":
+                job["status"] = "done"
+                job["stage"] = "done"
+            elif ai_status == "error":
+                job["status"] = "error"
+                job["stage"] = "failed"
+                job["error"] = str(ai_job.get("error", "Unknown extraction error"))
+            elif ai_status is None and job.get("clean_text"):
+                metadata = job.get("metadata", {}) or {}
+                _submit_ai_job(
+                    source_key,
+                    str(job.get("clean_text", "")),
+                    str(metadata.get("title", "")),
+                    str(metadata.get("abstract", "")),
+                    metadata.get("sections", []),
+                )
+
+
+def _poll_model_warmup_job():
+    """Update one-time entity model warmup status from background future."""
+    warmup_job = st.session_state.get("model_warmup_job", {})
+    if warmup_job.get("status") != "running":
+        return
+
+    future = warmup_job.get("future")
+    if not future or not future.done():
+        return
+
+    try:
+        warmup_job["result"] = future.result()
+        warmup_job["status"] = "done"
+    except Exception as exc:
+        warmup_job["status"] = "error"
+        warmup_job["error"] = str(exc)
+    finally:
+        warmup_job["future"] = None
 
 
 def _has_running_background_jobs() -> bool:
     """Return True when any PMC or AI background work is still in progress."""
-    return any(job.get("status") == "running" for job in st.session_state.pmc_jobs.values()) or any(
-        job.get("status") == "running" for job in st.session_state.ai_jobs.values()
+    model_warmup_running = st.session_state.get("model_warmup_job", {}).get("status") == "running"
+    return (
+        any(job.get("status") == "running" for job in st.session_state.pmc_jobs.values())
+        or any(job.get("status") == "running" for job in st.session_state.ai_jobs.values())
+        or model_warmup_running
     )
 
 
@@ -676,6 +760,14 @@ def initialize_session_state():
         st.session_state.ai_executor = ThreadPoolExecutor(max_workers=AI_EXTRACT_WORKERS)
     if "ai_jobs" not in st.session_state:
         st.session_state.ai_jobs = {}
+    if "model_warmup_job" not in st.session_state:
+        warmup_future = st.session_state.ai_executor.submit(warmup_entity_extraction_models)
+        st.session_state.model_warmup_job = {
+            "status": "running",
+            "future": warmup_future,
+            "result": None,
+            "error": "",
+        }
     if "autosaved_papers" not in st.session_state:
         st.session_state.autosaved_papers = {}
     if "pending_toasts" not in st.session_state:
@@ -1073,6 +1165,7 @@ def main():
     initialize_session_state()
     _poll_ai_jobs()
     _poll_pmc_jobs()
+    _poll_model_warmup_job()
     _flush_pending_toasts()
     
     # Page header
@@ -1081,6 +1174,14 @@ def main():
         "Upload PDF research papers to extract genes, proteins, diseases, and pathways. "
         "The system will automatically extract entities and relationships for manual review."
     )
+    warmup_job = st.session_state.get("model_warmup_job", {})
+    if warmup_job.get("status") == "running":
+        st.caption("Preparing NER models once for this app session...")
+    elif warmup_job.get("status") == "error":
+        st.warning(
+            "Model warmup failed; extraction will continue with lazy loading. "
+            f"Details: {warmup_job.get('error', 'Unknown warmup error')}"
+        )
 
     _render_live_entity_summary_panel()
 
@@ -1199,7 +1300,20 @@ def main():
 
             status = job.get("status")
             if status == "running":
-                st.info("⏳ Fetching and normalizing article... this runs in background.")
+                stage = str(job.get("stage", "fetch"))
+                if stage == "fetch":
+                    st.info("⏳ Fetching and normalizing article... this runs in background.")
+                    continue
+
+                st.info("⏳ Article fetched. Running entity extraction...")
+                process_extracted_paper(
+                    job.get("metadata", {}),
+                    job.get("clean_text", ""),
+                    "PMC article",
+                    "",
+                    source_url=pmc_url,
+                    source_key=source_key,
+                )
                 continue
 
             if status == "error":

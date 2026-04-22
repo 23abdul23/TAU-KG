@@ -59,6 +59,7 @@ st.set_page_config(
 )
 
 DATA_DIR = Path("data")
+PAPER_STORE_PATH = DATA_DIR / "paper_store.json"
 CHAT_STATE_DIR = DATA_DIR / "chat_sessions"
 CHAT_STATE_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -847,6 +848,61 @@ def build_graph_adjacency(approved_only: bool = True) -> Dict[str, List[Dict[str
             adjacency[target_key].append({**edge_record, "neighbor_key": source_key, "neighbor_name": source})
 
     return adjacency
+
+
+def build_paper_store_stats() -> Dict[str, Any]:
+    """Summarize paper-ingested data directly from data/paper_store.json."""
+    empty_stats = {
+        "nodes_total": 0,
+        "edges_total": 0,
+        "node_types": {},
+        "edge_types": {},
+    }
+    if not PAPER_STORE_PATH.exists():
+        return empty_stats
+
+    try:
+        payload = json.loads(PAPER_STORE_PATH.read_text(encoding="utf-8"))
+    except Exception:
+        return empty_stats
+
+    paper_entities = payload.get("paper_entities", {})
+    paper_edges = payload.get("paper_edges", [])
+
+    node_types: Dict[str, int] = {}
+    nodes_total = 0
+    if not isinstance(paper_entities, dict):
+        paper_entities = {}
+    for entities_by_type in paper_entities.values():
+        if not isinstance(entities_by_type, dict):
+            continue
+        for entity_type, values in entities_by_type.items():
+            if not isinstance(values, list):
+                continue
+            count = len(values)
+            if count <= 0:
+                continue
+            normalized_type = normalize_node_type(singularize_entity_type(str(entity_type)))
+            node_types[normalized_type] = node_types.get(normalized_type, 0) + count
+            nodes_total += count
+
+    edge_types: Dict[str, int] = {}
+    edges_total = 0
+    if not isinstance(paper_edges, list):
+        paper_edges = []
+    for edge in paper_edges:
+        if not isinstance(edge, dict):
+            continue
+        relation = str(edge.get("edge_type", edge.get("relation", "ASSOCIATES"))).strip().upper() or "ASSOCIATES"
+        edge_types[relation] = edge_types.get(relation, 0) + 1
+        edges_total += 1
+
+    return {
+        "nodes_total": nodes_total,
+        "edges_total": edges_total,
+        "node_types": node_types,
+        "edge_types": edge_types,
+    }
 
 
 def merge_search_results(raw_results: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
@@ -2270,6 +2326,8 @@ def build_stored_graph_payload(
         "source_counts": source_counts,
         "type_counts": type_counts,
         "scope": scope,
+        "available_connected_nodes_pre_cap": len(candidate_node_keys),
+        "available_edges_pre_cap": len(edge_registry),
     }
 
 
@@ -2345,7 +2403,6 @@ def display_stored_knowledge_graph_tab() -> None:
         approved_only=not include_pending,
     )
 
-    adjacency = build_graph_adjacency(approved_only=not include_pending)
     total_unique_nodes_available = len(
         {
             normalize_node_key(node.get("name", ""))
@@ -2356,45 +2413,23 @@ def display_stored_knowledge_graph_tab() -> None:
             and (not allowed_sources or normalize_source_name(node.get("source"), "UNKNOWN") in allowed_sources)
         }
     )
-    total_edges_available = 0
-    for source_key, edge_list in adjacency.items():
-        source_node = node_lookup.get(source_key)
-        if not source_node:
-            continue
-        source_type = normalize_node_type(source_node.get("type", "entity"))
-        source_origin = normalize_source_name(source_node.get("source"), "UNKNOWN")
-        if scope != "all" and source_origin != "PAPER_INGEST":
-            continue
-        if allowed_types and source_type not in allowed_types:
-            continue
-        if allowed_sources and source_origin not in allowed_sources:
-            continue
-        for edge in edge_list:
-            target_node = node_lookup.get(edge.get("neighbor_key", ""))
-            if not target_node:
-                continue
-            target_type = normalize_node_type(target_node.get("type", "entity"))
-            target_origin = normalize_source_name(target_node.get("source"), edge.get("provenance", "UNKNOWN"))
-            if scope != "all" and target_origin != "PAPER_INGEST":
-                continue
-            if allowed_types and target_type not in allowed_types:
-                continue
-            if allowed_sources and target_origin not in allowed_sources:
-                continue
-            if safe_float(edge.get("score", 0.0), 0.0) < min_edge_score:
-                continue
-            total_edges_available += 1
-    total_edges_available = total_edges_available // 2
+    total_connected_nodes_available = int(payload.get("available_connected_nodes_pre_cap", 0) or 0)
+    total_edges_available = int(payload.get("available_edges_pre_cap", 0) or 0)
+    isolated_nodes = max(total_unique_nodes_available - total_connected_nodes_available, 0)
 
     st.info(
         "Graph is condensed by design: duplicate entity names are merged, then filters apply, "
         "then top-N node/edge caps are applied, and nodes disconnected after edge capping are removed."
     )
     st.caption(
-        f"Available after current filters: ~{total_unique_nodes_available} unique nodes, "
+        f"Available after current filters: ~{total_connected_nodes_available} connected nodes, "
         f"~{total_edges_available} edges. Current caps: max_nodes={max_nodes}, max_edges={max_edges}, "
         f"min_edge_score={min_edge_score:.2f}."
     )
+    if isolated_nodes:
+        st.caption(
+            f"Additional nodes matching type/source filters but not connected by a qualifying edge: ~{isolated_nodes}."
+        )
 
     if not payload.get("nodes"):
         st.info("No graph could be built with the current scope and filters.")
@@ -3090,15 +3125,40 @@ def main():
             if st.session_state.db_manager:
                 try:
                     stats = st.session_state.db_manager.get_database_stats()
-                    st.metric("Total Genes/Proteins", stats['total_documents'])
-                    
-                    st.subheader("Data Sources")
-                    for source, count in stats['sources'].items():
-                        st.write(f"• {source}: {count}")
-                    
-                    st.subheader("Node Types")
-                    for node_type, count in stats['node_types'].items():
-                        st.write(f"• {node_type}: {count}")
+                    paper_store_stats = build_paper_store_stats()
+
+                    indexed_paper_nodes = int(
+                        stats.get("paper_ingest_nodes_total", stats.get("paper_entities_documents", 0)) or 0
+                    )
+                    indexed_paper_edges = int(
+                        stats.get("paper_ingest_edges_total", stats.get("paper_edges_documents", 0)) or 0
+                    )
+                    paper_nodes = int(paper_store_stats.get("nodes_total", 0) or 0)
+                    paper_edges = int(paper_store_stats.get("edges_total", 0) or 0)
+                    metric_col1, metric_col2 = st.columns(2)
+                    metric_col1.metric("Paper Ingest Nodes", paper_nodes)
+                    metric_col2.metric("Paper Ingest Edges", paper_edges)
+
+                    st.subheader("Paper Ingest Node Types")
+                    paper_node_types = paper_store_stats.get("node_types", {}) or {}
+                    if paper_node_types:
+                        for node_type, count in sorted(paper_node_types.items(), key=lambda item: str(item[0]).lower()):
+                            st.write(f"• {node_type}: {count}")
+                    else:
+                        st.write("• No paper-ingested nodes found.")
+
+                    st.subheader("Paper Ingest Edge Types")
+                    paper_edge_types = paper_store_stats.get("edge_types", {}) or {}
+                    if paper_edge_types:
+                        for edge_type, count in sorted(paper_edge_types.items(), key=lambda item: str(item[0]).lower()):
+                            st.write(f"• {edge_type}: {count}")
+                    else:
+                        st.write("• No paper-ingested edges found.")
+
+                    if indexed_paper_nodes != paper_nodes or indexed_paper_edges != paper_edges:
+                        st.caption(
+                            f"Indexed approved in vector DB: nodes={indexed_paper_nodes}, edges={indexed_paper_edges}."
+                        )
                         
                 except Exception as e:
                     st.error(f"Error loading stats: {str(e)}")

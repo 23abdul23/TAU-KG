@@ -19,9 +19,12 @@ Features:
 import os
 import json
 import re
+import importlib.util
 from functools import lru_cache
 from typing import List, Dict, Any, Tuple, Optional, Iterable
 import logging
+from pathlib import Path
+from threading import Lock
 from src.llm_provider import LLMClient
 from src.paper_schema import (
     canonicalize_edge_type,
@@ -68,6 +71,11 @@ SCISPACY_ENTITY_LABEL_MAP = {
     "DISEASE": ("disease", 0.88),
 }
 RELATIONSHIP_CONTEXT_CHARS = 220
+NER_PIPELINE_DISEASE_CONFIDENCE = 0.88
+NER_PIPELINE_GENE_PROTEIN_CONFIDENCE = 0.83
+NER_PIPELINE_PATHWAY_CONFIDENCE = 0.76
+_MODEL_WARMUP_LOCK = Lock()
+_MODEL_WARMUP_DONE = False
 
 
 def get_llm_client() -> LLMClient:
@@ -464,6 +472,261 @@ def _merge_extraction_results(
     return merged
 
 
+def _parse_int_env(name: str, default: int, minimum: int = 1) -> int:
+    raw_value = os.getenv(name, "").strip()
+    if not raw_value:
+        return default
+    try:
+        return max(minimum, int(raw_value))
+    except ValueError:
+        logger.warning("Invalid %s=%r. Using default %s.", name, raw_value, default)
+        return default
+
+
+def _parse_float_env(name: str, default: float, minimum: float = 0.0, maximum: float = 1.0) -> float:
+    raw_value = os.getenv(name, "").strip()
+    if not raw_value:
+        return default
+    try:
+        parsed = float(raw_value)
+        return max(minimum, min(maximum, parsed))
+    except ValueError:
+        logger.warning("Invalid %s=%r. Using default %s.", name, raw_value, default)
+        return default
+
+
+def _load_module_from_path(module_name: str, module_path: Path) -> Optional[Any]:
+    if not module_path.exists():
+        return None
+
+    spec = importlib.util.spec_from_file_location(module_name, str(module_path))
+    if spec is None or spec.loader is None:
+        return None
+
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+@lru_cache(maxsize=1)
+def _load_full_ner_pipeline_modules() -> Tuple[Optional[Any], Optional[Any]]:
+    """
+    Load the full NER_extracion pipeline stages from local modules.
+
+    We first look for src-local modules, then fall back to test helpers to stay
+    compatible with the existing repository layout.
+    """
+    repo_root = Path(__file__).resolve().parent.parent
+
+    scispacy_module = (
+        _load_module_from_path("src_scispacy_pipeline", repo_root / "src" / "scispacy_pipeline.py")
+        or _load_module_from_path("test_scispacy_pipeline", repo_root / "test" / "scispacy_pipeline.py")
+    )
+    biobert_module = (
+        _load_module_from_path("src_biobert_refinement", repo_root / "src" / "biobert_refinement.py")
+        or _load_module_from_path("test_biobert_refinement", repo_root / "test" / "biobert_refinement.py")
+    )
+
+    if scispacy_module is None:
+        logger.warning(
+            "Full NER pipeline SciSpaCy stage not found under src/ or test/. Falling back to local extractor."
+        )
+    if biobert_module is None:
+        logger.warning(
+            "Full NER pipeline BioBERT refinement stage not found under src/ or test/. "
+            "Using SciSpaCy stage output only."
+        )
+    return scispacy_module, biobert_module
+
+
+def warmup_entity_extraction_models() -> Dict[str, Any]:
+    """
+    Best-effort one-time model warmup for concurrent extraction workloads.
+
+    This avoids repeated cold starts when many PMC extraction jobs arrive at once.
+    """
+    global _MODEL_WARMUP_DONE
+
+    with _MODEL_WARMUP_LOCK:
+        if _MODEL_WARMUP_DONE:
+            return {"status": "ready", "cached": True}
+
+        backend = _get_extraction_backend()
+        details: Dict[str, Any] = {
+            "status": "ready",
+            "cached": False,
+            "backend": backend,
+            "scispacy": "not_attempted",
+            "biobert": "not_attempted",
+        }
+
+        if backend == "llm":
+            _MODEL_WARMUP_DONE = True
+            details["note"] = "LLM backend selected; local NER models were not warmed."
+            return details
+
+        scispacy_module, biobert_module = _load_full_ner_pipeline_modules()
+
+        try:
+            if scispacy_module is not None and hasattr(scispacy_module, "load_models"):
+                scispacy_module.load_models()
+                details["scispacy"] = "ready"
+            elif _get_scispacy_nlp() is not None:
+                details["scispacy"] = "ready"
+            else:
+                details["scispacy"] = "unavailable"
+        except Exception as exc:
+            details["scispacy"] = f"error:{exc}"
+            logger.warning("SciSpaCy warmup failed: %s", exc)
+
+        try:
+            if biobert_module is not None and hasattr(biobert_module, "load_model"):
+                model_name_default = str(getattr(biobert_module, "DEFAULT_MODEL_NAME", "d4data/biomedical-ner-all"))
+                biobert_module.load_model(
+                    model_name=os.getenv("PAPER_BIOBERT_MODEL_NAME", "").strip() or model_name_default,
+                    device=None,
+                )
+                details["biobert"] = "ready"
+            elif biobert_module is None:
+                details["biobert"] = "unavailable"
+            else:
+                details["biobert"] = "unsupported_module"
+        except Exception as exc:
+            details["biobert"] = f"error:{exc}"
+            logger.warning("BioBERT warmup failed: %s", exc)
+
+        _MODEL_WARMUP_DONE = True
+        return details
+
+
+def _convert_full_pipeline_categories(
+    categories: Dict[str, Any],
+    paper_text: str,
+) -> Dict[str, List[Dict[str, Any]]]:
+    converted = {
+        "genes": [],
+        "proteins": [],
+        "diseases": [],
+        "pathways": [],
+    }
+
+    for entity in categories.get("diseases", []) or []:
+        if not isinstance(entity, dict):
+            continue
+        name = str(entity.get("text", "")).strip()
+        context = str(entity.get("evidence_text", "")).strip() or name
+        if not name:
+            continue
+        converted["diseases"].append(
+            {
+                "name": name,
+                "context": context,
+                "confidence": NER_PIPELINE_DISEASE_CONFIDENCE,
+                "entity_type": "disease",
+                "chromosome": "",
+            }
+        )
+
+    for entity in categories.get("genes_proteins", []) or []:
+        if not isinstance(entity, dict):
+            continue
+        name = str(entity.get("text", "")).strip()
+        context = str(entity.get("evidence_text", "")).strip() or name
+        if not name:
+            continue
+        bucket = _infer_gene_or_protein_bucket(name, context)
+        converted[bucket].append(
+            {
+                "name": name,
+                "context": context,
+                "confidence": NER_PIPELINE_GENE_PROTEIN_CONFIDENCE,
+                "entity_type": "protein" if bucket == "proteins" else "gene",
+                "chromosome": "",
+            }
+        )
+
+    for entity in categories.get("pathways", []) or []:
+        if not isinstance(entity, dict):
+            continue
+        name = str(entity.get("text", "")).strip()
+        context = str(entity.get("evidence_text", "")).strip() or name
+        if not name:
+            continue
+        converted["pathways"].append(
+            {
+                "name": name,
+                "context": context,
+                "confidence": NER_PIPELINE_PATHWAY_CONFIDENCE,
+                "entity_type": "pathway",
+                "chromosome": "",
+            }
+        )
+
+    # Keep the lightweight regex-based pathway fallback to maintain prior recall.
+    converted["pathways"].extend(_extract_pathway_entities(paper_text))
+
+    for bucket in ["genes", "proteins", "diseases", "pathways"]:
+        converted[bucket] = _dedupe_entities(converted[bucket])
+
+    return converted
+
+
+def _extract_entities_with_full_ner_pipeline(
+    paper_text: str,
+) -> Dict[str, List[Dict[str, Any]]]:
+    scispacy_module, biobert_module = _load_full_ner_pipeline_modules()
+    if scispacy_module is None:
+        return _scispacy_extract_entities(paper_text)
+
+    try:
+        scispacy_entities, scispacy_timings = scispacy_module.main_pipeline(paper_text)
+        logger.info(
+            "Full pipeline SciSpaCy stage complete: diseases=%s genes_proteins=%s pathways=%s",
+            len(scispacy_entities.get("diseases", []) or []),
+            len(scispacy_entities.get("genes_proteins", []) or []),
+            len(scispacy_entities.get("pathways", []) or []),
+        )
+        if scispacy_timings:
+            logger.debug("SciSpaCy timings: %s", scispacy_timings)
+    except Exception as exc:
+        logger.warning("Full pipeline SciSpaCy stage failed, falling back to local extractor: %s", exc)
+        return _scispacy_extract_entities(paper_text)
+
+    categories = scispacy_entities
+    if biobert_module is not None:
+        try:
+            model_name_default = str(getattr(biobert_module, "DEFAULT_MODEL_NAME", "d4data/biomedical-ner-all"))
+            context_window_default = int(getattr(biobert_module, "DEFAULT_CONTEXT_WINDOW", 80))
+            batch_size_default = int(getattr(biobert_module, "DEFAULT_BATCH_SIZE", 32))
+            confidence_default = float(getattr(biobert_module, "DEFAULT_CONFIDENCE_THRESHOLD", 0.65))
+            span_default = float(getattr(biobert_module, "DEFAULT_SPAN_THRESHOLD", 0.55))
+
+            categories, refinement_report, refinement_timings = biobert_module.main_pipeline(
+                text=paper_text,
+                input_json=scispacy_entities,
+                model_name=os.getenv("PAPER_BIOBERT_MODEL_NAME", "").strip() or model_name_default,
+                context_window=_parse_int_env("PAPER_BIOBERT_CONTEXT_WINDOW", context_window_default),
+                batch_size=_parse_int_env("PAPER_BIOBERT_BATCH_SIZE", batch_size_default),
+                confidence_threshold=_parse_float_env("PAPER_BIOBERT_CONFIDENCE_THRESHOLD", confidence_default),
+                span_threshold=_parse_float_env("PAPER_BIOBERT_SPAN_THRESHOLD", span_default),
+                device=None,
+            )
+            logger.info(
+                "Full pipeline BioBERT stage complete: diseases=%s genes_proteins=%s pathways=%s",
+                len(categories.get("diseases", []) or []),
+                len(categories.get("genes_proteins", []) or []),
+                len(categories.get("pathways", []) or []),
+            )
+            if refinement_timings:
+                logger.debug("BioBERT timings: %s", refinement_timings)
+            if refinement_report:
+                logger.debug("BioBERT report summary: %s", refinement_report.get("summary", {}))
+        except Exception as exc:
+            logger.warning("Full pipeline BioBERT refinement failed, keeping SciSpaCy entities: %s", exc)
+
+    return _convert_full_pipeline_categories(categories, paper_text)
+
+
 def build_entity_extraction_context(
     paper_text: str,
     sections: Optional[List[Dict[str, Any]]] = None,
@@ -752,8 +1015,8 @@ def extract_entities_from_text(
 
     Backends:
     - llm: original LLM-only extraction over a section-aware excerpt
-    - scispacy: full-text SciSpaCy entities + full-text sentence relationships
-    - hybrid (default): SciSpaCy first; LLM fallback if SciSpaCy returns empty
+    - scispacy: full NER_extracion pipeline (SciSpaCy stage + BioBERT refinement) + sentence relationships
+    - hybrid (default): full NER_extracion pipeline first; LLM fallback if extraction returns empty
     """
     if not existing_entities:
         existing_entities = {
@@ -774,20 +1037,20 @@ def extract_entities_from_text(
     }
 
     if backend in {"scispacy", "hybrid"}:
-        scispacy_entities = _scispacy_extract_entities(full_text, sections=sections)
+        ner_pipeline_entities = _extract_entities_with_full_ner_pipeline(full_text)
         extracted_data = {
-            **scispacy_entities,
-            "relationships": _infer_sentence_relationships(full_text, scispacy_entities),
-            "extraction_backend": "scispacy",
+            **ner_pipeline_entities,
+            "relationships": _infer_sentence_relationships(full_text, ner_pipeline_entities),
+            "extraction_backend": "scispacy_biobert_pipeline",
         }
         if backend == "scispacy":
             extracted_data = _boost_confidence_for_known_entities(extracted_data, existing_entities)
             extracted_data = _normalize_extracted_payload(extracted_data, title=title)
-            logger.info("SciSpaCy-only extraction complete: %s entities", _count_entities(extracted_data))
+            logger.info("Pipeline-only extraction complete: %s entities", _count_entities(extracted_data))
             return extracted_data
 
         if _count_entities(extracted_data) == 0:
-            logger.info("Hybrid extraction: SciSpaCy returned no entities, falling back to LLM.")
+            logger.info("Hybrid extraction: NER pipeline returned no entities, falling back to LLM.")
             llm_extracted = _extract_entities_with_llm(
                 paper_text=paper_text,
                 title=title,

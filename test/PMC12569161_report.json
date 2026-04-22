@@ -1,0 +1,1333 @@
+{
+  "pipeline": {
+    "scispacy_used": true,
+    "pmcid": "PMC12569161",
+    "scispacy_input_counts": {
+      "diseases": 27,
+      "genes_proteins": 229,
+      "pathways": 17
+    }
+  },
+  "summary": {
+    "biobert_available": true,
+    "input_counts": {
+      "diseases": 27,
+      "genes_proteins": 229,
+      "pathways": 17
+    },
+    "output_counts": {
+      "diseases": 32,
+      "genes_proteins": 192,
+      "pathways": 10
+    },
+    "total_input_entities": 273,
+    "total_output_entities": 234,
+    "total_removed_entities": 39,
+    "changed_entities": 21,
+    "unchanged_entities": 213,
+    "label_changed_entities": 5,
+    "category_changed_entities": 5,
+    "span_or_text_changed_entities": 17,
+    "removed_reason_counts": {
+      "noise_filter:no_alpha_characters": 2,
+      "noise_filter:too_short": 4,
+      "noise_filter:blocked_noise_term": 3,
+      "deduplicated:lower_score_or_shorter_span": 30
+    }
+  },
+  "timings": {
+    "flatten_seconds": 0.003,
+    "biobert_inference_seconds": 12.292,
+    "reclassify_seconds": 0.031,
+    "filter_seconds": 0.001,
+    "dedup_seconds": 0.15,
+    "restructure_seconds": 0.003,
+    "total_pipeline_seconds": 12.481
+  },
+  "changes": [
+    {
+      "entity_id": "genes_proteins:0",
+      "from": {
+        "category": "genes_proteins",
+        "text": "podocyte-specific",
+        "start": 13,
+        "end": 30,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_bionlp13cg_md"
+      },
+      "to": {
+        "category": "diseases",
+        "text": "podocyte-specific",
+        "start": 13,
+        "end": 30,
+        "mapped_label": "DISEASE",
+        "source": "en_ner_bionlp13cg_md"
+      },
+      "changes": [
+        {
+          "field": "mapped_label",
+          "from": "GENE_OR_PROTEIN",
+          "to": "DISEASE"
+        },
+        {
+          "field": "category",
+          "from": "genes_proteins",
+          "to": "diseases"
+        }
+      ],
+      "refined_score": 0.9988
+    },
+    {
+      "entity_id": "genes_proteins:1",
+      "from": {
+        "category": "genes_proteins",
+        "text": "formin 2",
+        "start": 600,
+        "end": 608,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_bionlp13cg_md"
+      },
+      "to": {
+        "category": "genes_proteins",
+        "text": "inverted formin 2 ( INF2 )",
+        "start": 591,
+        "end": 617,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_bionlp13cg_md"
+      },
+      "changes": [
+        {
+          "field": "span",
+          "from": [
+            600,
+            608
+          ],
+          "to": [
+            591,
+            617
+          ]
+        },
+        {
+          "field": "text",
+          "from": "formin 2",
+          "to": "inverted formin 2 ( INF2 )"
+        }
+      ],
+      "refined_score": 0.9981
+    },
+    {
+      "entity_id": "genes_proteins:9",
+      "from": {
+        "category": "genes_proteins",
+        "text": "kidney\u2019s filtration units",
+        "start": 1569,
+        "end": 1594,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_jnlpba_md"
+      },
+      "to": {
+        "category": "diseases",
+        "text": "kidney\u2019s filtration units",
+        "start": 1569,
+        "end": 1594,
+        "mapped_label": "DISEASE",
+        "source": "en_ner_jnlpba_md"
+      },
+      "changes": [
+        {
+          "field": "mapped_label",
+          "from": "GENE_OR_PROTEIN",
+          "to": "DISEASE"
+        },
+        {
+          "field": "category",
+          "from": "genes_proteins",
+          "to": "diseases"
+        }
+      ],
+      "refined_score": 0.9973
+    },
+    {
+      "entity_id": "genes_proteins:10",
+      "from": {
+        "category": "genes_proteins",
+        "text": "40 genes",
+        "start": 1974,
+        "end": 1982,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_jnlpba_md"
+      },
+      "to": {
+        "category": "genes_proteins",
+        "text": "in over 40 genes",
+        "start": 1966,
+        "end": 1982,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_jnlpba_md"
+      },
+      "changes": [
+        {
+          "field": "span",
+          "from": [
+            1974,
+            1982
+          ],
+          "to": [
+            1966,
+            1982
+          ]
+        },
+        {
+          "field": "text",
+          "from": "40 genes",
+          "to": "in over 40 genes"
+        }
+      ],
+      "refined_score": 0.8886
+    },
+    {
+      "entity_id": "genes_proteins:12",
+      "from": {
+        "category": "genes_proteins",
+        "text": "INF2 gene 6",
+        "start": 2495,
+        "end": 2506,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_jnlpba_md"
+      },
+      "to": {
+        "category": "diseases",
+        "text": "mutations in the INF2",
+        "start": 2478,
+        "end": 2499,
+        "mapped_label": "DISEASE",
+        "source": "en_ner_jnlpba_md"
+      },
+      "changes": [
+        {
+          "field": "mapped_label",
+          "from": "GENE_OR_PROTEIN",
+          "to": "DISEASE"
+        },
+        {
+          "field": "category",
+          "from": "genes_proteins",
+          "to": "diseases"
+        },
+        {
+          "field": "span",
+          "from": [
+            2495,
+            2506
+          ],
+          "to": [
+            2478,
+            2499
+          ]
+        },
+        {
+          "field": "text",
+          "from": "INF2 gene 6",
+          "to": "mutations in the INF2"
+        }
+      ],
+      "refined_score": 0.8017
+    },
+    {
+      "entity_id": "genes_proteins:15",
+      "from": {
+        "category": "genes_proteins",
+        "text": "INF2 gene",
+        "start": 4535,
+        "end": 4544,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_jnlpba_md"
+      },
+      "to": {
+        "category": "genes_proteins",
+        "text": "the INF2 gene",
+        "start": 4531,
+        "end": 4544,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_jnlpba_md"
+      },
+      "changes": [
+        {
+          "field": "span",
+          "from": [
+            4535,
+            4544
+          ],
+          "to": [
+            4531,
+            4544
+          ]
+        },
+        {
+          "field": "text",
+          "from": "INF2 gene",
+          "to": "the INF2 gene"
+        }
+      ],
+      "refined_score": 0.5991
+    },
+    {
+      "entity_id": "diseases:9",
+      "from": {
+        "category": "diseases",
+        "text": "ng/\u00b5L.",
+        "start": 6771,
+        "end": 6777,
+        "mapped_label": "DISEASE",
+        "source": "en_ner_bc5cdr_md"
+      },
+      "to": {
+        "category": "diseases",
+        "text": "5 ng/\u00b5L. 1 \u00b5L",
+        "start": 6769,
+        "end": 6782,
+        "mapped_label": "DISEASE",
+        "source": "en_ner_bc5cdr_md"
+      },
+      "changes": [
+        {
+          "field": "span",
+          "from": [
+            6771,
+            6777
+          ],
+          "to": [
+            6769,
+            6782
+          ]
+        },
+        {
+          "field": "text",
+          "from": "ng/\u00b5L.",
+          "to": "5 ng/\u00b5L. 1 \u00b5L"
+        }
+      ],
+      "refined_score": 0.9991
+    },
+    {
+      "entity_id": "genes_proteins:23",
+      "from": {
+        "category": "genes_proteins",
+        "text": "Gene Forward sequence",
+        "start": 6977,
+        "end": 6998,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_jnlpba_md"
+      },
+      "to": {
+        "category": "genes_proteins",
+        "text": "Gene Forward sequence (",
+        "start": 6977,
+        "end": 7000,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_jnlpba_md"
+      },
+      "changes": [
+        {
+          "field": "span",
+          "from": [
+            6977,
+            6998
+          ],
+          "to": [
+            6977,
+            7000
+          ]
+        },
+        {
+          "field": "text",
+          "from": "Gene Forward sequence",
+          "to": "Gene Forward sequence ("
+        }
+      ],
+      "refined_score": 0.8436
+    },
+    {
+      "entity_id": "pathways:6",
+      "from": {
+        "category": "pathways",
+        "text": "Antibody",
+        "start": 9426,
+        "end": 9434,
+        "mapped_label": "PATHWAY",
+        "source": "en_ner_craft_md"
+      },
+      "to": {
+        "category": "pathways",
+        "text": "Antibody dilution",
+        "start": 9426,
+        "end": 9443,
+        "mapped_label": "PATHWAY",
+        "source": "en_ner_craft_md"
+      },
+      "changes": [
+        {
+          "field": "span",
+          "from": [
+            9426,
+            9434
+          ],
+          "to": [
+            9426,
+            9443
+          ]
+        },
+        {
+          "field": "text",
+          "from": "Antibody",
+          "to": "Antibody dilution"
+        }
+      ],
+      "refined_score": 0.8211
+    },
+    {
+      "entity_id": "genes_proteins:44",
+      "from": {
+        "category": "genes_proteins",
+        "text": "Immunocyto-",
+        "start": 9454,
+        "end": 9465,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_bionlp13cg_md"
+      },
+      "to": {
+        "category": "genes_proteins",
+        "text": "Immunocyto- and histochemistry",
+        "start": 9454,
+        "end": 9484,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_bionlp13cg_md"
+      },
+      "changes": [
+        {
+          "field": "span",
+          "from": [
+            9454,
+            9465
+          ],
+          "to": [
+            9454,
+            9484
+          ]
+        },
+        {
+          "field": "text",
+          "from": "Immunocyto-",
+          "to": "Immunocyto- and histochemistry"
+        }
+      ],
+      "refined_score": 0.999
+    },
+    {
+      "entity_id": "genes_proteins:48",
+      "from": {
+        "category": "genes_proteins",
+        "text": "Ki67",
+        "start": 9757,
+        "end": 9761,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_bionlp13cg_md"
+      },
+      "to": {
+        "category": "genes_proteins",
+        "text": "1:100 \u2013 Ki67",
+        "start": 9749,
+        "end": 9761,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_bionlp13cg_md"
+      },
+      "changes": [
+        {
+          "field": "span",
+          "from": [
+            9757,
+            9761
+          ],
+          "to": [
+            9749,
+            9761
+          ]
+        },
+        {
+          "field": "text",
+          "from": "Ki67",
+          "to": "1:100 \u2013 Ki67"
+        }
+      ],
+      "refined_score": 0.992
+    },
+    {
+      "entity_id": "diseases:15",
+      "from": {
+        "category": "diseases",
+        "text": "heterozygous autosomal dominant",
+        "start": 13490,
+        "end": 13521,
+        "mapped_label": "DISEASE",
+        "source": "en_ner_bc5cdr_md"
+      },
+      "to": {
+        "category": "diseases",
+        "text": "heterozygous autosomal dominant point mutation",
+        "start": 13490,
+        "end": 13536,
+        "mapped_label": "DISEASE",
+        "source": "en_ner_bc5cdr_md"
+      },
+      "changes": [
+        {
+          "field": "span",
+          "from": [
+            13490,
+            13521
+          ],
+          "to": [
+            13490,
+            13536
+          ]
+        },
+        {
+          "field": "text",
+          "from": "heterozygous autosomal dominant",
+          "to": "heterozygous autosomal dominant point mutation"
+        }
+      ],
+      "refined_score": 0.9352
+    },
+    {
+      "entity_id": "genes_proteins:81",
+      "from": {
+        "category": "genes_proteins",
+        "text": "hematoxylin\u2013eosin",
+        "start": 14769,
+        "end": 14786,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_jnlpba_md"
+      },
+      "to": {
+        "category": "genes_proteins",
+        "text": "hematoxylin\u2013eosin (",
+        "start": 14769,
+        "end": 14788,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_jnlpba_md"
+      },
+      "changes": [
+        {
+          "field": "span",
+          "from": [
+            14769,
+            14786
+          ],
+          "to": [
+            14769,
+            14788
+          ]
+        },
+        {
+          "field": "text",
+          "from": "hematoxylin\u2013eosin",
+          "to": "hematoxylin\u2013eosin ("
+        }
+      ],
+      "refined_score": 0.9952
+    },
+    {
+      "entity_id": "genes_proteins:88",
+      "from": {
+        "category": "genes_proteins",
+        "text": "Tra-1",
+        "start": 17896,
+        "end": 17901,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_bionlp13cg_md"
+      },
+      "to": {
+        "category": "genes_proteins",
+        "text": "Tra-1-81",
+        "start": 17896,
+        "end": 17904,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_bionlp13cg_md"
+      },
+      "changes": [
+        {
+          "field": "span",
+          "from": [
+            17896,
+            17901
+          ],
+          "to": [
+            17896,
+            17904
+          ]
+        },
+        {
+          "field": "text",
+          "from": "Tra-1",
+          "to": "Tra-1-81"
+        }
+      ],
+      "refined_score": 0.9999
+    },
+    {
+      "entity_id": "genes_proteins:101",
+      "from": {
+        "category": "genes_proteins",
+        "text": "mRNA",
+        "start": 22714,
+        "end": 22718,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_jnlpba_md"
+      },
+      "to": {
+        "category": "genes_proteins",
+        "text": "mRNA level",
+        "start": 22714,
+        "end": 22724,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_jnlpba_md"
+      },
+      "changes": [
+        {
+          "field": "span",
+          "from": [
+            22714,
+            22718
+          ],
+          "to": [
+            22714,
+            22724
+          ]
+        },
+        {
+          "field": "text",
+          "from": "mRNA",
+          "to": "mRNA level"
+        }
+      ],
+      "refined_score": 0.9223
+    },
+    {
+      "entity_id": "pathways:10",
+      "from": {
+        "category": "pathways",
+        "text": "integrins",
+        "start": 24553,
+        "end": 24562,
+        "mapped_label": "PATHWAY",
+        "source": "en_ner_craft_md"
+      },
+      "to": {
+        "category": "pathways",
+        "text": "hesion via integrins",
+        "start": 24542,
+        "end": 24562,
+        "mapped_label": "PATHWAY",
+        "source": "en_ner_craft_md"
+      },
+      "changes": [
+        {
+          "field": "span",
+          "from": [
+            24553,
+            24562
+          ],
+          "to": [
+            24542,
+            24562
+          ]
+        },
+        {
+          "field": "text",
+          "from": "integrins",
+          "to": "hesion via integrins"
+        }
+      ],
+      "refined_score": 0.9965
+    },
+    {
+      "entity_id": "pathways:12",
+      "from": {
+        "category": "pathways",
+        "text": "microtubule",
+        "start": 24909,
+        "end": 24920,
+        "mapped_label": "PATHWAY",
+        "source": "en_ner_craft_md"
+      },
+      "to": {
+        "category": "pathways",
+        "text": "genes related to microtubule formation",
+        "start": 24892,
+        "end": 24930,
+        "mapped_label": "PATHWAY",
+        "source": "en_ner_craft_md"
+      },
+      "changes": [
+        {
+          "field": "span",
+          "from": [
+            24909,
+            24920
+          ],
+          "to": [
+            24892,
+            24930
+          ]
+        },
+        {
+          "field": "text",
+          "from": "microtubule",
+          "to": "genes related to microtubule formation"
+        }
+      ],
+      "refined_score": 0.9973
+    },
+    {
+      "entity_id": "genes_proteins:165",
+      "from": {
+        "category": "genes_proteins",
+        "text": "proteinuria (Fig. 1 A",
+        "start": 36979,
+        "end": 37000,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_bionlp13cg_md"
+      },
+      "to": {
+        "category": "diseases",
+        "text": "proteinuria (Fig. 1 A",
+        "start": 36979,
+        "end": 37000,
+        "mapped_label": "DISEASE",
+        "source": "en_ner_bionlp13cg_md"
+      },
+      "changes": [
+        {
+          "field": "mapped_label",
+          "from": "GENE_OR_PROTEIN",
+          "to": "DISEASE"
+        },
+        {
+          "field": "category",
+          "from": "genes_proteins",
+          "to": "diseases"
+        }
+      ],
+      "refined_score": 0.9997
+    },
+    {
+      "entity_id": "genes_proteins:190",
+      "from": {
+        "category": "genes_proteins",
+        "text": "INF2 gene variant",
+        "start": 43536,
+        "end": 43553,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_jnlpba_md"
+      },
+      "to": {
+        "category": "diseases",
+        "text": "INF2 gene variant",
+        "start": 43536,
+        "end": 43553,
+        "mapped_label": "DISEASE",
+        "source": "en_ner_jnlpba_md"
+      },
+      "changes": [
+        {
+          "field": "mapped_label",
+          "from": "GENE_OR_PROTEIN",
+          "to": "DISEASE"
+        },
+        {
+          "field": "category",
+          "from": "genes_proteins",
+          "to": "diseases"
+        }
+      ],
+      "refined_score": 0.9093
+    },
+    {
+      "entity_id": "genes_proteins:195",
+      "from": {
+        "category": "genes_proteins",
+        "text": "formin",
+        "start": 46517,
+        "end": 46523,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_bionlp13cg_md"
+      },
+      "to": {
+        "category": "genes_proteins",
+        "text": "formin homology (FH) 1",
+        "start": 46517,
+        "end": 46539,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_bionlp13cg_md"
+      },
+      "changes": [
+        {
+          "field": "span",
+          "from": [
+            46517,
+            46523
+          ],
+          "to": [
+            46517,
+            46539
+          ]
+        },
+        {
+          "field": "text",
+          "from": "formin",
+          "to": "formin homology (FH) 1"
+        }
+      ],
+      "refined_score": 0.9078
+    },
+    {
+      "entity_id": "genes_proteins:223",
+      "from": {
+        "category": "genes_proteins",
+        "text": "EM",
+        "start": 51689,
+        "end": 51691,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_jnlpba_md"
+      },
+      "to": {
+        "category": "genes_proteins",
+        "text": "EM images",
+        "start": 51689,
+        "end": 51698,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_jnlpba_md"
+      },
+      "changes": [
+        {
+          "field": "span",
+          "from": [
+            51689,
+            51691
+          ],
+          "to": [
+            51689,
+            51698
+          ]
+        },
+        {
+          "field": "text",
+          "from": "EM",
+          "to": "EM images"
+        }
+      ],
+      "refined_score": 0.9989
+    }
+  ],
+  "removed": [
+    {
+      "entity_id": "genes_proteins:18",
+      "from": {
+        "category": "genes_proteins",
+        "text": "1 \u00d7",
+        "start": 6374,
+        "end": 6377,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_jnlpba_md"
+      },
+      "reason": "noise_filter:no_alpha_characters"
+    },
+    {
+      "entity_id": "genes_proteins:57",
+      "from": {
+        "category": "genes_proteins",
+        "text": "\u00d7",
+        "start": 10701,
+        "end": 10702,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_jnlpba_md"
+      },
+      "reason": "noise_filter:too_short"
+    },
+    {
+      "entity_id": "genes_proteins:60",
+      "from": {
+        "category": "genes_proteins",
+        "text": "3 \u00d7",
+        "start": 11188,
+        "end": 11191,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_jnlpba_md"
+      },
+      "reason": "noise_filter:no_alpha_characters"
+    },
+    {
+      "entity_id": "genes_proteins:70",
+      "from": {
+        "category": "genes_proteins",
+        "text": "MA",
+        "start": 12148,
+        "end": 12150,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_bionlp13cg_md"
+      },
+      "reason": "noise_filter:too_short"
+    },
+    {
+      "entity_id": "genes_proteins:73",
+      "from": {
+        "category": "genes_proteins",
+        "text": "p",
+        "start": 12745,
+        "end": 12746,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_jnlpba_md"
+      },
+      "reason": "noise_filter:too_short"
+    },
+    {
+      "entity_id": "genes_proteins:136",
+      "from": {
+        "category": "genes_proteins",
+        "text": "antibodies",
+        "start": 27823,
+        "end": 27833,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_jnlpba_md"
+      },
+      "reason": "noise_filter:blocked_noise_term"
+    },
+    {
+      "entity_id": "genes_proteins:146",
+      "from": {
+        "category": "genes_proteins",
+        "text": "B",
+        "start": 31286,
+        "end": 31287,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_bionlp13cg_md"
+      },
+      "reason": "noise_filter:too_short"
+    },
+    {
+      "entity_id": "pathways:4",
+      "from": {
+        "category": "pathways",
+        "text": "Chromosomal",
+        "start": 6554,
+        "end": 6565,
+        "mapped_label": "PATHWAY",
+        "source": "en_ner_craft_md"
+      },
+      "reason": "noise_filter:blocked_noise_term"
+    },
+    {
+      "entity_id": "pathways:5",
+      "from": {
+        "category": "pathways",
+        "text": "antibodies",
+        "start": 9099,
+        "end": 9109,
+        "mapped_label": "PATHWAY",
+        "source": "en_ner_craft_md"
+      },
+      "reason": "noise_filter:blocked_noise_term"
+    },
+    {
+      "entity_id": "pathways:2",
+      "from": {
+        "category": "pathways",
+        "text": "actin cytoskeleton",
+        "start": 1085,
+        "end": 1103,
+        "mapped_label": "PATHWAY",
+        "source": "en_ner_craft_md"
+      },
+      "reason": "deduplicated:lower_score_or_shorter_span",
+      "kept_entity_id": "genes_proteins:8"
+    },
+    {
+      "entity_id": "genes_proteins:154",
+      "from": {
+        "category": "genes_proteins",
+        "text": "DID-DAD",
+        "start": 32719,
+        "end": 32726,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_bionlp13cg_md"
+      },
+      "reason": "deduplicated:lower_score_or_shorter_span",
+      "kept_entity_id": "genes_proteins:155"
+    },
+    {
+      "entity_id": "genes_proteins:2",
+      "from": {
+        "category": "genes_proteins",
+        "text": "formin 2 ( INF2 ) gene",
+        "start": 600,
+        "end": 622,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_jnlpba_md"
+      },
+      "reason": "deduplicated:lower_score_or_shorter_span",
+      "kept_entity_id": "genes_proteins:1"
+    },
+    {
+      "entity_id": "genes_proteins:64",
+      "from": {
+        "category": "genes_proteins",
+        "text": "B actin",
+        "start": 11459,
+        "end": 11466,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_bionlp13cg_md"
+      },
+      "reason": "deduplicated:lower_score_or_shorter_span",
+      "kept_entity_id": "genes_proteins:63"
+    },
+    {
+      "entity_id": "pathways:0",
+      "from": {
+        "category": "pathways",
+        "text": "actin filaments",
+        "start": 910,
+        "end": 925,
+        "mapped_label": "PATHWAY",
+        "source": "en_ner_craft_md"
+      },
+      "reason": "deduplicated:lower_score_or_shorter_span",
+      "kept_entity_id": "genes_proteins:6"
+    },
+    {
+      "entity_id": "genes_proteins:3",
+      "from": {
+        "category": "genes_proteins",
+        "text": "INF2",
+        "start": 611,
+        "end": 615,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_bionlp13cg_md"
+      },
+      "reason": "deduplicated:lower_score_or_shorter_span",
+      "kept_entity_id": "genes_proteins:1"
+    },
+    {
+      "entity_id": "genes_proteins:131",
+      "from": {
+        "category": "genes_proteins",
+        "text": "uncleaved protein",
+        "start": 27278,
+        "end": 27295,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_jnlpba_md"
+      },
+      "reason": "deduplicated:lower_score_or_shorter_span",
+      "kept_entity_id": "genes_proteins:130"
+    },
+    {
+      "entity_id": "genes_proteins:37",
+      "from": {
+        "category": "genes_proteins",
+        "text": "HPRT",
+        "start": 7621,
+        "end": 7625,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_bionlp13cg_md"
+      },
+      "reason": "deduplicated:lower_score_or_shorter_span",
+      "kept_entity_id": "genes_proteins:38"
+    },
+    {
+      "entity_id": "genes_proteins:34",
+      "from": {
+        "category": "genes_proteins",
+        "text": "CTSL",
+        "start": 7521,
+        "end": 7525,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_jnlpba_md"
+      },
+      "reason": "deduplicated:lower_score_or_shorter_span",
+      "kept_entity_id": "genes_proteins:35"
+    },
+    {
+      "entity_id": "pathways:11",
+      "from": {
+        "category": "pathways",
+        "text": "extracellular matrix",
+        "start": 24593,
+        "end": 24613,
+        "mapped_label": "PATHWAY",
+        "source": "en_ner_craft_md"
+      },
+      "reason": "deduplicated:lower_score_or_shorter_span",
+      "kept_entity_id": "genes_proteins:107"
+    },
+    {
+      "entity_id": "genes_proteins:30",
+      "from": {
+        "category": "genes_proteins",
+        "text": "MAFB",
+        "start": 7330,
+        "end": 7334,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_bionlp13cg_md"
+      },
+      "reason": "deduplicated:lower_score_or_shorter_span",
+      "kept_entity_id": "genes_proteins:31"
+    },
+    {
+      "entity_id": "pathways:16",
+      "from": {
+        "category": "pathways",
+        "text": "actin filament",
+        "start": 49291,
+        "end": 49305,
+        "mapped_label": "PATHWAY",
+        "source": "en_ner_craft_md"
+      },
+      "reason": "deduplicated:lower_score_or_shorter_span",
+      "kept_entity_id": "genes_proteins:200"
+    },
+    {
+      "entity_id": "genes_proteins:197",
+      "from": {
+        "category": "genes_proteins",
+        "text": "FH2 domains",
+        "start": 46544,
+        "end": 46555,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_jnlpba_md"
+      },
+      "reason": "deduplicated:lower_score_or_shorter_span",
+      "kept_entity_id": "genes_proteins:196"
+    },
+    {
+      "entity_id": "genes_proteins:100",
+      "from": {
+        "category": "genes_proteins",
+        "text": "F-actin",
+        "start": 22528,
+        "end": 22535,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_bionlp13cg_md"
+      },
+      "reason": "deduplicated:lower_score_or_shorter_span",
+      "kept_entity_id": "pathways:15"
+    },
+    {
+      "entity_id": "genes_proteins:27",
+      "from": {
+        "category": "genes_proteins",
+        "text": "REX1",
+        "start": 7186,
+        "end": 7190,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_bionlp13cg_md"
+      },
+      "reason": "deduplicated:lower_score_or_shorter_span",
+      "kept_entity_id": "genes_proteins:28"
+    },
+    {
+      "entity_id": "genes_proteins:184",
+      "from": {
+        "category": "genes_proteins",
+        "text": "ACTN4",
+        "start": 39651,
+        "end": 39656,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_bionlp13cg_md"
+      },
+      "reason": "deduplicated:lower_score_or_shorter_span",
+      "kept_entity_id": "genes_proteins:185"
+    },
+    {
+      "entity_id": "genes_proteins:186",
+      "from": {
+        "category": "genes_proteins",
+        "text": "INF2 33",
+        "start": 40402,
+        "end": 40409,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_jnlpba_md"
+      },
+      "reason": "deduplicated:lower_score_or_shorter_span",
+      "kept_entity_id": "diseases:22"
+    },
+    {
+      "entity_id": "genes_proteins:32",
+      "from": {
+        "category": "genes_proteins",
+        "text": "VIM",
+        "start": 7382,
+        "end": 7385,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_bionlp13cg_md"
+      },
+      "reason": "deduplicated:lower_score_or_shorter_span",
+      "kept_entity_id": "genes_proteins:31"
+    },
+    {
+      "entity_id": "genes_proteins:218",
+      "from": {
+        "category": "genes_proteins",
+        "text": "WT1",
+        "start": 49353,
+        "end": 49356,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_bionlp13cg_md"
+      },
+      "reason": "deduplicated:lower_score_or_shorter_span",
+      "kept_entity_id": "genes_proteins:219"
+    },
+    {
+      "entity_id": "genes_proteins:147",
+      "from": {
+        "category": "genes_proteins",
+        "text": "C, V,",
+        "start": 31298,
+        "end": 31303,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_bionlp13cg_md"
+      },
+      "reason": "deduplicated:lower_score_or_shorter_span",
+      "kept_entity_id": "genes_proteins:145"
+    },
+    {
+      "entity_id": "pathways:3",
+      "from": {
+        "category": "pathways",
+        "text": "basement membrane",
+        "start": 2225,
+        "end": 2242,
+        "mapped_label": "PATHWAY",
+        "source": "en_ner_craft_md"
+      },
+      "reason": "deduplicated:lower_score_or_shorter_span",
+      "kept_entity_id": "genes_proteins:11"
+    },
+    {
+      "entity_id": "genes_proteins:4",
+      "from": {
+        "category": "genes_proteins",
+        "text": "actin-associated",
+        "start": 830,
+        "end": 846,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_bionlp13cg_md"
+      },
+      "reason": "deduplicated:lower_score_or_shorter_span",
+      "kept_entity_id": "genes_proteins:5"
+    },
+    {
+      "entity_id": "genes_proteins:181",
+      "from": {
+        "category": "genes_proteins",
+        "text": "actin (Fig. 6 C",
+        "start": 38016,
+        "end": 38031,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_bionlp13cg_md"
+      },
+      "reason": "deduplicated:lower_score_or_shorter_span",
+      "kept_entity_id": "genes_proteins:180"
+    },
+    {
+      "entity_id": "genes_proteins:227",
+      "from": {
+        "category": "genes_proteins",
+        "text": "Omnibus",
+        "start": 52910,
+        "end": 52917,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_bionlp13cg_md"
+      },
+      "reason": "deduplicated:lower_score_or_shorter_span",
+      "kept_entity_id": "genes_proteins:226"
+    },
+    {
+      "entity_id": "genes_proteins:96",
+      "from": {
+        "category": "genes_proteins",
+        "text": "actin",
+        "start": 21944,
+        "end": 21949,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_bionlp13cg_md"
+      },
+      "reason": "deduplicated:lower_score_or_shorter_span",
+      "kept_entity_id": "pathways:1"
+    },
+    {
+      "entity_id": "genes_proteins:112",
+      "from": {
+        "category": "genes_proteins",
+        "text": "MYO1C",
+        "start": 24857,
+        "end": 24862,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_bionlp13cg_md"
+      },
+      "reason": "deduplicated:lower_score_or_shorter_span",
+      "kept_entity_id": "genes_proteins:109"
+    },
+    {
+      "entity_id": "genes_proteins:68",
+      "from": {
+        "category": "genes_proteins",
+        "text": "HL99",
+        "start": 11796,
+        "end": 11800,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_bionlp13cg_md"
+      },
+      "reason": "deduplicated:lower_score_or_shorter_span",
+      "kept_entity_id": "genes_proteins:67"
+    },
+    {
+      "entity_id": "genes_proteins:110",
+      "from": {
+        "category": "genes_proteins",
+        "text": "FLNB",
+        "start": 24844,
+        "end": 24848,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_bionlp13cg_md"
+      },
+      "reason": "deduplicated:lower_score_or_shorter_span",
+      "kept_entity_id": "genes_proteins:109"
+    },
+    {
+      "entity_id": "genes_proteins:111",
+      "from": {
+        "category": "genes_proteins",
+        "text": "MSN",
+        "start": 24851,
+        "end": 24854,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_bionlp13cg_md"
+      },
+      "reason": "deduplicated:lower_score_or_shorter_span",
+      "kept_entity_id": "genes_proteins:109"
+    },
+    {
+      "entity_id": "genes_proteins:225",
+      "from": {
+        "category": "genes_proteins",
+        "text": "TRR",
+        "start": 52768,
+        "end": 52771,
+        "mapped_label": "GENE_OR_PROTEIN",
+        "source": "en_ner_jnlpba_md"
+      },
+      "reason": "deduplicated:lower_score_or_shorter_span",
+      "kept_entity_id": "diseases:26"
+    }
+  ]
+}

@@ -741,11 +741,16 @@ class VectorDBManager:
             "paper_entities_documents": 0,
             "paper_edges_documents": 0,
             "curated_entities_documents": 0,
+            "paper_ingest_nodes_total": 0,
+            "paper_ingest_edges_total": 0,
+            "paper_ingest_node_types": {},
+            "paper_ingest_edge_types": {},
         }
 
         for metadata in metadatas:
             metadata = metadata or {}
             source = str(metadata.get("source_system", metadata.get("node_source", "UNKNOWN")))
+            normalized_source = source.strip().upper()
             node_type = str(metadata.get("node_type", metadata.get("entity_type", "entity")))
             record_kind = str(metadata.get("record_kind", "unknown"))
             stats["sources"][source] = stats["sources"].get(source, 0) + 1
@@ -760,6 +765,19 @@ class VectorDBManager:
                 stats["curated_entities_documents"] += 1
             elif record_kind == "entity":
                 stats["paper_entities_documents"] += 1
+
+            if normalized_source == "PAPER_INGEST":
+                if record_kind == "entity":
+                    stats["paper_ingest_nodes_total"] += 1
+                    stats["paper_ingest_node_types"][node_type] = (
+                        stats["paper_ingest_node_types"].get(node_type, 0) + 1
+                    )
+                elif record_kind == "relationship":
+                    stats["paper_ingest_edges_total"] += 1
+                    edge_type = str(metadata.get("edge_type", "ASSOCIATES")).strip() or "ASSOCIATES"
+                    stats["paper_ingest_edge_types"][edge_type] = (
+                        stats["paper_ingest_edge_types"].get(edge_type, 0) + 1
+                    )
 
         stats["total_documents_all_collections"] = stats["total_documents"]
         return stats
