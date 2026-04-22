@@ -1,0 +1,2765 @@
+{
+  "runtime_seconds": 39.334,
+  "timings": {
+    "input_build_seconds": 0.544,
+    "parallel_inference_seconds": 1.496,
+    "merge_seconds": 0.054,
+    "model_runtime_seconds": {
+      "en_ner_bc5cdr_md": 1.331,
+      "en_ner_craft_md": 1.382,
+      "en_ner_jnlpba_md": 1.434,
+      "en_ner_bionlp13cg_md": 1.483
+    }
+  },
+  "counts": {
+    "diseases": 27,
+    "genes_proteins": 230,
+    "pathways": 17
+  },
+  "diseases": [
+    {
+      "text": "FSGS",
+      "start": 101,
+      "end": 105,
+      "source": "en_ner_bc5cdr_md",
+      "evidence_text": "-specific genes are associated with genetic focal segmental glomerulosclerosis (FSGS), yet the potential for targeted treatments remains uncertain. Therefore, patie",
+      "default_label": "DISEASE",
+      "deafult_label": "DISEASE",
+      "mapped_label": "DISEASE"
+    },
+    {
+      "text": "steroid-resistant nephrotic syndrome",
+      "start": 1876,
+      "end": 1912,
+      "source": "en_ner_bc5cdr_md",
+      "evidence_text": "sease, with genetic variants identified in up to 60% of children suffering from steroid-resistant nephrotic syndrome (SRNS) 1 and in 30% of adults with FSGS 2 . Variants in over 40 genes have been",
+      "default_label": "DISEASE",
+      "deafult_label": "DISEASE",
+      "mapped_label": "DISEASE"
+    },
+    {
+      "text": "SRNS",
+      "start": 1914,
+      "end": 1918,
+      "source": "en_ner_bc5cdr_md",
+      "evidence_text": "d in up to 60% of children suffering from steroid-resistant nephrotic syndrome (SRNS) 1 and in 30% of adults with FSGS 2 . Variants in over 40 genes have been assoc",
+      "default_label": "DISEASE",
+      "deafult_label": "DISEASE",
+      "mapped_label": "DISEASE"
+    },
+    {
+      "text": "FSGS 2",
+      "start": 1948,
+      "end": 1954,
+      "source": "en_ner_bc5cdr_md",
+      "evidence_text": "ng from steroid-resistant nephrotic syndrome (SRNS) 1 and in 30% of adults with FSGS 2 . Variants in over 40 genes have been associated with SRNS 3 . Many of these ge",
+      "default_label": "DISEASE",
+      "deafult_label": "DISEASE",
+      "mapped_label": "DISEASE"
+    },
+    {
+      "text": "autosomal dominant FSGS",
+      "start": 2438,
+      "end": 2461,
+      "source": "en_ner_bc5cdr_md",
+      "evidence_text": "on, leading to podocyte foot process effacement 3 , 5 \u2013 8 . One common cause of autosomal dominant FSGS is heterozygous mutations in the INF2 gene 6 , 9 . However, the impact of patie",
+      "default_label": "DISEASE",
+      "deafult_label": "DISEASE",
+      "mapped_label": "DISEASE"
+    },
+    {
+      "text": "kidney disease",
+      "start": 2753,
+      "end": 2767,
+      "source": "en_ner_bc5cdr_md",
+      "evidence_text": "h in mice has demonstrated that knock-in models carrying INF2 mutations develop kidney disease spontaneously, indicating a direct pathogenic role of these mutations. In contr",
+      "default_label": "DISEASE",
+      "deafult_label": "DISEASE",
+      "mapped_label": "DISEASE"
+    },
+    {
+      "text": "kidney damage",
+      "start": 2938,
+      "end": 2951,
+      "source": "en_ner_bc5cdr_md",
+      "evidence_text": "nockout mice do not typically develop kidney pathology on their own but exhibit kidney damage only when subjected to additional injury models. This suggests that the disease",
+      "default_label": "DISEASE",
+      "deafult_label": "DISEASE",
+      "mapped_label": "DISEASE"
+    },
+    {
+      "text": "kidney injury",
+      "start": 3276,
+      "end": 3289,
+      "source": "en_ner_bc5cdr_md",
+      "evidence_text": "ontrast, complete loss of INF2 function requires an external insult to manifest kidney injury 10 . Additionally, the histological features of adult-onset genetic FSGS can va",
+      "default_label": "DISEASE",
+      "deafult_label": "DISEASE",
+      "mapped_label": "DISEASE"
+    },
+    {
+      "text": "adult-onset",
+      "start": 3338,
+      "end": 3349,
+      "source": "en_ner_bc5cdr_md",
+      "evidence_text": "nsult to manifest kidney injury 10 . Additionally, the histological features of adult-onset genetic FSGS can vary significantly, even among individuals with the same genet",
+      "default_label": "DISEASE",
+      "deafult_label": "DISEASE",
+      "mapped_label": "DISEASE"
+    },
+    {
+      "text": "ng/\u00b5L.",
+      "start": 6771,
+      "end": 6777,
+      "source": "en_ner_bc5cdr_md",
+      "evidence_text": "r Scientific). 500 ng of RNA was reverse transcribed into cDNA and diluted to 5 ng/\u00b5L. 1 \u00b5L was used for qPCR, and primer sequences used are listed in Table 1 . The \u2206",
+      "default_label": "DISEASE",
+      "deafult_label": "DISEASE",
+      "mapped_label": "DISEASE"
+    },
+    {
+      "text": "chronic kidney disease",
+      "start": 12930,
+      "end": 12952,
+      "source": "en_ner_bc5cdr_md",
+      "evidence_text": "e-onset FSGS at the age of 17. At the time of diagnosis, this patient exhibited chronic kidney disease (CKD stage G4A3). After starting steroid treatment, the urine protein-to-creati",
+      "default_label": "DISEASE",
+      "deafult_label": "DISEASE",
+      "mapped_label": "DISEASE"
+    },
+    {
+      "text": "CKD",
+      "start": 12954,
+      "end": 12957,
+      "source": "en_ner_bc5cdr_md",
+      "evidence_text": "of 17. At the time of diagnosis, this patient exhibited chronic kidney disease (CKD stage G4A3). After starting steroid treatment, the urine protein-to-creatinine",
+      "default_label": "DISEASE",
+      "deafult_label": "DISEASE",
+      "mapped_label": "DISEASE"
+    },
+    {
+      "text": "glomerulosclerosis",
+      "start": 13196,
+      "end": 13214,
+      "source": "en_ner_bc5cdr_md",
+      "evidence_text": "(Fig. 1 A). Histological examination of the renal biopsy revealed severe global glomerulosclerosis (29/35) and focal glomerulosclerosis (2/35). Additionally, there was 30\u201335% int",
+      "default_label": "DISEASE",
+      "deafult_label": "DISEASE",
+      "mapped_label": "DISEASE"
+    },
+    {
+      "text": "fibrosis",
+      "start": 13304,
+      "end": 13312,
+      "source": "en_ner_bc5cdr_md",
+      "evidence_text": "nd focal glomerulosclerosis (2/35). Additionally, there was 30\u201335% interstitial fibrosis and tubular atrophy (Fig. 1 B). Electron microscopy showed irregular, jagged po",
+      "default_label": "DISEASE",
+      "deafult_label": "DISEASE",
+      "mapped_label": "DISEASE"
+    },
+    {
+      "text": "tubular atrophy",
+      "start": 13317,
+      "end": 13332,
+      "source": "en_ner_bc5cdr_md",
+      "evidence_text": "erulosclerosis (2/35). Additionally, there was 30\u201335% interstitial fibrosis and tubular atrophy (Fig. 1 B). Electron microscopy showed irregular, jagged podocyte morphology an",
+      "default_label": "DISEASE",
+      "deafult_label": "DISEASE",
+      "mapped_label": "DISEASE"
+    },
+    {
+      "text": "heterozygous autosomal dominant",
+      "start": 13490,
+      "end": 13521,
+      "source": "en_ner_bc5cdr_md",
+      "evidence_text": "and segmental foot process effacement (Fig. 1 C). Genetic analysis identified a heterozygous autosomal dominant point mutation in exon 2 of the INF2 gene, characterized by a nucleotide exchan",
+      "default_label": "DISEASE",
+      "deafult_label": "DISEASE",
+      "mapped_label": "DISEASE"
+    },
+    {
+      "text": "proteinuria",
+      "start": 13880,
+      "end": 13891,
+      "source": "en_ner_bc5cdr_md",
+      "evidence_text": "py was discontinued after identification of the genetic cause of FSGS. However, proteinuria increased again, and the patient progressed to end-stage renal disease one and",
+      "default_label": "DISEASE",
+      "deafult_label": "DISEASE",
+      "mapped_label": "DISEASE"
+    },
+    {
+      "text": "end-stage renal disease",
+      "start": 13939,
+      "end": 13962,
+      "source": "en_ner_bc5cdr_md",
+      "evidence_text": "se of FSGS. However, proteinuria increased again, and the patient progressed to end-stage renal disease one and a half years later, ultimately receiving a living donor kidney transpla",
+      "default_label": "DISEASE",
+      "deafult_label": "DISEASE",
+      "mapped_label": "DISEASE"
+    },
+    {
+      "text": "hiPSC-Podocytes",
+      "start": 28914,
+      "end": 28929,
+      "source": "en_ner_bc5cdr_md",
+      "evidence_text": "d patient (black) hiPSC-Podocytes with linear regression. The slope for control hiPSC-Podocytes is 10.5, while that for patient hiPSC-Podocytes is 8.8. This difference is not",
+      "default_label": "DISEASE",
+      "deafult_label": "DISEASE",
+      "mapped_label": "DISEASE"
+    },
+    {
+      "text": "autosomal dominant disease",
+      "start": 39052,
+      "end": 39078,
+      "source": "en_ner_bc5cdr_md",
+      "evidence_text": "in a personalized manner. Adult-onset genetic FSGS is typically inherited as an autosomal dominant disease with variable penetrance 29 . Patients with genetic FSGS often resist immunosup",
+      "default_label": "DISEASE",
+      "deafult_label": "DISEASE",
+      "mapped_label": "DISEASE"
+    },
+    {
+      "text": "toxicity",
+      "start": 39260,
+      "end": 39268,
+      "source": "en_ner_bc5cdr_md",
+      "evidence_text": "e may still benefit from specific therapies 30 \u2013 32 . However, the considerable toxicity associated with these therapies complicates empirical treatments for genetic FS",
+      "default_label": "DISEASE",
+      "deafult_label": "DISEASE",
+      "mapped_label": "DISEASE"
+    },
+    {
+      "text": "hypertensive",
+      "start": 39544,
+      "end": 39556,
+      "source": "en_ner_bc5cdr_md",
+      "evidence_text": "ocytes to stress, potentially requiring modifier genes or additional metabolic, hypertensive, or other stressors for full development of the diseased phenotype 29 . For ins",
+      "default_label": "DISEASE",
+      "deafult_label": "DISEASE",
+      "mapped_label": "DISEASE"
+    },
+    {
+      "text": "human primary urinary epithelial cells 35 , ciPodocytes 36 , HEK293 and HeLa cells 37 , 38 . In these studies, knockdown of INF2 was mediated by morpholinos, siRNA, or CRISPR/Cas9 technology to investigate the role of INF2 33 , 39 . However, caution is necessary because ciPodocytes are known to dedifferentiate in vitro and behave differently than podocytes in vivo 40 . Additionally, the transfection",
+      "start": 40184,
+      "end": 40586,
+      "source": "en_ner_bc5cdr_md",
+      "evidence_text": "ing zebrafish 33 , mice 10 , 34 , and drosophila 35 , as well as in vitro using human primary urinary epithelial cells 35 , ciPodocytes 36 , HEK293 and HeLa cells 37 , 38 . In these studies, knockdown of INF2 was mediated by morpholinos, siRNA, or CRISPR/Cas9 technology to investigate the role of INF2 33 , 39 . However, caution is necessary because ciPodocytes are known to dedifferentiate in vitro and behave differently than podocytes in vivo 40 . Additionally, the transfection of siRNA and injection of morpholinos can lead to inconsistent knockdown effici",
+      "default_label": "DISEASE",
+      "deafult_label": "DISEASE",
+      "mapped_label": "DISEASE"
+    },
+    {
+      "text": "R218Q",
+      "start": 45776,
+      "end": 45781,
+      "source": "en_ner_bc5cdr_md",
+      "evidence_text": "idated. For instance, INF2 knock-out mice do not develop FSGS 25 , whereas INF2 R218Q knock-in mice only show disease after additional injury with puromycin aminonuc",
+      "default_label": "DISEASE",
+      "deafult_label": "DISEASE",
+      "mapped_label": "DISEASE"
+    },
+    {
+      "text": "monogenic SRNS",
+      "start": 49544,
+      "end": 49558,
+      "source": "en_ner_bc5cdr_md",
+      "evidence_text": "s. However, decisions regarding the continuation of CNI treatment in responsive monogenic SRNS should be made on a case-by-case basis 32 , 53 . Bis-T-23 has been shown to inc",
+      "default_label": "DISEASE",
+      "deafult_label": "DISEASE",
+      "mapped_label": "DISEASE"
+    },
+    {
+      "text": "D.F.",
+      "start": 51864,
+      "end": 51868,
+      "source": "en_ner_bc5cdr_md",
+      "evidence_text": "a analysis and interpretation, manuscript writing, final approval of manuscript D.F.: Collection and assembly of data R.K.: Collection and assembly of data, data an",
+      "default_label": "DISEASE",
+      "deafult_label": "DISEASE",
+      "mapped_label": "DISEASE"
+    },
+    {
+      "text": "TRR",
+      "start": 52768,
+      "end": 52771,
+      "source": "en_ner_bc5cdr_md",
+      "evidence_text": "D given to JMD; the German Research Foundation (DFG), project number 509149993, TRR 374 given to JMD, JS and MS. The bulk RNA sequencing data supporting the findin",
+      "default_label": "DISEASE",
+      "deafult_label": "DISEASE",
+      "mapped_label": "DISEASE"
+    }
+  ],
+  "genes_proteins": [
+    {
+      "text": "podocyte-specific",
+      "start": 13,
+      "end": 30,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "Mutations in podocyte-specific genes are associated with genetic focal segmental glomerulosclerosis (FSGS), ye",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "formin 2",
+      "start": 600,
+      "end": 608,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": ". HiPSC-Podocytes were generated from a patient with a mutation in the inverted formin 2 ( INF2 ) gene, who showed a partial clinical response to steroid treatment. Com",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "formin 2 ( INF2 ) gene",
+      "start": 600,
+      "end": 622,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": ". HiPSC-Podocytes were generated from a patient with a mutation in the inverted formin 2 ( INF2 ) gene, who showed a partial clinical response to steroid treatment. Compared to healt",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "INF2",
+      "start": 611,
+      "end": 615,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "ocytes were generated from a patient with a mutation in the inverted formin 2 ( INF2 ) gene, who showed a partial clinical response to steroid treatment. Compared t",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "actin-associated",
+      "start": 830,
+      "end": 846,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "ecific hiPSC-Podocytes exhibited decreased protrusion length, reduced levels of actin-associated markers, and alterations in INF2 protein levels. Additionally, actin filaments",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "actin-associated markers",
+      "start": 830,
+      "end": 854,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "ecific hiPSC-Podocytes exhibited decreased protrusion length, reduced levels of actin-associated markers, and alterations in INF2 protein levels. Additionally, actin filaments were dis",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "actin filaments",
+      "start": 910,
+      "end": 925,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "actin-associated markers, and alterations in INF2 protein levels. Additionally, actin filaments were disrupted, characterized by increased actin depolymerization. Next to the",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "SDH",
+      "start": 1067,
+      "end": 1070,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "tion. Next to the actin-modulating agent Bis-T-23, the steroid Solu-Decortin H (SDH) improved the actin cytoskeleton in the patient-specific cells, which aligned w",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "actin cytoskeleton",
+      "start": 1085,
+      "end": 1103,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "actin-modulating agent Bis-T-23, the steroid Solu-Decortin H (SDH) improved the actin cytoskeleton in the patient-specific cells, which aligned with the patient\u2019s partial respons",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "kidney\u2019s filtration units",
+      "start": 1569,
+      "end": 1594,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "esion defined by the scarring of certain parts of some glomeruli, which are the kidney\u2019s filtration units. A significant aspect is the effacement of podocytes, which are specialized cel",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "40 genes",
+      "start": 1974,
+      "end": 1982,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "nephrotic syndrome (SRNS) 1 and in 30% of adults with FSGS 2 . Variants in over 40 genes have been associated with SRNS 3 . Many of these genes are essential for the po",
+      "default_label": "DNA",
+      "deafult_label": "DNA",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "glomerular basement membrane 1 , 4",
+      "start": 2214,
+      "end": 2248,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "lit diaphragm, the structure of the actin cytoskeleton, and the adhesion to the glomerular basement membrane 1 , 4 . Some genetic variants may disrupt normal podocyte function through indirect e",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "INF2 gene 6",
+      "start": 2495,
+      "end": 2506,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": ". One common cause of autosomal dominant FSGS is heterozygous mutations in the INF2 gene 6 , 9 . However, the impact of patient-specific single nucleotide polymorphisms h",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "mutant protein",
+      "start": 3133,
+      "end": 3147,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "mutations may result from a gain-of-function or dominant-negative effect of the mutant protein, leading to intrinsic cellular dysfunction. In contrast, complete loss of INF2",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "podocytes 11 \u2013 13",
+      "start": 4231,
+      "end": 4248,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "induced pluripotent stem cells (hiPSCs), followed by their differentiation into podocytes 11 \u2013 13 . It has been demonstrated that these hiPSC-derived podocytes (hiPSC-Podocytes)",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "INF2 gene",
+      "start": 4535,
+      "end": 4544,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "protocol was applied to a patient with genetic FSGS carrying a mutation in the INF2 gene (c.217G > A; G73S), allowing for examining patient-specific podocytes in vitro.",
+      "default_label": "DNA",
+      "deafult_label": "DNA",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "60 rpm",
+      "start": 6101,
+      "end": 6107,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": ",000 hiPSCs/cm 2 in a low-adhesive plate overnight on a shaking platform set to 60 rpm at 37 \u00b0C and 5% CO 2 . Differentiation into podocytes was performed using the s",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "CO 2",
+      "start": 6124,
+      "end": 6128,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "ow-adhesive plate overnight on a shaking platform set to 60 rpm at 37 \u00b0C and 5% CO 2 . Differentiation into podocytes was performed using the same media as in 2D di",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "1 \u00d7",
+      "start": 6374,
+      "end": 6377,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "tated plates. 3D cultures were fixed with 4% PFA for 30 min, after washing with 1 \u00d7 PBS. Ultrastructural analysis was performed via SEM. Samples were fixed with a",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "cDNA",
+      "start": 6749,
+      "end": 6753,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "(#A52849, ThermoFisher Scientific). 500 ng of RNA was reverse transcribed into cDNA and diluted to 5 ng/\u00b5L. 1 \u00b5L was used for qPCR, and primer sequences used are l",
+      "default_label": "DNA",
+      "deafult_label": "DNA",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "primer sequences",
+      "start": 6806,
+      "end": 6822,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "verse transcribed into cDNA and diluted to 5 ng/\u00b5L. 1 \u00b5L was used for qPCR, and primer sequences used are listed in Table 1 . The \u2206\u2206Ct method was used for calculation, and ACTB",
+      "default_label": "DNA",
+      "deafult_label": "DNA",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "ACTB",
+      "start": 6898,
+      "end": 6902,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "nces used are listed in Table 1 . The \u2206\u2206Ct method was used for calculation, and ACTB served as a housekeeping gene. Table1 Sequences of primers used for qPCR. Gene",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "housekeeping gene",
+      "start": 6915,
+      "end": 6932,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "ted in Table 1 . The \u2206\u2206Ct method was used for calculation, and ACTB served as a housekeeping gene. Table1 Sequences of primers used for qPCR. Gene Forward sequence (5\u2032-3\u2032) Rever",
+      "default_label": "DNA",
+      "deafult_label": "DNA",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "Gene Forward sequence",
+      "start": 6977,
+      "end": 6998,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "ACTB served as a housekeeping gene. Table1 Sequences of primers used for qPCR. Gene Forward sequence (5\u2032-3\u2032) Reverse sequence (5\u2032-3\u2032) NANOG AGATGCCTCACACGGAGACT TTGGGACTGGTGGAAGAAT",
+      "default_label": "DNA",
+      "deafult_label": "DNA",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "OCT3/4",
+      "start": 7080,
+      "end": 7086,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "5\u2032-3\u2032) Reverse sequence (5\u2032-3\u2032) NANOG AGATGCCTCACACGGAGACT TTGGGACTGGTGGAAGAATC OCT3/4 CAGGGCCCCATTTTGGTACC CTCAGTTTGAATGCATGGGAGAGC SOX2 TTCACATGTCCCAGCACTACCAGA ATG",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "SOX2",
+      "start": 7133,
+      "end": 7137,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "AGACT TTGGGACTGGTGGAAGAATC OCT3/4 CAGGGCCCCATTTTGGTACC CTCAGTTTGAATGCATGGGAGAGC SOX2 TTCACATGTCCCAGCACTACCAGA ATGTGTGAGAGGGGCAGTGTGC REX1 ACGTTTCGTGTGTCCCTTTC TTAGG",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "TTCACATGTCCCAGCACTACCAGA",
+      "start": 7138,
+      "end": 7162,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "TTGGGACTGGTGGAAGAATC OCT3/4 CAGGGCCCCATTTTGGTACC CTCAGTTTGAATGCATGGGAGAGC SOX2 TTCACATGTCCCAGCACTACCAGA ATGTGTGAGAGGGGCAGTGTGC REX1 ACGTTTCGTGTGTCCCTTTC TTAGGATGTGGGCTTTCAGG \u03b1SMA ACTG",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "REX1",
+      "start": 7186,
+      "end": 7190,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "C CTCAGTTTGAATGCATGGGAGAGC SOX2 TTCACATGTCCCAGCACTACCAGA ATGTGTGAGAGGGGCAGTGTGC REX1 ACGTTTCGTGTGTCCCTTTC TTAGGATGTGGGCTTTCAGG \u03b1SMA ACTGAGCGTGGCTATTCCTCCGTT GCAGTGG",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "REX1 ACGTTTCGTGTGTCCCTTTC",
+      "start": 7186,
+      "end": 7211,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "C CTCAGTTTGAATGCATGGGAGAGC SOX2 TTCACATGTCCCAGCACTACCAGA ATGTGTGAGAGGGGCAGTGTGC REX1 ACGTTTCGTGTGTCCCTTTC TTAGGATGTGGGCTTTCAGG \u03b1SMA ACTGAGCGTGGCTATTCCTCCGTT GCAGTGGCCATCTCATTTTCA SYNPO",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "SYNPO",
+      "start": 7285,
+      "end": 7290,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "CCTTTC TTAGGATGTGGGCTTTCAGG \u03b1SMA ACTGAGCGTGGCTATTCCTCCGTT GCAGTGGCCATCTCATTTTCA SYNPO TAAGCAACCT\u2026AACTGAGG TTCTGGGCTAAAGCTAAC MAFB TTGTAACCAGAATCACCCTGAGGTC CCAGGGTCA",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "MAFB",
+      "start": 7330,
+      "end": 7334,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "TATTCCTCCGTT GCAGTGGCCATCTCATTTTCA SYNPO TAAGCAACCT\u2026AACTGAGG TTCTGGGCTAAAGCTAAC MAFB TTGTAACCAGAATCACCCTGAGGTC CCAGGGTCAGGGATGGCTAA VIM AAATGGCTCGTCACCTTCGT TTGCGCT",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "MAFB TTGTAACCAGAATCACCCTGAGGTC CCAGGGTCAGGGATGGCTAA VIM",
+      "start": 7330,
+      "end": 7385,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "TATTCCTCCGTT GCAGTGGCCATCTCATTTTCA SYNPO TAAGCAACCT\u2026AACTGAGG TTCTGGGCTAAAGCTAAC MAFB TTGTAACCAGAATCACCCTGAGGTC CCAGGGTCAGGGATGGCTAA VIM AAATGGCTCGTCACCTTCGT TTGCGCTCCTGAAAAACTGC WT1 TCAGAGGCATTCAGGATGTG TTATTGCAGCCT",
+      "default_label": "DNA",
+      "deafult_label": "DNA",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "VIM",
+      "start": 7382,
+      "end": 7385,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "AACTGAGG TTCTGGGCTAAAGCTAAC MAFB TTGTAACCAGAATCACCCTGAGGTC CCAGGGTCAGGGATGGCTAA VIM AAATGGCTCGTCACCTTCGT TTGCGCTCCTGAAAAACTGC WT1 TCAGAGGCATTCAGGATGTG TTATTGCAGCCT",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "TTGCGCTCCTGAAAAACTGC WT1 TCAGAGGCATTCAGGATGTG TTATTGCAGCCTGGGTAAGC INF2",
+      "start": 7407,
+      "end": 7478,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "AC MAFB TTGTAACCAGAATCACCCTGAGGTC CCAGGGTCAGGGATGGCTAA VIM AAATGGCTCGTCACCTTCGT TTGCGCTCCTGAAAAACTGC WT1 TCAGAGGCATTCAGGATGTG TTATTGCAGCCTGGGTAAGC INF2 CCCTAACCCTCAGCATGGCA GCGCTTCCTCCTGGTGGTTC CTSL TAGAGGCACAGTGGACCAAG CTCCATCCTTC",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "CTSL",
+      "start": 7521,
+      "end": 7525,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "TTCAGGATGTG TTATTGCAGCCTGGGTAAGC INF2 CCCTAACCCTCAGCATGGCA GCGCTTCCTCCTGGTGGTTC CTSL TAGAGGCACAGTGGACCAAG CTCCATCCTTCTTCATTCATGCC GAPDH CAAGATCATCAGCAATGCCTCC ATGAT",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "CTSL TAGAGGCACAGTGGACCAAG",
+      "start": 7521,
+      "end": 7546,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "TTCAGGATGTG TTATTGCAGCCTGGGTAAGC INF2 CCCTAACCCTCAGCATGGCA GCGCTTCCTCCTGGTGGTTC CTSL TAGAGGCACAGTGGACCAAG CTCCATCCTTCTTCATTCATGCC GAPDH CAAGATCATCAGCAATGCCTCC ATGATGTTCTGGAGAGCCCC HPRT",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "GAPDH",
+      "start": 7571,
+      "end": 7576,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "GCATGGCA GCGCTTCCTCCTGGTGGTTC CTSL TAGAGGCACAGTGGACCAAG CTCCATCCTTCTTCATTCATGCC GAPDH CAAGATCATCAGCAATGCCTCC ATGATGTTCTGGAGAGCCCC HPRT GACCAGTCAACAGGGGACAT AACACTTCG",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "HPRT",
+      "start": 7621,
+      "end": 7625,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "CCAAG CTCCATCCTTCTTCATTCATGCC GAPDH CAAGATCATCAGCAATGCCTCC ATGATGTTCTGGAGAGCCCC HPRT GACCAGTCAACAGGGGACAT AACACTTCGTGGGGTCCTTTTC ACTB ACCGAGCGTGGCTACAGCTTCACC AGCAC",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "HPRT GACCAGTCAACAGGGGACAT",
+      "start": 7621,
+      "end": 7646,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "CCAAG CTCCATCCTTCTTCATTCATGCC GAPDH CAAGATCATCAGCAATGCCTCC ATGATGTTCTGGAGAGCCCC HPRT GACCAGTCAACAGGGGACAT AACACTTCGTGGGGTCCTTTTC ACTB ACCGAGCGTGGCTACAGCTTCACC AGCACCCGTGGCCATCTCTTTCTCG",
+      "default_label": "DNA",
+      "deafult_label": "DNA",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "AGCACCCGTGGCCATCTCTTTCTCG",
+      "start": 7700,
+      "end": 7725,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "HPRT GACCAGTCAACAGGGGACAT AACACTTCGTGGGGTCCTTTTC ACTB ACCGAGCGTGGCTACAGCTTCACC AGCACCCGTGGCCATCTCTTTCTCG Sequences of primers used for qPCR. Primer flanking the INF2 mutation (c.217G >",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "Podocyte-associated marker genes",
+      "start": 8479,
+      "end": 8511,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "encing service of Novogene. Analysis was performed as previously described 17 . Podocyte-associated marker genes are based on published GSEA lists from the molecular signatures database (MSigD",
+      "default_label": "DNA",
+      "deafult_label": "DNA",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "C2_PODOCYTES",
+      "start": 8691,
+      "end": 8703,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "_2_NEPHRON_PROGENITOR_CELLS, MENON_FETAL_KIDNEY_4_PODOCYTES, LAKE_ADULT_KIDNEY_ C2_PODOCYTES ) as well as from the original publication of the differentiation protocol 12 ,",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "Primary antibodies",
+      "start": 9091,
+      "end": 9109,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": ".5% Triton-X-100, 1% bovine serum albumin, and 10% normal goat serum (1 h, RT). Primary antibodies were diluted according to Table 2 in 1 \u00d7 PBS containing 1% bovine serum albumin",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "secondary antibodies",
+      "start": 9295,
+      "end": 9315,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "and incubated overnight (4 \u00b0C). After washing 3 \u00d7 with 1 \u00d7 PBS for 5 min at RT, secondary antibodies were incubated for 1 h (RT). After washing, samples were mounted using Fluoromo",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "Immunocyto-",
+      "start": 9454,
+      "end": 9465,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "ounted using Fluoromount-G containing DAPI. Table 2 Antibody dilutions used for Immunocyto- and histochemistry and Western Blot Analysis. Antibody Company Catalogue number",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "Synaptopodin Progen",
+      "start": 9611,
+      "end": 9630,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "talogue number Immuno-cytochemistry Immuno-histochemistry Western blot analysis Synaptopodin Progen 61094 1:200 1:200 1:100 INF2 C-terminal Proteintech 20466-1-AP 1:100 1:100 1:10",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "1:200 1:200 1:100 INF2",
+      "start": 9637,
+      "end": 9659,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "chemistry Immuno-histochemistry Western blot analysis Synaptopodin Progen 61094 1:200 1:200 1:100 INF2 C-terminal Proteintech 20466-1-AP 1:100 1:100 1:100 Podocin Proteintech 20384-1",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "Podocin Proteintech",
+      "start": 9712,
+      "end": 9731,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "1094 1:200 1:200 1:100 INF2 C-terminal Proteintech 20466-1-AP 1:100 1:100 1:100 Podocin Proteintech 20384-1-AP 1:200 1:100 \u2013 Ki67 Abcam ab15580 1:500 \u2013 \u2013 OCT3/4 Stem cell technolo",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "Ki67",
+      "start": 9757,
+      "end": 9761,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "ntech 20466-1-AP 1:100 1:100 1:100 Podocin Proteintech 20384-1-AP 1:200 1:100 \u2013 Ki67 Abcam ab15580 1:500 \u2013 \u2013 OCT3/4 Stem cell technologies 60093.1 1:100 \u2013 \u2013 SSEA4 S",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "SSEA4",
+      "start": 9834,
+      "end": 9839,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "\u2013 Ki67 Abcam ab15580 1:500 \u2013 \u2013 OCT3/4 Stem cell technologies 60093.1 1:100 \u2013 \u2013 SSEA4 Stem cell technologies 60062FI.1 1:100 \u2013 \u2013 Tra-1-81 Invitrogen 12-8883-82 1:100",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "Cortactin",
+      "start": 9924,
+      "end": 9933,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "cell technologies 60062FI.1 1:100 \u2013 \u2013 Tra-1-81 Invitrogen 12-8883-82 1:100 \u2013 \u2013 Cortactin Invitrogen PA527134 1:200 \u2013 1:300 Nephrin Progen GP-N2 \u2013 1:100 INF2 N-fragment",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "PA527134 1:200",
+      "start": 9945,
+      "end": 9959,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "062FI.1 1:100 \u2013 \u2013 Tra-1-81 Invitrogen 12-8883-82 1:100 \u2013 \u2013 Cortactin Invitrogen PA527134 1:200 \u2013 1:300 Nephrin Progen GP-N2 \u2013 1:100 INF2 N-fragment Sigma Aldrich SAB1401801 \u2013",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "Nephrin Progen",
+      "start": 9968,
+      "end": 9982,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "-81 Invitrogen 12-8883-82 1:100 \u2013 \u2013 Cortactin Invitrogen PA527134 1:200 \u2013 1:300 Nephrin Progen GP-N2 \u2013 1:100 INF2 N-fragment Sigma Aldrich SAB1401801 \u2013 \u2013 1:100 RhoA Santa Cru",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "RhoA",
+      "start": 10048,
+      "end": 10052,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "Nephrin Progen GP-N2 \u2013 1:100 INF2 N-fragment Sigma Aldrich SAB1401801 \u2013 \u2013 1:100 RhoA Santa Cruz sc-418 \u2013 \u2013 1:25 Cathepsin L Invitrogen, BMS1032 \u2013 \u2013 1:500 GAPDH Prot",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "Cruz sc-418",
+      "start": 10059,
+      "end": 10070,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "gen GP-N2 \u2013 1:100 INF2 N-fragment Sigma Aldrich SAB1401801 \u2013 \u2013 1:100 RhoA Santa Cruz sc-418 \u2013 \u2013 1:25 Cathepsin L Invitrogen, BMS1032 \u2013 \u2013 1:500 GAPDH Proteintech 10494-1-AP",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "HRP",
+      "start": 10405,
+      "end": 10408,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "00 \u2013 Alexa Fluor guinea pig 488 Invitrogen A11073 1:1000 1:200 \u2013 Anti-mouse and HRP Agilent technologies P0447 \u2013 \u2013 1:10,000 Anti-rabbit HRP Agilent technologies P0",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "xylol (3 \u00d7",
+      "start": 10622,
+      "end": 10632,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "o- and histochemistry and Western Blot Analysis. Samples were deparaffinized in xylol (3 \u00d7 5 min) and rehydrated in a descending ethanol series (5 min each: 2 \u00d7 100%, 2 \u00d7",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "\u00d7",
+      "start": 10701,
+      "end": 10702,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "xylol (3 \u00d7 5 min) and rehydrated in a descending ethanol series (5 min each: 2 \u00d7 100%, 2 \u00d7 96%, 1 \u00d7 80%, 1 \u00d7 70%, ddH 2 O). Samples were boiled in citric acid b",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "ddH 2 O",
+      "start": 10736,
+      "end": 10743,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "n a descending ethanol series (5 min each: 2 \u00d7 100%, 2 \u00d7 96%, 1 \u00d7 80%, 1 \u00d7 70%, ddH 2 O). Samples were boiled in citric acid buffer for 15 min in a pressure cooker and",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "70 \u00b0C",
+      "start": 10955,
+      "end": 10960,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "dilutions according to Table 2 . 30 \u00b5g of lysates was boiled in Laemmli buffer (70 \u00b0C for 10 min) and separated on SDS gels (8\u201312%) at 120 V for 1 h. Nitrocellulose",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "3 \u00d7",
+      "start": 11188,
+      "end": 11191,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "cording to Table 2 in TBS and incubated overnight (4 \u00b0C). Membranes were washed 3 \u00d7 with TBS-T and then incubated in secondary antibody for 1 h (RT). Total fluores",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "ImageJ.",
+      "start": 11331,
+      "end": 11338,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "(RT). Total fluorescence of phalloidin was analyzed from confocal images using ImageJ. Classification of actin filaments was performed as previously described 20 , 21",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "actin bundles",
+      "start": 11439,
+      "end": 11452,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "tin filaments was performed as previously described 20 , 21 . Type A represents actin bundles, type B actin filaments, and type C fragmented actin filaments. Evaluation was",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "type B actin filaments",
+      "start": 11454,
+      "end": 11476,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "as performed as previously described 20 , 21 . Type A represents actin bundles, type B actin filaments, and type C fragmented actin filaments. Evaluation was performed blinded. Quant",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "B actin",
+      "start": 11459,
+      "end": 11466,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "rformed as previously described 20 , 21 . Type A represents actin bundles, type B actin filaments, and type C fragmented actin filaments. Evaluation was performed blin",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "Actin Polymerization",
+      "start": 11714,
+      "end": 11734,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "with more than 50 cells per replicate and more than 5 fields analyzed per well. Actin Polymerization Biochem Kit (#BK003, Cytoskeleton) with non-muscle actin (#APHL99, Cytoskeleton",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "non-muscle actin",
+      "start": 11775,
+      "end": 11791,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "analyzed per well. Actin Polymerization Biochem Kit (#BK003, Cytoskeleton) with non-muscle actin (#APHL99, Cytoskeleton) and muscle actin (#APHL95), mixed 10:1, was used to ana",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "APHL99",
+      "start": 11794,
+      "end": 11800,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "Actin Polymerization Biochem Kit (#BK003, Cytoskeleton) with non-muscle actin (#APHL99, Cytoskeleton) and muscle actin (#APHL95), mixed 10:1, was used to analyze acti",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "HL99",
+      "start": 11796,
+      "end": 11800,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "tin Polymerization Biochem Kit (#BK003, Cytoskeleton) with non-muscle actin (#APHL99, Cytoskeleton) and muscle actin (#APHL95), mixed 10:1, was used to analyze acti",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "muscle actin",
+      "start": 11820,
+      "end": 11832,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "em Kit (#BK003, Cytoskeleton) with non-muscle actin (#APHL99, Cytoskeleton) and muscle actin (#APHL95), mixed 10:1, was used to analyze actin polymerization and depolymeriz",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "MA",
+      "start": 12148,
+      "end": 12150,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "re treated for 1 h with Bis-T-23 (30 \u00b5M) (Aberjona Laboratories, Inc., Beverly, MA), tacrolimus (10 \u00b5g/mL) (Prograf, Astellas Pharma), and SDH (1 \u00b5g/mL) (Jenaphar",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "SDH (1 \u00b5g/mL",
+      "start": 12207,
+      "end": 12219,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "ries, Inc., Beverly, MA), tacrolimus (10 \u00b5g/mL) (Prograf, Astellas Pharma), and SDH (1 \u00b5g/mL) (Jenapharm) in 150 \u00b5L basic medium per well and subsequently fixed and stained",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "150 \u00b5L basic",
+      "start": 12236,
+      "end": 12248,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "rolimus (10 \u00b5g/mL) (Prograf, Astellas Pharma), and SDH (1 \u00b5g/mL) (Jenapharm) in 150 \u00b5L basic medium per well and subsequently fixed and stained with phalloidin and DAPI. Qu",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "p",
+      "start": 12745,
+      "end": 12746,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "h GraphPad Prism using unpaired Welch\u2019s t-test or one-way ANOVA. Significance ( p -value) is indicated with asterisks. We generated hiPSC-Podocytes from a patien",
+      "default_label": "DNA",
+      "deafult_label": "DNA",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "exon 2",
+      "start": 13540,
+      "end": 13546,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "Genetic analysis identified a heterozygous autosomal dominant point mutation in exon 2 of the INF2 gene, characterized by a nucleotide exchange from guanine to adenin",
+      "default_label": "DNA",
+      "deafult_label": "DNA",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "position 73",
+      "start": 13705,
+      "end": 13716,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "ne at position 217 (c.217G > A), which results in an amino acid substitution at position 73 of the protein sequence, changing glycine to serine (G73S). Immunosuppressive t",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "Fig. 1 B, C",
+      "start": 14150,
+      "end": 14161,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "lanted kidney shows normal podocyte foot processes and was used as a reference (Fig. 1 B, C). Staining for common podocyte-associated marker proteins, such as synaptopodin",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "synaptopodin",
+      "start": 14229,
+      "end": 14241,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "(Fig. 1 B, C). Staining for common podocyte-associated marker proteins, such as synaptopodin, nephrin, and podocin, as well as the actin-associated protein INF2, displayed",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "nephrin",
+      "start": 14243,
+      "end": 14250,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "Staining for common podocyte-associated marker proteins, such as synaptopodin, nephrin, and podocin, as well as the actin-associated protein INF2, displayed structura",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "podocin",
+      "start": 14256,
+      "end": 14263,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "common podocyte-associated marker proteins, such as synaptopodin, nephrin, and podocin, as well as the actin-associated protein INF2, displayed structural alterations",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "actin-associated protein INF2",
+      "start": 14280,
+      "end": 14309,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "ted marker proteins, such as synaptopodin, nephrin, and podocin, as well as the actin-associated protein INF2, displayed structural alterations and significant damage to the glomerular filt",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "hematoxylin\u2013eosin",
+      "start": 14769,
+      "end": 14786,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "ment and dialysis is marked in blue on the x-axis. (B) Histological analysis of hematoxylin\u2013eosin (HE) and periodic acid\u2013Schiff (PAS) staining of a kidney biopsy from the FSGS p",
+      "default_label": "DNA",
+      "deafult_label": "DNA",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "podocyte-specific",
+      "start": 15363,
+      "end": 15380,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "ite arrows). Scale bars represent 10 \u00b5m. ( D\u2013E ) Immunofluorescence staining of podocyte-specific and actin-associated markers. The slit diaphragm protein nephrin is shown in gr",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "slit diaphragm protein nephrin",
+      "start": 15415,
+      "end": 15445,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "unofluorescence staining of podocyte-specific and actin-associated markers. The slit diaphragm protein nephrin is shown in green and podocin in red (D ). The actin-associated podocyte-specif",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "red (D )",
+      "start": 15479,
+      "end": 15487,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "ed markers. The slit diaphragm protein nephrin is shown in green and podocin in red (D ). The actin-associated podocyte-specific marker synaptopodin is depicted in gree",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "actin-associated podocyte-specific marker synaptopodin",
+      "start": 15493,
+      "end": 15547,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "e slit diaphragm protein nephrin is shown in green and podocin in red (D ). The actin-associated podocyte-specific marker synaptopodin is depicted in green, and INF2 protein in red (E) . Nuclei are in blue, stained",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "INF2 protein",
+      "start": 15574,
+      "end": 15586,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "ctin-associated podocyte-specific marker synaptopodin is depicted in green, and INF2 protein in red (E) . Nuclei are in blue, stained with DAPI. Scale bars represent 100 \u00b5m",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "pluripotency markers",
+      "start": 17352,
+      "end": 17372,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "ms of genomic stability (Fig. 2 A\u2013C), proliferation capacity, and expression of pluripotency markers (Fig. 2 D, E). The patient\u2019s point mutation in the INF2 gene was preserved duri",
+      "default_label": "DNA",
+      "deafult_label": "DNA",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "hiPSC-Podocytes (Fig. 2 B",
+      "start": 17582,
+      "end": 17607,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "t both in patient-specific fibroblasts and hiPSCs (Fig. 2 A), as well as in the hiPSC-Podocytes (Fig. 2 B). In contrast, the mutation was absent in all cells derived from the healthy co",
+      "default_label": "DNA",
+      "deafult_label": "DNA",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "Tra-1",
+      "start": 17896,
+      "end": 17901,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "feration marker Ki67 and common pluripotency markers such as OCT3/4, SSEA4, and Tra-1-81 were expressed in all three individual clones of the patient-derived hiPSCs",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "marker genes",
+      "start": 18435,
+      "end": 18447,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "docytes to confirm podocyte identity (Fig. S2). Here, hiPSC-Podocytes expressed marker genes important for the podocyte phenotype and exhibited a more developed morphology,",
+      "default_label": "DNA",
+      "deafult_label": "DNA",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "c.217G",
+      "start": 18954,
+      "end": 18960,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "hese results illustrate the preservation of the patient\u2019s genetic INF2 variant (c.217G > A) throughout reprogramming and differentiation, with the variant absent in c",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "linear actin filaments",
+      "start": 21026,
+      "end": 21048,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "ch is associated with the cytoskeleton and is responsible for the regulation of linear actin filaments (Fig. 3 C). Inter-clonal differences were excluded by staining of key podocyte",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "synaptopodin (Fig. S3",
+      "start": 21157,
+      "end": 21178,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "ferences were excluded by staining of key podocyte markers, such as podocin and synaptopodin (Fig. S3). Since typical podocyte markers were present but decreased in the patient-deri",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "podocyte markers",
+      "start": 21195,
+      "end": 21211,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "key podocyte markers, such as podocin and synaptopodin (Fig. S3). Since typical podocyte markers were present but decreased in the patient-derived hiPSC-Podocytes in 2D culture",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "protein (Fig. 3 E",
+      "start": 21693,
+      "end": 21710,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "2D differentiated hiPSC-Podocytes was validated at both the mRNA (Fig. 3 D) and protein (Fig. 3 E) levels. Filamentous actin, stained with phalloidin, was altered in patient-spe",
+      "default_label": "DNA",
+      "deafult_label": "DNA",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "Filamentous actin",
+      "start": 21720,
+      "end": 21737,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "ocytes was validated at both the mRNA (Fig. 3 D) and protein (Fig. 3 E) levels. Filamentous actin, stained with phalloidin, was altered in patient-specific cells with significan",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "actin",
+      "start": 21944,
+      "end": 21949,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "ce (Fig. 3 F). In contrast, the protein level of cortactin, which also promotes actin rearrangement, was increased compared to the control (Fig. 3 G). Fig. 3 Phenoty",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "Fig. 3",
+      "start": 22015,
+      "end": 22021,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "promotes actin rearrangement, was increased compared to the control (Fig. 3 G). Fig. 3 Phenotypic alterations of patient hiPSC-Podocytes. (A) Scanning electron micros",
+      "default_label": "RNA",
+      "deafult_label": "RNA",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "SEM",
+      "start": 22292,
+      "end": 22295,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "morphological features of individual cells (around 25 cells per cell line) from SEM imaging, including cell shape (circularity), protrusion length, and number. (C)",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "podocyte-specific markers podocin",
+      "start": 22411,
+      "end": 22444,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "ularity), protrusion length, and number. (C) Immunocytochemical staining of the podocyte-specific markers podocin and synaptopodin, the actin-associated protein INF2, as well as filamentous act",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "F-actin",
+      "start": 22528,
+      "end": 22535,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "synaptopodin, the actin-associated protein INF2, as well as filamentous actin (F-actin) stained with phalloidin in control and patient hiPSC-Podocytes. Scale bars rep",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "mRNA",
+      "start": 22714,
+      "end": 22718,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": ") Decreased synaptopodin expression in patient hiPSC-Podocytes, demonstrated at mRNA level via qPCR (D) and at protein level via western blot analysis normalized to",
+      "default_label": "RNA",
+      "deafult_label": "RNA",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "CD2AP",
+      "start": 24493,
+      "end": 24498,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "everal markers important for maintaining the proper podocyte phenotype, such as CD2AP , VIM , SYNPO , FAT1 , MAFB , along with adhesion via integrins ( ITGA3 , ITGA5",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "FAT1",
+      "start": 24515,
+      "end": 24519,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "nt for maintaining the proper podocyte phenotype, such as CD2AP , VIM , SYNPO , FAT1 , MAFB , along with adhesion via integrins ( ITGA3 , ITGA5 , ITGB3 ) and extrac",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "ITGA3",
+      "start": 24565,
+      "end": 24570,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "such as CD2AP , VIM , SYNPO , FAT1 , MAFB , along with adhesion via integrins ( ITGA3 , ITGA5 , ITGB3 ) and extracellular matrix components ( LAMB2 , VIM ) were expr",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "ITGA5",
+      "start": 24573,
+      "end": 24578,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "CD2AP , VIM , SYNPO , FAT1 , MAFB , along with adhesion via integrins ( ITGA3 , ITGA5 , ITGB3 ) and extracellular matrix components ( LAMB2 , VIM ) were expressed in",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "ITGB3",
+      "start": 24581,
+      "end": 24586,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "VIM , SYNPO , FAT1 , MAFB , along with adhesion via integrins ( ITGA3 , ITGA5 , ITGB3 ) and extracellular matrix components ( LAMB2 , VIM ) were expressed in both co",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "extracellular matrix components",
+      "start": 24593,
+      "end": 24624,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": ", FAT1 , MAFB , along with adhesion via integrins ( ITGA3 , ITGA5 , ITGB3 ) and extracellular matrix components ( LAMB2 , VIM ) were expressed in both control and patient hiPSC-Podocytes, alt",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "LAMB2",
+      "start": 24627,
+      "end": 24632,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "n via integrins ( ITGA3 , ITGA5 , ITGB3 ) and extracellular matrix components ( LAMB2 , VIM ) were expressed in both control and patient hiPSC-Podocytes, although ma",
+      "default_label": "DNA",
+      "deafult_label": "DNA",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "actin-binding ( FLNB , MSN , MYO1C )",
+      "start": 24828,
+      "end": 24864,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "ed in the patient-specific cell (Fig. 4 A). Additionally, genes associated with actin-binding ( FLNB , MSN , MYO1C ) were also decreased, while genes related to microtubule formation ( TUBA1B , TU",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "FLNB",
+      "start": 24844,
+      "end": 24848,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "t-specific cell (Fig. 4 A). Additionally, genes associated with actin-binding ( FLNB , MSN , MYO1C ) were also decreased, while genes related to microtubule formati",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "MSN",
+      "start": 24851,
+      "end": 24854,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "fic cell (Fig. 4 A). Additionally, genes associated with actin-binding ( FLNB , MSN , MYO1C ) were also decreased, while genes related to microtubule formation ( T",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "MYO1C",
+      "start": 24857,
+      "end": 24862,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "ll (Fig. 4 A). Additionally, genes associated with actin-binding ( FLNB , MSN , MYO1C ) were also decreased, while genes related to microtubule formation ( TUBA1B ,",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "TUBA1B",
+      "start": 24933,
+      "end": 24939,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "N , MYO1C ) were also decreased, while genes related to microtubule formation ( TUBA1B , TUBB2B , KIF23 , CENPE ), actin dynamics ( ANLN ), cytoskeletal protein-membr",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "TUBB2B",
+      "start": 24942,
+      "end": 24948,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": ") were also decreased, while genes related to microtubule formation ( TUBA1B , TUBB2B , KIF23 , CENPE ), actin dynamics ( ANLN ), cytoskeletal protein-membrane ancho",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "KIF23",
+      "start": 24951,
+      "end": 24956,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "lso decreased, while genes related to microtubule formation ( TUBA1B , TUBB2B , KIF23 , CENPE ), actin dynamics ( ANLN ), cytoskeletal protein-membrane anchoring ( E",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "CENPE",
+      "start": 24959,
+      "end": 24964,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "eased, while genes related to microtubule formation ( TUBA1B , TUBB2B , KIF23 , CENPE ), actin dynamics ( ANLN ), cytoskeletal protein-membrane anchoring ( EPB41L3 )",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "ANLN",
+      "start": 24985,
+      "end": 24989,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "to microtubule formation ( TUBA1B , TUBB2B , KIF23 , CENPE ), actin dynamics ( ANLN ), cytoskeletal protein-membrane anchoring ( EPB41L3 ), and small GTPase activa",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "EPB41L3",
+      "start": 25035,
+      "end": 25042,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "3 , CENPE ), actin dynamics ( ANLN ), cytoskeletal protein-membrane anchoring ( EPB41L3 ), and small GTPase activation ( DOCK1 , RACGAP1 ) were upregulated in patient",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "DOCK1",
+      "start": 25076,
+      "end": 25081,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "oskeletal protein-membrane anchoring ( EPB41L3 ), and small GTPase activation ( DOCK1 , RACGAP1 ) were upregulated in patient hiPSC-Podocytes (Fig. 4 B). Consistent",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "RACGAP1",
+      "start": 25084,
+      "end": 25091,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "l protein-membrane anchoring ( EPB41L3 ), and small GTPase activation ( DOCK1 , RACGAP1 ) were upregulated in patient hiPSC-Podocytes (Fig. 4 B). Consistent with these",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "Fig. 4 B",
+      "start": 25139,
+      "end": 25147,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "ase activation ( DOCK1 , RACGAP1 ) were upregulated in patient hiPSC-Podocytes (Fig. 4 B). Consistent with these findings, gene set enrichment analysis revealed that ge",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "integrins",
+      "start": 25481,
+      "end": 25490,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "hiPSC-Podocytes compared to the control. In contrast, cell adhesion mediated by integrins was more active in control hiPSC-Podocytes (Fig. 4 C). Fig. 4 Comparative trans",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "Fig. 4",
+      "start": 25546,
+      "end": 25552,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "on mediated by integrins was more active in control hiPSC-Podocytes (Fig. 4 C). Fig. 4 Comparative transcriptomic analysis of hiPSC-Podocytes from a FSGS patient and",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "actin cytoskeleton",
+      "start": 25762,
+      "end": 25780,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "were assessed for marker genes related to the podocyte phenotype (A) and to the actin cytoskeleton (B) . Two clones were analyzed for each cell line. Heatmaps with transcript per",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "formin INF2",
+      "start": 26837,
+      "end": 26848,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "a negative score indicates higher activity of the pathway in control cells. The formin INF2, which is involved in the polymerization and depolymerization of linear, unbran",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "C- and N-terminal fragments",
+      "start": 26970,
+      "end": 26997,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "and depolymerization of linear, unbranched actin filaments, can be cleaved into C- and N-terminal fragments by proteolytic cleavage at position 547 mediated by cathepsins 22 \u2013 25 . Wester",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "cathepsins",
+      "start": 27050,
+      "end": 27060,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "C- and N-terminal fragments by proteolytic cleavage at position 547 mediated by cathepsins 22 \u2013 25 . Western blot analysis was performed using anti-INF2 antibodies that b",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "anti-INF2 antibodies",
+      "start": 27113,
+      "end": 27133,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "547 mediated by cathepsins 22 \u2013 25 . Western blot analysis was performed using anti-INF2 antibodies that bind to either the N-terminal or C-terminal region of the INF2 protein. Th",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "N-terminal or C-terminal region",
+      "start": 27158,
+      "end": 27189,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "blot analysis was performed using anti-INF2 antibodies that bind to either the N-terminal or C-terminal region of the INF2 protein. This showed a decrease in both total INF2 protein and full",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "full-length",
+      "start": 27265,
+      "end": 27276,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "gion of the INF2 protein. This showed a decrease in both total INF2 protein and full-length, uncleaved protein in patient hiPSC-Podocytes (Fig. 5 A\u2013D). The ratio of full-l",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "uncleaved protein",
+      "start": 27278,
+      "end": 27295,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "NF2 protein. This showed a decrease in both total INF2 protein and full-length, uncleaved protein in patient hiPSC-Podocytes (Fig. 5 A\u2013D). The ratio of full-length INF2 protein",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "full-length INF2 protein",
+      "start": 27350,
+      "end": 27374,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "length, uncleaved protein in patient hiPSC-Podocytes (Fig. 5 A\u2013D). The ratio of full-length INF2 protein to cleaved INF2 fragments remained consistent in control cells (Fig. 5 E). In c",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "cleaved INF2 fragments",
+      "start": 27378,
+      "end": 27400,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "patient hiPSC-Podocytes (Fig. 5 A\u2013D). The ratio of full-length INF2 protein to cleaved INF2 fragments remained consistent in control cells (Fig. 5 E). In contrast, increased levels",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "INF2 fragments",
+      "start": 27483,
+      "end": 27497,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "mained consistent in control cells (Fig. 5 E). In contrast, increased levels of INF2 fragments were detected in patient hiPSC-Podocytes, indicating a higher cleavage rate des",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "Fig. 5 INF2",
+      "start": 27635,
+      "end": 27646,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "gher cleavage rate despite the low expression level of INF2 protein (Fig. 5 F). Fig. 5 INF2 and actin dynamics in patient hiPSC-Podocytes. (A\u2013F) Total and cleaved INF2 pro",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "antibodies",
+      "start": 27823,
+      "end": 27833,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "tient hiPSC-Podocytes were compared to control using western blot analysis with antibodies targeting the C-terminus (A) and N-terminus (B) of INF2. The quantification of",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "C-terminus (A)",
+      "start": 27848,
+      "end": 27862,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "e compared to control using western blot analysis with antibodies targeting the C-terminus (A) and N-terminus (B) of INF2. The quantification of total INF2 protein levels (in",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "N-terminus",
+      "start": 27867,
+      "end": 27877,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "ol using western blot analysis with antibodies targeting the C-terminus (A) and N-terminus (B) of INF2. The quantification of total INF2 protein levels (including both fu",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "Full-length protein",
+      "start": 27995,
+      "end": 28014,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "tal INF2 protein levels (including both full-length and cleaved fragments) (C). Full-length protein was quantified in (D) and the distribution of uncleaved protein and cleaved C-t",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "N-terminal fragments",
+      "start": 28106,
+      "end": 28126,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "ied in (D) and the distribution of uncleaved protein and cleaved C-terminal and N-terminal fragments relative to total INF2 levels is presented as a percentage for control (E) and",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "G\u2013I) Cathepsin L",
+      "start": 28370,
+      "end": 28386,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "s t-test or one-way ANOVA. ns: not significant, * p < 0.5, ** p < 0.01, n = 3. (G\u2013I) Cathepsin L expression was validated on mRNA level via qPCR with data normalized to ACTB (G",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "cathepsin L protein",
+      "start": 28492,
+      "end": 28511,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "on mRNA level via qPCR with data normalized to ACTB (G) and confirmed decreased cathepsin L protein via western blot analysis, with normalization to GAPDH (H) . Welch\u2019s t-test, **",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "Bulk RNA",
+      "start": 31206,
+      "end": 31214,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "in the proteolytic cleavage of INF2 by proteolysis (Subramanian et al., 2020). Bulk RNA sequencing data revealed that several cathepsin isoforms, including L, B, D, Z,",
+      "default_label": "RNA",
+      "deafult_label": "RNA",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "cathepsin isoforms",
+      "start": 31253,
+      "end": 31271,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "ysis (Subramanian et al., 2020). Bulk RNA sequencing data revealed that several cathepsin isoforms, including L, B, D, Z, A, C, V, K, O, and H -predominantly cysteine proteases-",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "L, B, D, Z, A, C, V, K, O, and H",
+      "start": 31283,
+      "end": 31315,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "). Bulk RNA sequencing data revealed that several cathepsin isoforms, including L, B, D, Z, A, C, V, K, O, and H -predominantly cysteine proteases- were expressed in both patient and control h",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "B",
+      "start": 31286,
+      "end": 31287,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "Bulk RNA sequencing data revealed that several cathepsin isoforms, including L, B, D, Z, A, C, V, K, O, and H -predominantly cysteine proteases- were expressed i",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "C, V,",
+      "start": 31298,
+      "end": 31303,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "uencing data revealed that several cathepsin isoforms, including L, B, D, Z, A, C, V, K, O, and H -predominantly cysteine proteases- were expressed in both patient a",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "cathepsin L",
+      "start": 31443,
+      "end": 31454,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "ed in both patient and control hiPSC-Podocytes (Fig. S5). The downregulation of cathepsin L, which plays a crucial role in protein degradation and repair processes and is",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "patient-specific INF2 protein",
+      "start": 31690,
+      "end": 31719,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "nd protein levels (Fig. 5 H). This indicates that the increased cleavage of the patient-specific INF2 protein in hiPSC-Podocytes is not directly linked to cathepsin L. The small GTPase RhoA",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "cathepsin",
+      "start": 31765,
+      "end": 31774,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "the patient-specific INF2 protein in hiPSC-Podocytes is not directly linked to cathepsin L. The small GTPase RhoA plays a significant role in regulating actin dynamics",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "Fig. S6",
+      "start": 32238,
+      "end": 32245,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "alterations in their cytoskeleton, INF2 expression, or cathepsin L expression (Fig. S6). These findings suggest that the observed effects are specific to the podocyte",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "N-terminal diaphanous inhibitory domain",
+      "start": 32560,
+      "end": 32599,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "lymerization activity is regulated by an autoinhibitory interaction between its N-terminal diaphanous inhibitory domain (DID) and C-terminal diaphanous autoregulatory domain (DAD) domains, whereas ac",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "C-terminal diaphanous autoregulatory domain",
+      "start": 32610,
+      "end": 32653,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "itory interaction between its N-terminal diaphanous inhibitory domain (DID) and C-terminal diaphanous autoregulatory domain (DAD) domains, whereas actin polymerization is unaffected by the DID-DAD intera",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "DID-DAD",
+      "start": 32719,
+      "end": 32726,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "ulatory domain (DAD) domains, whereas actin polymerization is unaffected by the DID-DAD interaction 25 . Interestingly, most genetic variants in the INF2 gene associat",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "DID-DAD interaction 25",
+      "start": 32719,
+      "end": 32741,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "ulatory domain (DAD) domains, whereas actin polymerization is unaffected by the DID-DAD interaction 25 . Interestingly, most genetic variants in the INF2 gene associated with genetic",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "INF2\u2019s",
+      "start": 32930,
+      "end": 32936,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "identified in the featured FSGS patient, are located in the DID, which mediates INF2\u2019s role in actin dynamics 9 , 26 . Therefore, we analyzed the ability of the patie",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "actin dynamics 9",
+      "start": 32945,
+      "end": 32961,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "he featured FSGS patient, are located in the DID, which mediates INF2\u2019s role in actin dynamics 9 , 26 . Therefore, we analyzed the ability of the patient\u2019s hiPSC-Podocytes to p",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "Fig. 5 K",
+      "start": 33277,
+      "end": 33285,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "depolymerization activity was significantly increased compared to the control (Fig. 5 K). The actin cytoskeleton of the podocytes was analyzed using a scoring system p",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "filamentous actin 20 , 21",
+      "start": 33407,
+      "end": 33432,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "was analyzed using a scoring system previously published for the evaluation of filamentous actin 20 , 21 . Three types of actin filaments were classified: Type A, which features thick",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "Type B",
+      "start": 33565,
+      "end": 33571,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "pe A, which features thick actin bundles covering more than 90% of the cytosol; Type B, characterized by thin and unbundled actin filaments; and Type C, which describ",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "Type C",
+      "start": 33630,
+      "end": 33636,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "f the cytosol; Type B, characterized by thin and unbundled actin filaments; and Type C, which describes a disrupted cytoskeleton with only fragmented, short filaments",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "Fig. 6 A",
+      "start": 33865,
+      "end": 33873,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "laments, while the control cells primarily demonstrated type A and some type B (Fig. 6 A). The disrupted actin filaments in the patient hiPSC-Podocytes align with the a",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "Fig. 6",
+      "start": 34028,
+      "end": 34034,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "the altered podocyte phenotype and the accelerated actin depolymerization rate. Fig. 6 Altered actin cytoskeleton with improvements in the actin cytoskeleton of hiPSC",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "Type A",
+      "start": 34339,
+      "end": 34345,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "DAPI (blue). Percentages are quantified based on the following classifications: Type A (more than 90% of the cell area showing bundled actin filaments), type B (unbun",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "proteinuria (Fig. 1 A",
+      "start": 36979,
+      "end": 37000,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "nosis, the patient did respond to steroid treatment with a partial remission of proteinuria (Fig. 1 A). To analyze the cellular response to different immunosuppressants commonly use",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "dynamin",
+      "start": 37325,
+      "end": 37332,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "in stabilizing agent Bis-T-23. Bis-T-23 enhances the natural oligomerization of dynamin, promoting actin polymerization 27 , 28 . In both patient and control hiPSC-Pod",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "actin polymerization 27",
+      "start": 37344,
+      "end": 37367,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "t Bis-T-23. Bis-T-23 enhances the natural oligomerization of dynamin, promoting actin polymerization 27 , 28 . In both patient and control hiPSC-Podocytes, genes related to pathways e",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "hiPSC-Podocytes, genes",
+      "start": 37403,
+      "end": 37425,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "f dynamin, promoting actin polymerization 27 , 28 . In both patient and control hiPSC-Podocytes, genes related to pathways essential for treatment response were expressed (Fig. 6 B).",
+      "default_label": "DNA",
+      "deafult_label": "DNA",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "Fig. 6 B",
+      "start": 37495,
+      "end": 37503,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "tes, genes related to pathways essential for treatment response were expressed (Fig. 6 B). Transcriptomic levels of DNM1 and DNM2 encoding dynamin, which is the primary",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "DNM1",
+      "start": 37531,
+      "end": 37535,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "tial for treatment response were expressed (Fig. 6 B). Transcriptomic levels of DNM1 and DNM2 encoding dynamin, which is the primary target of Bis-T-23, FKBP1A enco",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "DNM2",
+      "start": 37540,
+      "end": 37544,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "treatment response were expressed (Fig. 6 B). Transcriptomic levels of DNM1 and DNM2 encoding dynamin, which is the primary target of Bis-T-23, FKBP1A encoding FK50",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "FKBP1A",
+      "start": 37604,
+      "end": 37610,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "els of DNM1 and DNM2 encoding dynamin, which is the primary target of Bis-T-23, FKBP1A encoding FK506 binding protein, which is the binding partner of the calcineurin",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "FK506 binding protein",
+      "start": 37620,
+      "end": 37641,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "DNM2 encoding dynamin, which is the primary target of Bis-T-23, FKBP1A encoding FK506 binding protein, which is the binding partner of the calcineurin inhibitor tacrolimus, PPP3CA a",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "calcineurin",
+      "start": 37679,
+      "end": 37690,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "-23, FKBP1A encoding FK506 binding protein, which is the binding partner of the calcineurin inhibitor tacrolimus, PPP3CA and PPP3CC encoding the calcineurin isoforms and N",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "PPP3CA",
+      "start": 37713,
+      "end": 37719,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "protein, which is the binding partner of the calcineurin inhibitor tacrolimus, PPP3CA and PPP3CC encoding the calcineurin isoforms and NR3C1 encoding the glucocortic",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "PPP3CC",
+      "start": 37724,
+      "end": 37730,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "hich is the binding partner of the calcineurin inhibitor tacrolimus, PPP3CA and PPP3CC encoding the calcineurin isoforms and NR3C1 encoding the glucocorticoid recepto",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "calcineurin isoforms",
+      "start": 37744,
+      "end": 37764,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "partner of the calcineurin inhibitor tacrolimus, PPP3CA and PPP3CC encoding the calcineurin isoforms and NR3C1 encoding the glucocorticoid receptor were all expressed, suggesting p",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "NR3C1",
+      "start": 37769,
+      "end": 37774,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "n inhibitor tacrolimus, PPP3CA and PPP3CC encoding the calcineurin isoforms and NR3C1 encoding the glucocorticoid receptor were all expressed, suggesting potential f",
+      "default_label": "DNA",
+      "deafult_label": "DNA",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "glucocorticoid receptor",
+      "start": 37788,
+      "end": 37811,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "mus, PPP3CA and PPP3CC encoding the calcineurin isoforms and NR3C1 encoding the glucocorticoid receptor were all expressed, suggesting potential for direct effects of steroids and Bis",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "stains filamentous actin (Fig. 6 C, D)",
+      "start": 37997,
+      "end": 38035,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "treatment, we quantified changes in fluorescence intensity of phalloidin, which stains filamentous actin (Fig. 6 C, D). Following SDH treatment, we observed a significant increase in total F-actin f",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "actin (Fig. 6 C",
+      "start": 38016,
+      "end": 38031,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "ified changes in fluorescence intensity of phalloidin, which stains filamentous actin (Fig. 6 C, D). Following SDH treatment, we observed a significant increase in total F-act",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "filamentous actin cytoskeleton",
+      "start": 38240,
+      "end": 38270,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "-Podocytes. Moreover, treatment with Bis-T-23 resulted in an improvement of the filamentous actin cytoskeleton in patient hiPSC-Podocytes. In contrast, tacrolimus did not significantly alter",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "modifier genes",
+      "start": 39504,
+      "end": 39518,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "ts may increase the vulnerability of podocytes to stress, potentially requiring modifier genes or additional metabolic, hypertensive, or other stressors for full development",
+      "default_label": "DNA",
+      "deafult_label": "DNA",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "ACTN4",
+      "start": 39651,
+      "end": 39656,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "ssors for full development of the diseased phenotype 29 . For instance, genetic ACTN4 variants contribute to cytoskeletal disorganization, impairing podocyte resista",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "ACTN4 variants",
+      "start": 39651,
+      "end": 39665,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "ssors for full development of the diseased phenotype 29 . For instance, genetic ACTN4 variants contribute to cytoskeletal disorganization, impairing podocyte resistance to me",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "INF2 33",
+      "start": 40402,
+      "end": 40409,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "ted by morpholinos, siRNA, or CRISPR/Cas9 technology to investigate the role of INF2 33 , 39 . However, caution is necessary because ciPodocytes are known to dediffere",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "CRISPR/Cas9",
+      "start": 40676,
+      "end": 40687,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "and injection of morpholinos can lead to inconsistent knockdown efficiency, and CRISPR/Cas9 may induce unintended off-target effects 40 . These models also do not fully re",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "INF2 variant",
+      "start": 41871,
+      "end": 41883,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "generated hiPSC-Podocytes from both healthy controls and a patient carrying the INF2 variant (c.217G > A; G73S) displayed characteristic podocyte markers and morphological",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "Two-dimensional cultures",
+      "start": 42183,
+      "end": 42207,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "tro model over traditional podocyte cell lines, they have inherent limitations. Two-dimensional cultures do not fully recapitulate the complex in vivo microenvironment, particularly th",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "INF2 gene variant",
+      "start": 43536,
+      "end": 43553,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "with this approach, the findings cannot be exclusively related to the specific INF2 gene variant as the sole cause of the findings. To isolate the impact of the genetic cause o",
+      "default_label": "DNA",
+      "deafult_label": "DNA",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "CRISPR/Cas",
+      "start": 43789,
+      "end": 43799,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "tient\u2019s single-nucleotide polymorphism in the patient-specific hiPSC line using CRISPR/Cas or introducing this mutation in a control hiPSC line, with subsequent functiona",
+      "default_label": "DNA",
+      "deafult_label": "DNA",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "mutation sites",
+      "start": 44991,
+      "end": 45005,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "expression was increased. These discrepancies may stem from differences in the mutation sites (G73S and S186P), as well as in the different experimental setups. In our study",
+      "default_label": "DNA",
+      "deafult_label": "DNA",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "microtubule",
+      "start": 45179,
+      "end": 45190,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "tentially compensated for cytoskeletal disruption by upregulating cortactin and microtubule components, while in the previous study, podocytes were grown out of organoids",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "N-terminal DID, dimerization domain",
+      "start": 46475,
+      "end": 46510,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "disease modelling in vitro. The INF2 protein consists of multiple domains: The N-terminal DID, dimerization domain (DD), formin homology (FH) 1 and FH2 domains, and the C-terminal DAD 22 , 42 ,",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "formin",
+      "start": 46517,
+      "end": 46523,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "ein consists of multiple domains: The N-terminal DID, dimerization domain (DD), formin homology (FH) 1 and FH2 domains, and the C-terminal DAD 22 , 42 , 43 . The FH2",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "FH2",
+      "start": 46544,
+      "end": 46547,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "mains: The N-terminal DID, dimerization domain (DD), formin homology (FH) 1 and FH2 domains, and the C-terminal DAD 22 , 42 , 43 . The FH2 domain accelerates actin",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "FH2 domains",
+      "start": 46544,
+      "end": 46555,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "mains: The N-terminal DID, dimerization domain (DD), formin homology (FH) 1 and FH2 domains, and the C-terminal DAD 22 , 42 , 43 . The FH2 domain accelerates actin filamen",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "C-terminal DAD 22 , 42 , 43",
+      "start": 46565,
+      "end": 46592,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "DID, dimerization domain (DD), formin homology (FH) 1 and FH2 domains, and the C-terminal DAD 22 , 42 , 43 . The FH2 domain accelerates actin filament assembly, while the C-terminal regi",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "FH2 domain",
+      "start": 46599,
+      "end": 46609,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "rmin homology (FH) 1 and FH2 domains, and the C-terminal DAD 22 , 42 , 43 . The FH2 domain accelerates actin filament assembly, while the C-terminal region promotes depol",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "actin filament",
+      "start": 46622,
+      "end": 46636,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "d FH2 domains, and the C-terminal DAD 22 , 42 , 43 . The FH2 domain accelerates actin filament assembly, while the C-terminal region promotes depolymerization 44 . DID binds",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "C-terminal region",
+      "start": 46657,
+      "end": 46674,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "AD 22 , 42 , 43 . The FH2 domain accelerates actin filament assembly, while the C-terminal region promotes depolymerization 44 . DID binds to DAD of other formins, such as mDia,",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "formins",
+      "start": 46732,
+      "end": 46739,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "the C-terminal region promotes depolymerization 44 . DID binds to DAD of other formins, such as mDia, and inhibits depolymerization. In contrast, this interaction doe",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "mDia",
+      "start": 46749,
+      "end": 46753,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "egion promotes depolymerization 44 . DID binds to DAD of other formins, such as mDia, and inhibits depolymerization. In contrast, this interaction does not affect I",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "GTPases RhoA",
+      "start": 47070,
+      "end": 47082,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "ates that the patient-specific INF2 mutation disrupts autoinhibition. The small GTPases RhoA, Rac1, and Cdc42 have been reported to modulate INF2 function 46 . While wildty",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "Rac1",
+      "start": 47084,
+      "end": 47088,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "patient-specific INF2 mutation disrupts autoinhibition. The small GTPases RhoA, Rac1, and Cdc42 have been reported to modulate INF2 function 46 . While wildtype INF",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "Cdc42",
+      "start": 47094,
+      "end": 47099,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "ecific INF2 mutation disrupts autoinhibition. The small GTPases RhoA, Rac1, and Cdc42 have been reported to modulate INF2 function 46 . While wildtype INF2 likely fu",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "wildtype INF2",
+      "start": 47156,
+      "end": 47169,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "s RhoA, Rac1, and Cdc42 have been reported to modulate INF2 function 46 . While wildtype INF2 likely functions through direct competition with mDia protein rather than by ac",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "mDia protein",
+      "start": 47219,
+      "end": 47231,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "ction 46 . While wildtype INF2 likely functions through direct competition with mDia protein rather than by activation via RhoA, many disease-causing INF2 mutants appear to",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "INF2 mutants",
+      "start": 47289,
+      "end": 47301,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "tion with mDia protein rather than by activation via RhoA, many disease-causing INF2 mutants appear to increase interactions between INF2-active Cdc42 in HEK293 cells 26 ,",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "INF2-active Cdc42",
+      "start": 47342,
+      "end": 47359,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "RhoA, many disease-causing INF2 mutants appear to increase interactions between INF2-active Cdc42 in HEK293 cells 26 , 37 . Increased RhoA protein levels were found in patient h",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "GTPase",
+      "start": 47517,
+      "end": 47523,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "hiPSC-Podocytes, indicating that actin reorganization may be modulated by this GTPase in conjunction with the INF2 mutation. Additionally, cortactin levels were elev",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "cytoskeletal stabilization 47",
+      "start": 47653,
+      "end": 47682,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "ly, cortactin levels were elevated, likely as another compensatory response for cytoskeletal stabilization 47 . Proteolytic cleavage of INF2 by cathepsins occurs at position 547, resulting",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "N-terminal DID fragment",
+      "start": 47789,
+      "end": 47812,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "INF2 by cathepsins occurs at position 547, resulting in the accumulation of the N-terminal DID fragment at the cell edges, where it interacts with mDIA formins 25 . Consistent with pr",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "mDIA formins",
+      "start": 47856,
+      "end": 47868,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "ation of the N-terminal DID fragment at the cell edges, where it interacts with mDIA formins 25 . Consistent with previous studies, the patient\u2019s INF2 mutation did not impe",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "INF2 protein 25",
+      "start": 47979,
+      "end": 47994,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "studies, the patient\u2019s INF2 mutation did not impede cleavage of the full-length INF2 protein 25 . However, lower levels of total INF2 protein were found. Here, more INF2 fragm",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "uncleaved INF2 protein",
+      "start": 48099,
+      "end": 48121,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "of total INF2 protein were found. Here, more INF2 fragments were found than the uncleaved INF2 protein in patient hiPSC-Podocytes. Most cathepsins, including cathepsin L, were downre",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "actin-regulatory protein networks",
+      "start": 48706,
+      "end": 48739,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "alized podocyte phenotype. Future studies might include comparative analyses of actin-regulatory protein networks and assessment of podocyte-specific stress response pathways to elucidate mecha",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "WT1",
+      "start": 49353,
+      "end": 49356,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "ury by inhibiting actin filament disruption and apoptosis 51 , 52 . Carriers of WT1 variants were more likely to respond to calcineurin inhibitors (CNI) compared t",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "WT1 variants",
+      "start": 49353,
+      "end": 49365,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "ury by inhibiting actin filament disruption and apoptosis 51 , 52 . Carriers of WT1 variants were more likely to respond to calcineurin inhibitors (CNI) compared to carrier",
+      "default_label": "RNA",
+      "deafult_label": "RNA",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "glucocorticoid receptors",
+      "start": 49978,
+      "end": 50002,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "the patient\u2019s positive response to steroid treatment in the clinic. Dynamin and glucocorticoid receptors were expressed in patient hiPSC-Podocytes, allowing for direct effects of Bis-T",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "bridge",
+      "start": 50849,
+      "end": 50855,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "ssible toxicity, and off-target effects. This will be particularly important to bridge the gap between in vitro findings and clinical applicability. In summary, patie",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "Material 2",
+      "start": 51367,
+      "end": 51377,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "ntary material. Supplementary Material 1 Supplementary Material 1 Supplementary Material 2 Supplementary Material 2 Publisher\u2019s note Springer Nature remains neutral with",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "EM",
+      "start": 51689,
+      "end": 51691,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "hropathology, Uniklinikum Erlangen, Germany, for providing histology slides and EM images of kidney biopsies. V.R.: Conception and design, collection and assembly",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "Bildung und Forschung",
+      "start": 52563,
+      "end": 52584,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "gen-N\u00fcrnberg, grant number M4-IZKF-F009 given to JMD; the Bundesministerium f\u00fcr Bildung und Forschung (BMBF), project name STOP-FSGS-Speed Translation-Oriented Progress to Treat FSG",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "TRR",
+      "start": 52768,
+      "end": 52771,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "D given to JMD; the German Research Foundation (DFG), project number 509149993, TRR 374 given to JMD, JS and MS. The bulk RNA sequencing data supporting the findin",
+      "default_label": "DNA",
+      "deafult_label": "DNA",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "NCBI Gene Expression Omnibus database",
+      "start": 52889,
+      "end": 52926,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "RNA sequencing data supporting the findings of this study are available in the NCBI Gene Expression Omnibus database under the accession number GSE254563 . Raw data are not available due to patien",
+      "default_label": "DNA",
+      "deafult_label": "DNA",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "Omnibus",
+      "start": 52910,
+      "end": 52917,
+      "source": "en_ner_bionlp13cg_md",
+      "evidence_text": "supporting the findings of this study are available in the NCBI Gene Expression Omnibus database under the accession number GSE254563 . Raw data are not available due",
+      "default_label": "GENE_OR_GENE_PRODUCT",
+      "deafult_label": "GENE_OR_GENE_PRODUCT",
+      "mapped_label": "GENE_OR_PROTEIN"
+    },
+    {
+      "text": "Raw",
+      "start": 52966,
+      "end": 52969,
+      "source": "en_ner_jnlpba_md",
+      "evidence_text": "he NCBI Gene Expression Omnibus database under the accession number GSE254563 . Raw data are not available due to patient privacy concerns. All other data are avai",
+      "default_label": "PROTEIN",
+      "deafult_label": "PROTEIN",
+      "mapped_label": "GENE_OR_PROTEIN"
+    }
+  ],
+  "pathways": [
+    {
+      "text": "actin filaments",
+      "start": 910,
+      "end": 925,
+      "source": "en_ner_craft_md",
+      "evidence_text": "actin-associated markers, and alterations in INF2 protein levels. Additionally, actin filaments were disrupted, characterized by increased actin depolymerization. Next to the",
+      "default_label": "GO",
+      "deafult_label": "GO",
+      "mapped_label": "PATHWAY"
+    },
+    {
+      "text": "actin",
+      "start": 969,
+      "end": 974,
+      "source": "en_ner_craft_md",
+      "evidence_text": "evels. Additionally, actin filaments were disrupted, characterized by increased actin depolymerization. Next to the actin-modulating agent Bis-T-23, the steroid Solu",
+      "default_label": "GO",
+      "deafult_label": "GO",
+      "mapped_label": "PATHWAY"
+    },
+    {
+      "text": "actin cytoskeleton",
+      "start": 1085,
+      "end": 1103,
+      "source": "en_ner_craft_md",
+      "evidence_text": "actin-modulating agent Bis-T-23, the steroid Solu-Decortin H (SDH) improved the actin cytoskeleton in the patient-specific cells, which aligned with the patient\u2019s partial respons",
+      "default_label": "GO",
+      "deafult_label": "GO",
+      "mapped_label": "PATHWAY"
+    },
+    {
+      "text": "basement membrane",
+      "start": 2225,
+      "end": 2242,
+      "source": "en_ner_craft_md",
+      "evidence_text": "gm, the structure of the actin cytoskeleton, and the adhesion to the glomerular basement membrane 1 , 4 . Some genetic variants may disrupt normal podocyte function through indi",
+      "default_label": "GO",
+      "deafult_label": "GO",
+      "mapped_label": "PATHWAY"
+    },
+    {
+      "text": "Chromosomal",
+      "start": 6554,
+      "end": 6565,
+      "source": "en_ner_craft_md",
+      "evidence_text": "utaraldehyde and formaldehyde. Fixation was performed as described earlier 16 . Chromosomal stability of fibroblasts and hiPSCs was performed via the KaryoStat + \u2122 Genetic",
+      "default_label": "GO",
+      "deafult_label": "GO",
+      "mapped_label": "PATHWAY"
+    },
+    {
+      "text": "antibodies",
+      "start": 9099,
+      "end": 9109,
+      "source": "en_ner_craft_md",
+      "evidence_text": "on-X-100, 1% bovine serum albumin, and 10% normal goat serum (1 h, RT). Primary antibodies were diluted according to Table 2 in 1 \u00d7 PBS containing 1% bovine serum albumin",
+      "default_label": "GO",
+      "deafult_label": "GO",
+      "mapped_label": "PATHWAY"
+    },
+    {
+      "text": "Antibody",
+      "start": 9426,
+      "end": 9434,
+      "source": "en_ner_craft_md",
+      "evidence_text": "fter washing, samples were mounted using Fluoromount-G containing DAPI. Table 2 Antibody dilutions used for Immunocyto- and histochemistry and Western Blot Analysis. An",
+      "default_label": "GO",
+      "deafult_label": "GO",
+      "mapped_label": "PATHWAY"
+    },
+    {
+      "text": "Nuclei",
+      "start": 15600,
+      "end": 15606,
+      "source": "en_ner_craft_md",
+      "evidence_text": "pecific marker synaptopodin is depicted in green, and INF2 protein in red (E) . Nuclei are in blue, stained with DAPI. Scale bars represent 100 \u00b5m. Characterization o",
+      "default_label": "GO",
+      "deafult_label": "GO",
+      "mapped_label": "PATHWAY"
+    },
+    {
+      "text": "nuclear",
+      "start": 19405,
+      "end": 19412,
+      "source": "en_ner_craft_md",
+      "evidence_text": "rker Ki67 and pluripotency markers OCT3/4, SSEA4, and Tra-1-81 colocalized with nuclear staining in blue. All hiPSC clones showed equal expression of pluripotency mark",
+      "default_label": "GO",
+      "deafult_label": "GO",
+      "mapped_label": "PATHWAY"
+    },
+    {
+      "text": "cytoskeleton",
+      "start": 20972,
+      "end": 20984,
+      "source": "en_ner_craft_md",
+      "evidence_text": "vels of podocin and synaptopodin, as well as INF2, which is associated with the cytoskeleton and is responsible for the regulation of linear actin filaments (Fig. 3 C). Int",
+      "default_label": "GO",
+      "deafult_label": "GO",
+      "mapped_label": "PATHWAY"
+    },
+    {
+      "text": "integrins",
+      "start": 24553,
+      "end": 24562,
+      "source": "en_ner_craft_md",
+      "evidence_text": "phenotype, such as CD2AP , VIM , SYNPO , FAT1 , MAFB , along with adhesion via integrins ( ITGA3 , ITGA5 , ITGB3 ) and extracellular matrix components ( LAMB2 , VIM ) w",
+      "default_label": "GO",
+      "deafult_label": "GO",
+      "mapped_label": "PATHWAY"
+    },
+    {
+      "text": "extracellular matrix",
+      "start": 24593,
+      "end": 24613,
+      "source": "en_ner_craft_md",
+      "evidence_text": ", FAT1 , MAFB , along with adhesion via integrins ( ITGA3 , ITGA5 , ITGB3 ) and extracellular matrix components ( LAMB2 , VIM ) were expressed in both control and patient hiPSC-Pod",
+      "default_label": "GO",
+      "deafult_label": "GO",
+      "mapped_label": "PATHWAY"
+    },
+    {
+      "text": "microtubule",
+      "start": 24909,
+      "end": 24920,
+      "source": "en_ner_craft_md",
+      "evidence_text": "ctin-binding ( FLNB , MSN , MYO1C ) were also decreased, while genes related to microtubule formation ( TUBA1B , TUBB2B , KIF23 , CENPE ), actin dynamics ( ANLN ), cytoske",
+      "default_label": "GO",
+      "deafult_label": "GO",
+      "mapped_label": "PATHWAY"
+    },
+    {
+      "text": "cytoskeletal",
+      "start": 24993,
+      "end": 25005,
+      "source": "en_ner_craft_md",
+      "evidence_text": "otubule formation ( TUBA1B , TUBB2B , KIF23 , CENPE ), actin dynamics ( ANLN ), cytoskeletal protein-membrane anchoring ( EPB41L3 ), and small GTPase activation ( DOCK1 , R",
+      "default_label": "GO",
+      "deafult_label": "GO",
+      "mapped_label": "PATHWAY"
+    },
+    {
+      "text": "microtubule cytoskeleton",
+      "start": 25324,
+      "end": 25348,
+      "source": "en_ner_craft_md",
+      "evidence_text": "d with epithelial development, cell\u2013cell adhesion, actin cytoskeleton dynamics, microtubule cytoskeleton, and cell junctions were overrepresented in patient hiPSC-Podocytes compared to",
+      "default_label": "GO",
+      "deafult_label": "GO",
+      "mapped_label": "PATHWAY"
+    },
+    {
+      "text": "F-actin",
+      "start": 34822,
+      "end": 34829,
+      "source": "en_ner_craft_md",
+      "evidence_text": "(C) Representative images of untreated and treated hiPSC-Podocytes stained for F-actin with phalloidin in red and nuclei using DAPI in blue. Scale bars represent 100",
+      "default_label": "GO",
+      "deafult_label": "GO",
+      "mapped_label": "PATHWAY"
+    },
+    {
+      "text": "actin filament",
+      "start": 49291,
+      "end": 49305,
+      "source": "en_ner_craft_md",
+      "evidence_text": "more, dexamethasone treatment protected podocytes from PAN injury by inhibiting actin filament disruption and apoptosis 51 , 52 . Carriers of WT1 variants were more likely to",
+      "default_label": "GO",
+      "deafult_label": "GO",
+      "mapped_label": "PATHWAY"
+    }
+  ]
+}
